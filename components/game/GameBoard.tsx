@@ -2,16 +2,16 @@ import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { useGameContext } from '../../context/GameContext';
 
-// Path colors
+// Path colors - using colors from the logo
 const PATH_COLORS = {
-  bus: ['#4286f4', '#5a96f5', '#71a6f6', '#88b6f7', '#9fc6f8'],  // Blue shades
-  carpool: ['#4caf50', '#66bb6a', '#81c784', '#a5d6a7', '#c8e6c9'], // Green shades
-  bicycle: ['#ff9800', '#ffa726', '#ffb74d', '#ffcc80', '#ffe0b2']  // Orange shades
+  bus: ['#87CEEB', '#7EC0E4', '#74B4DE', '#6AA7D7', '#5F9AD1'],  // Sky Blue shades (new)
+  carpool: ['#c3e6df', '#a6dbd1', '#8ad0c4', '#6ec4b6', '#52b9a9'], // Teal shades (moved from bus)
+  bicycle: ['#ff9248', '#ff9e5c', '#ffaa70', '#ffb684', '#ffc298']  // Orange shades (unchanged)
 };
 
 // Emoji constants
 const EMOJI = {
-  start: '🔀',         // Twisted arrows for crossroads
+  start: '🏠',         // Home for crossroads (changed from arrows)
   bus: '🚌',           // Bus
   carpool: '🚗',       // Car
   bicycle: '🚲',       // Bicycle
@@ -331,21 +331,13 @@ const GameBoard = () => {
         borderRadius = { borderRadius: adjustedTileSize * 0.2 };
     }
     
-    // Player token if this is the active tile
-    const playerToken = (isActive && path.type === transportMode) ? (
-      <Text style={styles.emojiText}>
-        {transportMode === 'bus' ? EMOJI.bus : 
-         transportMode === 'carpool' ? EMOJI.carpool : EMOJI.bicycle}
-      </Text>
-    ) : null;
-    
     // Only render visible special emoji on start and finish of active path
     const showSpecialEmoji = 
       (tile.type === 'start' && (path.type === transportMode || (transportMode === null && path.type === 'bus'))) ||
       (tile.type === 'finish' && (path.type === transportMode || (transportMode === null && path.type === 'bus')));
     
     const opacity = path.type === transportMode ? 1 : 0.6;
-    
+
     return (
       <View key={`tile-${path.type}-${tile.id}`}>
         {/* Tile square */}
@@ -368,20 +360,28 @@ const GameBoard = () => {
           ]}
         >
           <Text style={styles.tileNumber}>{tile.id}</Text>
-          {playerToken}
+          
+          {/* Special emoji below player icon */}
+          {showSpecialEmoji && (
+            <Text style={styles.specialEmoji}>
+              {tile.type === 'start' ? EMOJI.start : EMOJI.finish}
+            </Text>
+          )}
         </View>
         
-        {/* Special emoji directly on tile */}
-        {showSpecialEmoji && (
+        {/* Player token - now separate from tile and with higher z-index */}
+        {isActive && path.type === transportMode && (
           <View style={[
-            styles.emojiContainer,
+            styles.playerTokenContainer,
             {
               left: tile.x - 15,
               top: tile.y - 15,
+              zIndex: 25, // Higher than any other element
             }
           ]}>
-            <Text style={styles.largeEmojiText}>
-              {tile.type === 'start' ? EMOJI.start : EMOJI.finish}
+            <Text style={styles.emojiText}>
+              {transportMode === 'bus' ? EMOJI.bus : 
+              transportMode === 'carpool' ? EMOJI.carpool : EMOJI.bicycle}
             </Text>
           </View>
         )}
@@ -418,7 +418,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     position: 'relative',
-    backgroundColor: '#e0f7fa',
+    backgroundColor: '#f5f7fa', // Light background matching the logo's style
   },
   tile: {
     position: 'absolute',
@@ -435,7 +435,7 @@ const styles = StyleSheet.create({
   },
   activeTile: {
     borderWidth: 3,
-    borderColor: 'yellow',
+    borderColor: '#FFD700',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.4,
@@ -450,20 +450,24 @@ const styles = StyleSheet.create({
     top: 2,
     left: 2,
   },
-  emojiText: {
-    fontSize: 24,
+  specialEmoji: {
+    fontSize: 20,
+    opacity: 0.8,
+    zIndex: 6,
   },
-  largeEmojiText: {
-    fontSize: 28,
-    textShadowColor: 'rgba(0,0,0,0.3)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 1,
-  },
-  emojiContainer: {
+  // Separate container for player token
+  playerTokenContainer: {
     position: 'absolute',
-    zIndex: 15,
+    width: 32,
+    height: 32,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  emojiText: {
+    fontSize: 28,
+    textShadowColor: 'rgba(0,0,0,0.5)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
 });
 

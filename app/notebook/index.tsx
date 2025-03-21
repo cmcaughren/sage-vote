@@ -12,7 +12,18 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { getNotebookEntries, clearNotebook } from '../../utilities/asyncStorage';
-import { useGameContext } from '../../context/GameContext';
+import { useGameContext } from '../../context/GameContext'; // Fixed the import path
+
+// Colors from the logo
+const COLORS = {
+  primary: '#52b9a9',   // Teal (previously bus path color)
+  secondary: '#ff9248', // Orange (unchanged)
+  tertiary: '#c3e6df',  // Light Teal
+  background: '#f5f7fa', // Light background
+  white: '#ffffff',
+  dark: '#333333',
+  lightGray: '#e0e0e0',
+};
 
 // Interface for notebook entries
 interface NotebookEntry {
@@ -87,6 +98,7 @@ export default function NotebookScreen() {
     <TouchableOpacity 
       style={styles.entryCard}
       onPress={() => handleOpenLink(item.url)}
+      activeOpacity={0.7}
     >
       <View style={styles.entryHeader}>
         <Text style={styles.entryUrl} numberOfLines={1} ellipsizeMode="middle">
@@ -97,7 +109,12 @@ export default function NotebookScreen() {
       <Text style={styles.entryDescription} numberOfLines={3}>
         {item.description}
       </Text>
-      <Text style={styles.linkText}>Tap to open →</Text>
+      <View style={styles.linkContainer}>
+        <Text style={styles.linkText}>Learn more about Canadian politics</Text>
+        <View style={styles.arrowContainer}>
+          <Text style={styles.arrowIcon}>→</Text>
+        </View>
+      </View>
     </TouchableOpacity>
   );
 
@@ -115,11 +132,12 @@ export default function NotebookScreen() {
 
       {loading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#007AFF" />
+          <ActivityIndicator size="large" color={COLORS.primary} />
           <Text style={styles.loadingText}>Loading your notebook...</Text>
         </View>
       ) : entries.length === 0 ? (
         <View style={styles.emptyContainer}>
+          <Text style={styles.emptyIcon}>📔</Text>
           <Text style={styles.emptyText}>Your notebook is empty</Text>
           <Text style={styles.emptySubtext}>
             Draw cards and tap "Learn More" to add educational links to your notebook
@@ -150,33 +168,33 @@ export default function NotebookScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F7FA',
+    backgroundColor: COLORS.background,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#1565C0',
+    backgroundColor: COLORS.primary,
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: 'white',
+    color: COLORS.white,
   },
   backButton: {
     padding: 8,
   },
   backButtonText: {
-    color: 'white',
+    color: COLORS.white,
     fontWeight: '500',
   },
   listContainer: {
     padding: 16,
   },
   entryCard: {
-    backgroundColor: 'white',
-    borderRadius: 8,
+    backgroundColor: COLORS.white,
+    borderRadius: 12,
     padding: 16,
     marginBottom: 12,
     shadowColor: '#000',
@@ -187,6 +205,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 2,
+    borderLeftWidth: 4,
+    borderLeftColor: COLORS.primary,
   },
   entryHeader: {
     flexDirection: 'row',
@@ -195,24 +215,44 @@ const styles = StyleSheet.create({
   },
   entryUrl: {
     fontSize: 14,
-    color: '#007AFF',
+    color: COLORS.primary,
     flex: 1,
     marginRight: 8,
   },
   entryDate: {
     fontSize: 12,
-    color: '#8E8E93',
+    color: COLORS.dark + '80', // Adding transparency
   },
   entryDescription: {
     fontSize: 16,
-    color: '#333',
+    color: COLORS.dark,
     marginBottom: 12,
     lineHeight: 22,
   },
+  linkContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: COLORS.lightGray,
+    paddingTop: 10,
+    marginTop: 5,
+  },
   linkText: {
     fontSize: 14,
-    color: '#007AFF',
-    textAlign: 'right',
+    color: COLORS.primary,
+  },
+  arrowContainer: {
+    backgroundColor: COLORS.tertiary,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  arrowIcon: {
+    color: COLORS.primary,
+    fontWeight: 'bold',
   },
   loadingContainer: {
     flex: 1,
@@ -222,7 +262,7 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 12,
     fontSize: 16,
-    color: '#8E8E93',
+    color: COLORS.dark + '80',
   },
   emptyContainer: {
     flex: 1,
@@ -230,15 +270,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 32,
   },
+  emptyIcon: {
+    fontSize: 48,
+    marginBottom: 16,
+  },
   emptyText: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 8,
-    color: '#333',
+    color: COLORS.dark,
   },
   emptySubtext: {
     fontSize: 16,
-    color: '#8E8E93',
+    color: COLORS.dark + '80',
     textAlign: 'center',
     lineHeight: 22,
   },
@@ -250,7 +294,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   clearButtonText: {
-    color: 'white',
+    color: COLORS.white,
     fontWeight: 'bold',
   },
 });

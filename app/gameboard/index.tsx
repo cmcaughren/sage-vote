@@ -6,8 +6,19 @@ import { useGameContext } from '../../context/GameContext';
 import GameBoard from '../../components/game/GameBoard';
 import Card from '../../components/ui/Card';
 import NotebookIcon from '../../components/ui/NotebookIcon';
+import WinningPopup from '../../components/ui/WinningPopup';
 import { getCards } from '../../firebase/firebaseService';
 import { getNotebookEntries } from '../../utilities/asyncStorage';
+
+// Colors from our updated theme
+const COLORS = {
+  primary: '#52b9a9',   // Teal
+  secondary: '#ff9248', // Orange
+  tertiary: '#87CEEB',  // Sky Blue
+  background: '#f5f7fa', // Light background
+  white: '#ffffff',
+  dark: '#333333'
+};
 
 const GameBoardScreen = () => {
   const { 
@@ -26,6 +37,7 @@ const GameBoardScreen = () => {
   const [currentCard, setCurrentCard] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [notebookCount, setNotebookCount] = useState(0);
+  const [showWinningPopup, setShowWinningPopup] = useState(false);
   const router = useRouter();
   
   // Fetch all cards when component mounts or transport mode changes
@@ -137,7 +149,9 @@ const GameBoardScreen = () => {
         } else if (newPosition > pathLengths[transportMode]) {
           // Reached the end
           setBoardPosition(pathLengths[transportMode]);
-          Alert.alert('Congratulations!', 'You reached the polling station!');
+          
+          // Show winning popup (which contains the confetti)
+          setShowWinningPopup(true);
         } else {
           setBoardPosition(newPosition);
         }
@@ -147,7 +161,6 @@ const GameBoardScreen = () => {
     }
     
     // Refresh notebook count after card is closed
-    // (in case they added a link to notebook)
     loadNotebookCount();
   };
 
@@ -161,10 +174,12 @@ const GameBoardScreen = () => {
     }
     else if (boardPosition < maxPosition){
       setBoardPosition(boardPosition + 1);
-      Alert.alert('Congratulations!', 'You reached the polling station!');
+      // Show winning popup (which contains the confetti)
+      setShowWinningPopup(true);
     }
     else {
-      Alert.alert('Congratulations!', 'You reached the polling station!');
+      // Already at finish - show winning popup
+      setShowWinningPopup(true);
     }
   };
   
@@ -173,9 +188,21 @@ const GameBoardScreen = () => {
     if (boardPosition > 0) {
       setBoardPosition(boardPosition - 1);
     } else {
-      // Player is back at start - offer to reroll
-      Alert.alert('Crossroads', 'You\'re back at the crossroads! You should reroll for a new transport mode.');
-      router.push('/crossroads');
+      // Player is already at start - offer to reroll
+      Alert.alert(
+        'Crossroads', 
+        'You\'re back at the crossroads! Would you like to reroll for a new transport mode?',
+        [
+          {
+            text: 'No',
+            style: 'cancel'
+          },
+          {
+            text: 'Yes, Reroll',
+            onPress: () => router.push('/crossroads')
+          }
+        ]
+      );
     }
   };
 
@@ -258,6 +285,12 @@ const GameBoardScreen = () => {
           devMode={devMode}
         />
       )}
+      
+      {/* Winning popup with integrated confetti */}
+      <WinningPopup 
+        visible={showWinningPopup} 
+        onRequestClose={() => setShowWinningPopup(false)}
+      />
     </SafeAreaView>
   );
 };
@@ -265,26 +298,26 @@ const GameBoardScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: COLORS.background,
   },
   header: {
     padding: 15,
-    backgroundColor: '#1565C0',
+    backgroundColor: COLORS.primary,
     alignItems: 'center',
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'white',
+    color: COLORS.white,
   },
   subtitle: {
     fontSize: 16,
-    color: 'white',
+    color: COLORS.white,
     marginTop: 5,
   },
   cardInfo: {
     fontSize: 14,
-    color: '#e0e0e0',
+    color: COLORS.tertiary,
     marginTop: 3,
   },
   notebookIconContainer: {
@@ -298,7 +331,7 @@ const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 10,
     overflow: 'hidden',
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     elevation: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -324,13 +357,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#f44336',
   },
   cardButton: {
-    backgroundColor: '#9C27B0',
+    backgroundColor: COLORS.secondary,
   },
   forwardButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: COLORS.primary,
   },
   homeButton: {
-    backgroundColor: '#2196F3',
+    backgroundColor: COLORS.primary,
     paddingVertical: 12,
     paddingHorizontal: 25,
     borderRadius: 25,
@@ -343,7 +376,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   buttonText: {
-    color: 'white',
+    color: COLORS.white,
     fontWeight: 'bold',
     fontSize: 16,
   }

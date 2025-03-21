@@ -10,6 +10,9 @@ import {
   ActivityIndicator
 } from 'react-native';
 
+// Main color from the updated theme
+const TEAL_COLOR = '#52b9a9'; // Teal color (previously bus path)
+
 interface DiceRollerProps {
   onRollComplete: (result: number) => void;
   compact?: boolean;
@@ -239,7 +242,7 @@ const DiceRoller = ({
         
         {/* Only show activity indicator in non-compact mode */}
         {diceState.phase === 'transitioning' && !compact && (
-          <ActivityIndicator size="large" color="#007bff" />
+          <ActivityIndicator size="large" color={TEAL_COLOR} />
         )}
         
         {/* Only show result container in non-compact mode */}
@@ -358,11 +361,11 @@ const styles = StyleSheet.create({
   },
   transportText: {
     fontSize: 18,
-    color: '#007bff',
+    color: TEAL_COLOR,
     marginBottom: 20,
   },
   rollButton: {
-    backgroundColor: '#28a745',
+    backgroundColor: TEAL_COLOR, // Updated to teal
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 5,
@@ -373,7 +376,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   continueButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: TEAL_COLOR, // Updated to teal
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 5,

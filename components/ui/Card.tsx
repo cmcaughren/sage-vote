@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f9fa',
     borderRadius: 8,
     borderLeftWidth: 4,
-    borderLeftColor: '#28a745',
+    borderLeftColor: '#52b9a9', // Teal color (previously bus path)
   },
   resultText: {
     fontSize: 18,
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f9fa',
   },
   actionButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#ff9248', // Changed to orange for better distinction
     padding: 12,
     borderRadius: 5,
     alignItems: 'center',
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   learnButton: {
-    backgroundColor: '#2196F3',
+    backgroundColor: '#52b9a9', // Teal color (previously bus path)
     padding: 12,
     borderRadius: 5,
     alignItems: 'center',
