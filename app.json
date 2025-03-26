@@ -1,17 +1,22 @@
 {
   "expo": {
-    "name": "sage-vote",
+    "name": "Sage-Vote",
     "slug": "sage-vote",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.carolyn.dev.sagevote",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.carolyn.dev.sagevote"
     },
     "plugins": [
       "expo-router",
@@ -20,6 +25,15 @@
     "experiments": {
       "typedRoutes": true
     },
-    "newArchEnabled": true
+    "newArchEnabled": true,
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "1a7b9a3c-d661-425e-93a7-bb24c09688f0"
+      }
+    },
+    "owner": "carolyn.dev"
   }
 }

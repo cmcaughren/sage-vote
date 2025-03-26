@@ -1,27 +1,16 @@
+// app/crossroads.tsx
 import React, { useState } from "react";
 import { 
   View, 
   Text, 
-  StyleSheet, 
   SafeAreaView,
-  TouchableOpacity,
   Dimensions
 } from "react-native";
 import { useRouter } from "expo-router";
-import DiceRoller from "../components/ui/DiceRoller";
+import DiceRoller from "../components/DiceRoller";
 import { useGameContext } from "../context/GameContext";
-
-// Colors from our updated theme
-const COLORS = {
-  primary: '#52b9a9',   // Teal
-  secondary: '#ff9248', // Orange
-  busBlue: '#87CEEB',   // Sky Blue
-  carpoolTeal: '#a6dbd1', // Light Teal
-  bikeOrange: '#ffaa70', // Light Orange
-  background: '#f5f7fa', // Light background
-  white: '#ffffff',
-  dark: '#333333'
-};
+import { styles } from "../styles/screens/Crossroads.styles";
+import { COLORS } from "../styles/theme/colors";
 
 export default function CrossroadsScreen() {
   const { setTransportMode } = useGameContext();
@@ -73,7 +62,7 @@ export default function CrossroadsScreen() {
           <View style={styles.optionsContainer}>
             {/* Bus Option */}
             <View style={[styles.optionCard, { width: cardSize, height: cardSize }]}>
-              <View style={[styles.optionIcon, { backgroundColor: COLORS.busBlue }]}>
+              <View style={[styles.optionIcon, { backgroundColor: COLORS.tertiary }]}>
                 <Text style={styles.optionEmoji}>🚌</Text>
               </View>
               <Text style={styles.optionTitle}>Public Transit</Text>
@@ -83,7 +72,7 @@ export default function CrossroadsScreen() {
             
             {/* Carpool Option */}
             <View style={[styles.optionCard, { width: cardSize, height: cardSize }]}>
-              <View style={[styles.optionIcon, { backgroundColor: COLORS.carpoolTeal }]}>
+              <View style={[styles.optionIcon, { backgroundColor: COLORS.secondary }]}>
                 <Text style={styles.optionEmoji}>🚗</Text>
               </View>
               <Text style={styles.optionTitle}>Carpool</Text>
@@ -93,7 +82,7 @@ export default function CrossroadsScreen() {
             
             {/* Bicycle Option */}
             <View style={[styles.optionCard, { width: cardSize, height: cardSize }]}>
-              <View style={[styles.optionIcon, { backgroundColor: COLORS.bikeOrange }]}>
+              <View style={[styles.optionIcon, { backgroundColor: COLORS.primary }]}>
                 <Text style={styles.optionEmoji}>🚲</Text>
               </View>
               <Text style={styles.optionTitle}>Bicycle</Text>
@@ -111,94 +100,3 @@ export default function CrossroadsScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-  },
-  content: {
-    flex: 1,
-    alignItems: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: COLORS.dark,
-    textAlign: 'center',
-    marginBottom: 12,
-    marginTop: 20,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: COLORS.dark + 'CC',
-    textAlign: 'center',
-    marginBottom: 15,
-    maxWidth: 400,
-  },
-  infoContainer: {
-    backgroundColor: COLORS.primary + '20',
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 20,
-    maxWidth: 400,
-  },
-  infoText: {
-    fontSize: 14,
-    color: COLORS.dark,
-    textAlign: 'center',
-    lineHeight: 20,
-  },
-  diceContainer: {
-    marginBottom: 15,
-  },
-  optionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    maxWidth: 350,
-    marginTop: 5,
-  },
-  optionCard: {
-    backgroundColor: COLORS.white,
-    borderRadius: 10,
-    padding: 8,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  optionIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 8,
-  },
-  optionEmoji: {
-    fontSize: 20,
-  },
-  optionTitle: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: COLORS.dark,
-    marginBottom: 2,
-    textAlign: 'center',
-  },
-  optionDescription: {
-    fontSize: 11,
-    color: COLORS.dark + 'CC',
-    fontWeight: '500',
-    textAlign: 'center',
-  },
-  optionSubtext: {
-    fontSize: 10,
-    color: COLORS.dark + '80',
-    marginTop: 2,
-    textAlign: 'center',
-  }
-});

@@ -1,17 +1,15 @@
-// components/ui/DiceRoller.tsx
+/// components/ui/DiceRoller.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   View, 
   Text, 
   TouchableOpacity, 
-  StyleSheet, 
   Animated, 
   Easing,
   ActivityIndicator
 } from 'react-native';
-
-// Main color from the updated theme
-const TEAL_COLOR = '#52b9a9'; // Teal color (previously bus path)
+import { styles } from '../styles/components/DiceRoller.styles';
+import { COLORS } from '../styles/theme/colors';
 
 interface DiceRollerProps {
   onRollComplete: (result: number) => void;
@@ -20,12 +18,12 @@ interface DiceRollerProps {
   shouldRoll?: boolean;
 }
 
-const DiceRoller = ({ 
+const DiceRoller: React.FC<DiceRollerProps> = ({ 
   onRollComplete, 
   compact = false, 
   hideTransportInfo = false, 
   shouldRoll = false 
-}: DiceRollerProps) => {
+}) => {
   // Change to a combined state object for atomic updates
   const [diceState, setDiceState] = useState({
     currentValue: 1,
@@ -157,7 +155,7 @@ const DiceRoller = ({
 
   // Function to render the dice face with dots
   const renderDiceFace = (value) => {
-    // Your existing dice face rendering code
+    // Dice face rendering code
     return (
       <View style={styles.diceFace}>
         {/* 3x3 grid of potential dot positions */}
@@ -242,7 +240,7 @@ const DiceRoller = ({
         
         {/* Only show activity indicator in non-compact mode */}
         {diceState.phase === 'transitioning' && !compact && (
-          <ActivityIndicator size="large" color={TEAL_COLOR} />
+          <ActivityIndicator size="large" color={COLORS.primary} />
         )}
         
         {/* Only show result container in non-compact mode */}
@@ -281,124 +279,5 @@ const DiceRoller = ({
     }
   }
 };
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-    height: 400,
-  },
-  compactContainer: {
-    height: 200, //150, // Significantly reduced from 300
-    padding: 10,
-    marginBottom: 0, // No extra margin at the bottom
-  },
-  diceContainer: {
-    width: 150,
-    height: 150,
-    backgroundColor: 'white',
-    borderRadius: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 5,
-    marginBottom: 40,
-  },
-  compactDiceContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 20,
-    marginBottom: 20, // Reduced margin 10
-  },
-  bottomSection: {
-    //height: 150, // Fixed height to prevent layout shifts
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  compactBottomSection: {
-    marginTop: 0,
-    marginBottom: 0,
-    //height: 40, // Greatly reduced for compact mode
-  },
-  diceFace: {
-    width: '100%',
-    height: '100%',
-    padding: 8,
-  },
-  diceGrid: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  dotContainer: {
-    width: '33.33%',
-    height: '33.33%',
-    padding: 6,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  dot: {
-    width: '90%',
-    height: '90%',
-    borderRadius: 50,
-    backgroundColor: '#000',
-  },
-  resultContainer: {
-    alignItems: 'center',
-  },
-  resultText: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  compactResultText: {
-    fontSize: 18,
-    marginBottom: 5,
-  },
-  transportText: {
-    fontSize: 18,
-    color: TEAL_COLOR,
-    marginBottom: 20,
-  },
-  rollButton: {
-    backgroundColor: TEAL_COLOR, // Updated to teal
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 5,
-  },
-  rollButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '500',
-  },
-  continueButton: {
-    backgroundColor: TEAL_COLOR, // Updated to teal
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 5,
-    marginTop: 10,
-  },
-  compactButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 20,
-  },
-  continueButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '500',
-  },
-  // Additional dot position styles
-  topLeft: {},
-  topRight: {},
-  middleLeft: {},
-  middle: {},
-  middleRight: {},
-  bottomLeft: {},
-  bottomRight: {},
-});
 
 export default DiceRoller;

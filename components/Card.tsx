@@ -1,8 +1,9 @@
 // components/ui/Card.tsx
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Linking, ScrollView, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, Linking, ScrollView, Alert } from 'react-native';
 import DiceRoller from './DiceRoller';
-import { saveNotebookEntry } from '../../utilities/asyncStorage';
+import { saveNotebookEntry } from '../utilities/asyncStorage';
+import { styles } from '../styles/components/Card.styles';
 
 const Card = ({ card, onClose, onAction, devMode = false }) => {
   const [diceResult, setDiceResult] = useState(null);
@@ -190,118 +191,5 @@ const Card = ({ card, onClose, onAction, devMode = false }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  cardContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 100,
-  },
-  card: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    width: '90%',
-    height: '80%',
-    maxWidth: 400,
-    overflow: 'hidden',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  cardHeader: {
-    backgroundColor: '#f8f9fa',
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#dee2e6',
-  },
-  cardTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  scrollContent: {
-    flex: 1,
-  },
-  contentContainer: {
-    padding: 20,
-  },
-  cardDescription: {
-    fontSize: 18,
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  diceContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 15,
-    width: '100%', // Take full width
-  },
-  actionContainer: {
-    width: '100%', // Take full width
-    marginTop: 10, // Reduced margin
-    marginBottom: 15,
-    padding: 15,
-    backgroundColor: '#f8f9fa',
-    borderRadius: 8,
-    borderLeftWidth: 4,
-    borderLeftColor: '#52b9a9', // Teal color (previously bus path)
-  },
-  resultText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  actionText: {
-    fontSize: 16,
-    lineHeight: 22,
-  },
-  cardFooter: {
-    padding: 15,
-    borderTopWidth: 1,
-    borderTopColor: '#dee2e6',
-    backgroundColor: '#f8f9fa',
-  },
-  actionButton: {
-    backgroundColor: '#ff9248', // Changed to orange for better distinction
-    padding: 12,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  disabledButton: {
-    backgroundColor: '#cccccc',
-    opacity: 0.5,
-  },
-  learnButton: {
-    backgroundColor: '#52b9a9', // Teal color (previously bus path)
-    padding: 12,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  closeButton: {
-    backgroundColor: '#f44336',
-    padding: 12,
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  learnButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-});
 
 export default Card;

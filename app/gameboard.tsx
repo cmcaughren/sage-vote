@@ -1,24 +1,15 @@
-// app/gameboard/index.tsx
+// app/gameboard.tsx
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useGameContext } from '../../context/GameContext';
-import GameBoard from '../../components/game/GameBoard';
-import Card from '../../components/ui/Card';
-import NotebookIcon from '../../components/ui/NotebookIcon';
-import WinningPopup from '../../components/ui/WinningPopup';
-import { getCards } from '../../firebase/firebaseService';
-import { getNotebookEntries } from '../../utilities/asyncStorage';
-
-// Colors from our updated theme
-const COLORS = {
-  primary: '#52b9a9',   // Teal
-  secondary: '#ff9248', // Orange
-  tertiary: '#87CEEB',  // Sky Blue
-  background: '#f5f7fa', // Light background
-  white: '#ffffff',
-  dark: '#333333'
-};
+import { useGameContext } from '../context/GameContext';
+import GameBoard from '../components/GameBoard';
+import Card from '../components/Card';
+import NotebookIcon from '../components/NotebookIcon';
+import WinningPopup from '../components/WinningPopup';
+import { getCards } from '../firebase/firebaseService';
+import { getNotebookEntries } from '../utilities/asyncStorage';
+import { styles } from '../styles/screens/GameBoard.styles';
 
 const GameBoardScreen = () => {
   const { 
@@ -294,92 +285,5 @@ const GameBoardScreen = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-  },
-  header: {
-    padding: 15,
-    backgroundColor: COLORS.primary,
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: COLORS.white,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: COLORS.white,
-    marginTop: 5,
-  },
-  cardInfo: {
-    fontSize: 14,
-    color: COLORS.tertiary,
-    marginTop: 3,
-  },
-  notebookIconContainer: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    zIndex: 10,
-  },
-  boardContainer: {
-    flex: 1,
-    margin: 10,
-    borderRadius: 10,
-    overflow: 'hidden',
-    backgroundColor: COLORS.white,
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  controlsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 15,
-  },
-  button: {
-    paddingVertical: 12,
-    paddingHorizontal: 25,
-    borderRadius: 25,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
-  },
-  backButton: {
-    backgroundColor: '#f44336',
-  },
-  cardButton: {
-    backgroundColor: COLORS.secondary,
-  },
-  forwardButton: {
-    backgroundColor: COLORS.primary,
-  },
-  homeButton: {
-    backgroundColor: COLORS.primary,
-    paddingVertical: 12,
-    paddingHorizontal: 25,
-    borderRadius: 25,
-    marginBottom: 20,
-    alignSelf: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
-  },
-  buttonText: {
-    color: COLORS.white,
-    fontWeight: 'bold',
-    fontSize: 16,
-  }
-});
 
 export default GameBoardScreen;

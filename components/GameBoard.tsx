@@ -1,22 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import { useGameContext } from '../../context/GameContext';
-
-// Path colors - using colors from the logo
-const PATH_COLORS = {
-  bus: ['#87CEEB', '#7EC0E4', '#74B4DE', '#6AA7D7', '#5F9AD1'],  // Sky Blue shades (new)
-  carpool: ['#c3e6df', '#a6dbd1', '#8ad0c4', '#6ec4b6', '#52b9a9'], // Teal shades (moved from bus)
-  bicycle: ['#ff9248', '#ff9e5c', '#ffaa70', '#ffb684', '#ffc298']  // Orange shades (unchanged)
-};
-
-// Emoji constants
-const EMOJI = {
-  start: '🏠',         // Home for crossroads (changed from arrows)
-  bus: '🚌',           // Bus
-  carpool: '🚗',       // Car
-  bicycle: '🚲',       // Bicycle
-  finish: '🗳️',        // Ballot box
-};
+import { View, Text, Dimensions } from 'react-native';
+import { useGameContext } from '../context/GameContext';
+import { styles, PATH_COLORS, EMOJI } from '../styles/components/GameBoard.styles';
 
 const GameBoard = () => {
   const { transportMode, boardPosition, setPathLengths } = useGameContext();
@@ -407,68 +392,5 @@ const GameBoard = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  board: {
-    width: '100%',
-    height: '100%',
-    position: 'relative',
-    backgroundColor: '#f5f7fa', // Light background matching the logo's style
-  },
-  tile: {
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: 'rgba(255,255,255,0.5)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
-    elevation: 2,
-    zIndex: 2,
-  },
-  activeTile: {
-    borderWidth: 3,
-    borderColor: '#FFD700',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.4,
-    shadowRadius: 5,
-    elevation: 8,
-    zIndex: 10,
-  },
-  tileNumber: {
-    fontSize: 10,
-    color: 'rgba(0,0,0,0.5)',
-    position: 'absolute',
-    top: 2,
-    left: 2,
-  },
-  specialEmoji: {
-    fontSize: 20,
-    opacity: 0.8,
-    zIndex: 6,
-  },
-  // Separate container for player token
-  playerTokenContainer: {
-    position: 'absolute',
-    width: 32,
-    height: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  emojiText: {
-    fontSize: 28,
-    textShadowColor: 'rgba(0,0,0,0.5)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
-  },
-});
 
 export default GameBoard;

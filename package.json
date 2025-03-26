@@ -14,6 +14,7 @@
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-picker/picker": "2.9.0",
     "expo": "*",
+    "expo-dev-client": "^5.0.15",
     "expo-router": "^4.0.18",
     "expo-splash-screen": "^0.29.22",
     "firebase": "*",
