@@ -1,24 +1,58 @@
-// components/ui/Card.tsx
+// components/Card.tsx
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Linking, ScrollView, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Linking, ScrollView, ActivityIndicator } from 'react-native';
 import DiceRoller from './DiceRoller';
-import { saveNotebookEntry } from '../utilities/asyncStorage';
+import { saveNotebookEntry, getNotebookEntries } from '../utilities/asyncStorage';
 import { styles } from '../styles/components/Card.styles';
+import { COLORS } from '../styles/theme/colors';
 
 const Card = ({ card, onClose, onAction, devMode = false }) => {
   const [diceResult, setDiceResult] = useState(null);
   const [isRolling, setIsRolling] = useState(false);
-  
+  const [hasVisitedLink, setHasVisitedLink] = useState(false);
+  const [checkingNotebook, setCheckingNotebook] = useState(true);
+  const [notebookEntryId, setNotebookEntryId] = useState(null);
+  const [currentCardLinkClicked, setCurrentCardLinkClicked] = useState(false);
+
   // Check if this card needs a dice roll
   const needsDiceRoll = Object.keys(card.opt_actions).length > 1;
-  
-  // Set up dice roller for cards that need it
+
+  // Check if the URL is already in the notebook when component mounts
   useEffect(() => {
+    const checkNotebook = async () => {
+      setCheckingNotebook(true);
+
+      try {
+        // Get all notebook entries
+        const entries = await getNotebookEntries();
+
+        // Check if current URL is already in notebook
+        const urlExists = entries.some(entry => entry.url === card.url);
+        console.log(`Card URL ${card.url} exists in notebook: ${urlExists}`);
+
+        // If URL already exists, we don't need to visit it
+        setHasVisitedLink(urlExists);
+
+        // Create a unique ID for this card's potential notebook entry
+        const entryId = `${card.id}-${Date.now()}`;
+        setNotebookEntryId(entryId);
+      } catch (error) {
+        console.error("Error checking notebook:", error);
+        // In case of error, fallback to allowing continue
+        setHasVisitedLink(true);
+      } finally {
+        setCheckingNotebook(false);
+      }
+    };
+
+    checkNotebook();
+
+    // Set up dice roller for cards that need it
     if (needsDiceRoll) {
       setIsRolling(true);
     }
   }, []);
-  
+
   // Find which action applies based on dice roll
   const getActionForDiceRoll = (roll) => {
     console.log('Looking for action for roll:', roll);
@@ -33,51 +67,58 @@ const Card = ({ card, onClose, onAction, devMode = false }) => {
     // Default fallback if no matching dice value found
     return Object.values(card.opt_actions)[0];
   };
-  
+
   const handleLearnMore = async () => {
     if (card.url) {
-      // Silently save to notebook before opening the link
       try {
-        // Create a unique ID using the card ID and a timestamp
-        const entryId = `${card.id}-${Date.now()}`;
-        
-        // Save to notebook (no need to check if it was added)
-        await saveNotebookEntry({
-          id: entryId,
-          url: card.url,
-          description: card.description
-        });
-        
-        // Immediately open the URL without any notification
+        // Mark that the link has been clicked during this card visit
+        setCurrentCardLinkClicked(true);
+
+        // Create a notebook entry if it doesn't exist already
+        if (!hasVisitedLink && notebookEntryId) {
+          // Save to notebook, will be ignored if URL already exists
+          await saveNotebookEntry({
+            id: notebookEntryId,
+            url: card.url,
+            description: card.description,
+            category: card.category || "Uncategorized"
+          });
+
+          // Mark as visited - this enables the Continue button
+          setHasVisitedLink(true);
+        }
+
+        // Open the URL
         Linking.openURL(card.url);
       } catch (error) {
-        console.error("Error saving to notebook:", error);
-        // Still open the URL even if saving fails
+        console.error("Error in handleLearnMore:", error);
+        // In case of error, fallback to allowing continue
+        setHasVisitedLink(true);
         Linking.openURL(card.url);
       }
     }
   };
-  
+
   // This is called when the dice roll animation completes
   const handleRollComplete = (result) => {
     console.log('Card: handleRollComplete called with result:', result);
-    
+
     // Force this to be a number
     const numericResult = Number(result);
-    
+
     // Update state
     setDiceResult(numericResult);
-    
+
     console.log('Updated diceResult to:', numericResult);
   };
-  
+
   // Called when Continue button is pressed
   const handleContinue = () => {
     console.log('Card: handleContinue called');
     console.log('Current dice result:', diceResult);
-    
+
     let actionCode;
-    
+
     if (needsDiceRoll && diceResult) {
       // Get action based on dice roll
       const actionToTake = getActionForDiceRoll(diceResult);
@@ -91,14 +132,14 @@ const Card = ({ card, onClose, onAction, devMode = false }) => {
       console.log('No valid action found');
       return;
     }
-    
+
     // Actually apply the action
     if (actionCode) {
       console.log('Calling onAction with:', actionCode);
       onAction(actionCode);
     }
   };
-  
+
   // Get the action text to display
   const getActionText = () => {
     if (needsDiceRoll) {
@@ -116,55 +157,132 @@ const Card = ({ card, onClose, onAction, devMode = false }) => {
     }
   };
 
-  // Used to check if Continue should be enabled
-  const canContinue = !needsDiceRoll || (needsDiceRoll && diceResult !== null);
-  
+  // Used to check if Continue should be enabled - both needs dice roll if applicable AND visited link
+  const canContinue = (!needsDiceRoll || (needsDiceRoll && diceResult !== null)) &&
+    (hasVisitedLink || devMode);
+
+  // Button text changes based on whether link visit is required
+  const getContinueButtonText = () => {
+    if (!canContinue) {
+      if (needsDiceRoll && diceResult === null) {
+        return 'Waiting for dice roll...';
+      }
+      return 'Visit link to continue';
+    }
+    return 'Continue';
+  };
+
+  // Get Learn More button style based on various states
+  const getLearnMoreButtonStyle = () => {
+    if (devMode) {
+      // In dev mode, just use standard button
+      return styles.learnButton;
+    }
+
+    // If the link is NOT already in the notebook
+    if (!hasVisitedLink) {
+      // Not clicked yet in this session - dark periwinkle with emphasis
+      if (!currentCardLinkClicked) {
+        return [
+          styles.learnButton,
+          {
+            backgroundColor: COLORS.info, // Dark periwinkle color
+            shadowColor: COLORS.info,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.4,
+            shadowRadius: 4,
+            elevation: 5,
+          }
+        ];
+      }
+      // Clicked in this session - light periwinkle
+      else {
+        return [
+          styles.learnButton,
+          { backgroundColor: COLORS.secondary } // Light periwinkle
+        ];
+      }
+    }
+
+    // Link is ALREADY in notebook - always light periwinkle
+    return [
+      styles.learnButton,
+      { backgroundColor: COLORS.secondary } // Light periwinkle
+    ];
+  };
+
+  // Get Learn More button text with/without sparkles
+  const getLearnMoreButtonText = () => {
+    // Only show sparkles if link is not in notebook and hasn't been clicked yet
+    if (!devMode && !hasVisitedLink && !currentCardLinkClicked) {
+      return '✨ Learn More ✨';
+    }
+    return 'Learn More';
+  };
+
+  // Render loading indicator while checking notebook
+  if (checkingNotebook) {
+    return (
+      <View style={styles.cardContainer}>
+        <View style={[styles.card, { justifyContent: 'center', alignItems: 'center' }]}>
+          <ActivityIndicator size="large" color={COLORS.primary} />
+          <Text style={{ marginTop: 20 }}>Loading card...</Text>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.cardContainer}>
       <View style={styles.card}>
         {/* Fixed Header */}
         <View style={styles.cardHeader}>
-          <Text style={styles.cardTitle}>Political Scenario</Text>
+          <Text style={styles.cardTitle}>
+            {card.category || "Political Scenario"}
+          </Text>
         </View>
-        
+
         {/* Scrollable Content Area */}
         <ScrollView style={styles.scrollContent} contentContainerStyle={styles.contentContainer}>
           <Text style={styles.cardDescription}>{card.description}</Text>
-          
+
           {isRolling && needsDiceRoll && (
             <View style={styles.diceContainer}>
-              <DiceRoller 
+              <DiceRoller
                 onRollComplete={handleRollComplete}
                 compact={true}
                 hideTransportInfo={true}
               />
             </View>
           )}
-          
+
           {diceResult && (
             <View style={styles.actionContainer}>
               <Text style={styles.resultText}>You rolled a {diceResult}!</Text>
               <Text style={styles.actionText}>{getActionText()}</Text>
             </View>
           )}
-          
+
           {!needsDiceRoll && (
             <View style={styles.actionContainer}>
               <Text style={styles.actionText}>{getActionText()}</Text>
             </View>
           )}
         </ScrollView>
-        
+
         {/* Fixed Footer with Buttons */}
         <View style={styles.cardFooter}>
-          <TouchableOpacity 
-            style={styles.learnButton}
+          {/* Learn More button with dynamic styling */}
+          <TouchableOpacity
+            style={getLearnMoreButtonStyle()}
             onPress={handleLearnMore}
           >
-            <Text style={styles.learnButtonText}>Learn More</Text>
+            <Text style={styles.learnButtonText}>
+              {getLearnMoreButtonText()}
+            </Text>
           </TouchableOpacity>
-          
-          <TouchableOpacity 
+
+          <TouchableOpacity
             style={[
               styles.actionButton,
               !canContinue && styles.disabledButton
@@ -173,13 +291,13 @@ const Card = ({ card, onClose, onAction, devMode = false }) => {
             disabled={!canContinue}
           >
             <Text style={styles.buttonText}>
-              {canContinue ? 'Continue' : 'Waiting for dice roll...'}
+              {getContinueButtonText()}
             </Text>
           </TouchableOpacity>
-          
+
           {/* Only render Close button in dev mode */}
           {devMode && (
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.closeButton}
               onPress={onClose}
             >

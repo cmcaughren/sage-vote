@@ -79,7 +79,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#f8f9fa',
   },
   actionButton: {
-    backgroundColor: COLORS.secondary, // Orange
+    backgroundColor: COLORS.secondary,
     padding: 12,
     borderRadius: 5,
     alignItems: 'center',
@@ -91,7 +91,7 @@ export const styles = StyleSheet.create({
     opacity: 0.5,
   },
   learnButton: {
-    backgroundColor: COLORS.primary, // Teal color
+    backgroundColor: COLORS.accent2,
     padding: 12,
     borderRadius: 5,
     alignItems: 'center',
@@ -112,5 +112,39 @@ export const styles = StyleSheet.create({
     color: COLORS.white,
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  // Enhanced Learn Button for required links
+  requiredLearnButton: {
+    backgroundColor: COLORS.info,
+    padding: 12,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 10,
+    shadowColor: COLORS.info,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
+    elevation: 5,
+    // Subtle pulse animation could be added here with transform
+  },
+
+  // Styles for the progress indicator
+  visitLinkContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: -5,
+    marginBottom: 10,
+  },
+  visitLinkText: {
+    fontSize: 12,
+    color: COLORS.info,
+    textAlign: 'center',
+    fontWeight: '600',
+  },
+  visitLinkIcon: {
+    fontSize: 14,
+    color: COLORS.info,
+    marginRight: 5,
   },
 });

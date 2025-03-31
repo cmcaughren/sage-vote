@@ -86,7 +86,28 @@ export const styles = StyleSheet.create({
     color: COLORS.white,
     fontWeight: 'bold',
     fontSize: 16,
-  }
+  },
+  primaryActionButton: {
+    backgroundColor: COLORS.secondary, // Using the secondary color like the Notebook button
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 10, // More rounded corners like homepage buttons
+    minWidth: 200, // Ensure button has good width
+    maxWidth: 300, // But not too wide
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  primaryActionButtonText: {
+    color: COLORS.white,
+    fontSize: 18,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
 });
 
 export default styles;

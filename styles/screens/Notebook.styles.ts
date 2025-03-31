@@ -1,6 +1,7 @@
 // styles/screens/Notebook.styles.ts
 import { StyleSheet } from 'react-native';
 import { COLORS } from '../theme/colors';
+import { INTERNAL_CALLSITES_REGEX } from '@expo/metro-config';
 
 export const styles = StyleSheet.create({
   container: {
@@ -30,7 +31,7 @@ export const styles = StyleSheet.create({
     padding: 16,
   },
   entryCard: {
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.white, //"#fff2f1",
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
@@ -43,7 +44,7 @@ export const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 2,
     borderLeftWidth: 4,
-    borderLeftColor: COLORS.primary,
+    borderLeftColor: COLORS.tertiaryLight, // salmon border
   },
   entryHeader: {
     flexDirection: 'row',
@@ -52,9 +53,10 @@ export const styles = StyleSheet.create({
   },
   entryUrl: {
     fontSize: 14,
-    color: COLORS.primary,
+    color: COLORS.error, // dark coral
     flex: 1,
     marginRight: 8,
+    fontStyle: 'italic',
   },
   entryDate: {
     fontSize: 12,
@@ -77,10 +79,10 @@ export const styles = StyleSheet.create({
   },
   linkText: {
     fontSize: 14,
-    color: COLORS.primary,
+    color: COLORS.dark, // Deep Coral
   },
   arrowContainer: {
-    backgroundColor: COLORS.tertiaryLight,
+    backgroundColor: COLORS.info, // Dark periwinkle
     width: 24,
     height: 24,
     borderRadius: 12,
@@ -88,7 +90,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   arrowIcon: {
-    color: COLORS.primary,
+    color: COLORS.white,
     fontWeight: 'bold',
   },
   loadingContainer: {
@@ -132,6 +134,28 @@ export const styles = StyleSheet.create({
   },
   clearButtonText: {
     color: COLORS.white,
+    fontWeight: 'bold',
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: COLORS.accent2,//COLORS.info + '15',
+    padding: 12,
+    marginTop: 10,
+    marginBottom: 4,
+    borderRadius: 8,
+    borderLeftWidth: 4,
+    borderLeftColor: COLORS.info,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.dark,
+  },
+  sectionToggle: {
+    fontSize: 18,
+    color: COLORS.info, // Deep periwinkle for toggle arrow
     fontWeight: 'bold',
   },
 });

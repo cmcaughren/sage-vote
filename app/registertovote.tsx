@@ -1,5 +1,5 @@
-// app/registertovote.tsx
-import React, { useState } from "react";
+// Updated app/registertovote.tsx with link requirements
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,20 +8,33 @@ import {
   Platform,
   ActionSheetIOS,
   SafeAreaView,
+  ActivityIndicator,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useRouter } from "expo-router";
 import { styles } from "../styles/screens/RegisterToVote.styles";
 import { COLORS } from "../styles/theme/colors";
+import PROVINCE_ID_URLS, { VOTER_REGISTRATION_URL } from "../constants/provinceUrls";
+import {
+  checkRegistrationLinksInNotebook,
+  saveVoterRegistrationToNotebook,
+  saveIdApplicationToNotebook
+} from "../utilities/asyncStorage";
+import { useGameContext } from "../context/GameContext";
 
 export default function RegisterToVoteScreen() {
+  const { devMode } = useGameContext();
   const [selectedTab, setSelectedTab] = useState("identification");
   const [selectedProvince, setSelectedProvince] = useState("Select Province");
+  const [checkingNotebook, setCheckingNotebook] = useState(true);
 
-  //set to true for development, to bypass requirement of following linkds
-  const [idApplied, setIdApplied] = useState(true); // Track ID button click
-  const [voterRegistered, setVoterRegistered] = useState(true); // Track Voter Reg button click
-  const router = useRouter(); // Router for navigation
+  // Track if links have been visited
+  const [idApplied, setIdApplied] = useState(false);
+  const [voterRegistered, setVoterRegistered] = useState(false);
+  const [idClickedThisSession, setIdClickedThisSession] = useState(false);
+  const [voterClickedThisSession, setVoterClickedThisSession] = useState(false);
+
+  const router = useRouter();
 
   const provinces = [
     "Alberta",
@@ -39,6 +52,40 @@ export default function RegisterToVoteScreen() {
     "Yukon",
   ];
 
+  // Check if registration links already exist in notebook
+  useEffect(() => {
+    const checkLinks = async () => {
+      setCheckingNotebook(true);
+
+      try {
+        // Skip check in dev mode if desired
+        if (devMode) {
+          setIdApplied(true);
+          setVoterRegistered(true);
+          setCheckingNotebook(false);
+          return;
+        }
+
+        const { hasIdApplication, hasVoterRegistration } = await checkRegistrationLinksInNotebook();
+
+        // Set states based on notebook check
+        setIdApplied(hasIdApplication);
+        setVoterRegistered(hasVoterRegistration);
+
+        console.log("Registration links in notebook:", { hasIdApplication, hasVoterRegistration });
+      } catch (error) {
+        console.error("Error checking registration links:", error);
+        // Fallback to allowing continue in case of error
+        setIdApplied(true);
+        setVoterRegistered(true);
+      } finally {
+        setCheckingNotebook(false);
+      }
+    };
+
+    checkLinks();
+  }, [devMode]);
+
   const showActionSheet = () => {
     ActionSheetIOS.showActionSheetWithOptions(
       {
@@ -52,6 +99,103 @@ export default function RegisterToVoteScreen() {
       }
     );
   };
+
+  // Updated to save to notebook and mark as visited
+  const handleApplyForID = async () => {
+    // Get the correct URL based on selected province
+    const idUrl = PROVINCE_ID_URLS[selectedProvince] || PROVINCE_ID_URLS["Select Province"];
+
+    try {
+      // Save to notebook if not already there
+      if (!idApplied) {
+        await saveIdApplicationToNotebook(selectedProvince, idUrl);
+      }
+
+      // Mark as applied in this session
+      setIdApplied(true);
+      setIdClickedThisSession(true);
+
+      // Open the URL
+      Linking.openURL(idUrl);
+    } catch (error) {
+      console.error("Error in handleApplyForID:", error);
+      // Fallback to just opening the URL
+      Linking.openURL(idUrl);
+      // And mark as visited anyway
+      setIdApplied(true);
+    }
+  };
+
+  // Updated to save to notebook and mark as visited
+  const handleVoterRegistration = async () => {
+    try {
+      // Save to notebook if not already there
+      if (!voterRegistered) {
+        await saveVoterRegistrationToNotebook(VOTER_REGISTRATION_URL);
+      }
+
+      // Mark as registered in this session
+      setVoterRegistered(true);
+      setVoterClickedThisSession(true);
+
+      // Open the URL
+      Linking.openURL(VOTER_REGISTRATION_URL);
+    } catch (error) {
+      console.error("Error in handleVoterRegistration:", error);
+      // Fallback to just opening the URL
+      Linking.openURL(VOTER_REGISTRATION_URL);
+      // And mark as visited anyway
+      setVoterRegistered(true);
+    }
+  };
+
+  // Get button style based on visited state
+  const getButtonStyle = (isVisited, isClickedThisSession, defaultStyle) => {
+    if (!isVisited) {
+      // Not yet visited - highlight
+      return [
+        defaultStyle,
+        {
+          backgroundColor: COLORS.info, // Dark periwinkle
+          shadowColor: COLORS.info,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.4,
+          shadowRadius: 4,
+          elevation: 5,
+        }
+      ];
+    } else if (isClickedThisSession) {
+      // Visited in this session - light periwinkle
+      return [
+        defaultStyle,
+        { backgroundColor: COLORS.secondary } // Light periwinkle
+      ];
+    }
+
+    // Previously visited - standard style
+    return defaultStyle;
+  };
+
+  // Get button text based on visited state
+  const getButtonText = (isVisited, isClickedThisSession, defaultText) => {
+    if (!isVisited && !isClickedThisSession) {
+      return `✨ ${defaultText} ✨`;
+    }
+    return defaultText;
+  };
+
+  // User can continue if both links are visited or in dev mode
+  const canContinue = (idApplied && voterRegistered) || devMode;
+
+  // Show loading state while checking notebook
+  if (checkingNotebook) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+        <Text style={{ marginTop: 20 }}>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -119,7 +263,7 @@ export default function RegisterToVoteScreen() {
           <View style={styles.tabContent}>
             <Text style={styles.sectionTitle}>Get Government ID</Text>
             <Text style={styles.sectionDescription}>
-              To vote in a federal election, you'll need valid government-issued 
+              To vote in a federal election, you'll need valid government-issued
               identification. Choose your province to find out how to get ID.
             </Text>
 
@@ -147,15 +291,12 @@ export default function RegisterToVoteScreen() {
             )}
 
             <TouchableOpacity
-              style={styles.actionButton}
-              onPress={() => {
-                Linking.openURL(
-                  "https://www2.gov.bc.ca/gov/content/governments/government-id/bc-services-card/your-card/get-a-card"
-                );
-                setIdApplied(true);
-              }}
+              style={getButtonStyle(idApplied, idClickedThisSession, styles.actionButton)}
+              onPress={handleApplyForID}
             >
-              <Text style={styles.actionButtonText}>Apply for ID</Text>
+              <Text style={styles.actionButtonText}>
+                {getButtonText(idApplied, idClickedThisSession, "Apply for ID")}
+              </Text>
             </TouchableOpacity>
           </View>
         )}
@@ -170,13 +311,12 @@ export default function RegisterToVoteScreen() {
             </Text>
 
             <TouchableOpacity
-              style={styles.actionButton}
-              onPress={() => {
-                Linking.openURL("https://ereg.elections.ca/CWelcome.aspx?lang=e");
-                setVoterRegistered(true);
-              }}
+              style={getButtonStyle(voterRegistered, voterClickedThisSession, styles.actionButton)}
+              onPress={handleVoterRegistration}
             >
-              <Text style={styles.actionButtonText}>Go to Voter Registration</Text>
+              <Text style={styles.actionButtonText}>
+                {getButtonText(voterRegistered, voterClickedThisSession, "Go to Voter Registration")}
+              </Text>
             </TouchableOpacity>
           </View>
         )}
@@ -185,13 +325,13 @@ export default function RegisterToVoteScreen() {
         <TouchableOpacity
           style={[
             styles.continueButton,
-            !idApplied || !voterRegistered ? styles.disabledButton : null,
+            !canContinue && styles.disabledButton,
           ]}
-          disabled={!idApplied || !voterRegistered}
+          disabled={!canContinue}
           onPress={() => router.push("/crossroads")}
         >
           <Text style={styles.continueButtonText}>
-            Continue to Game
+            {!canContinue ? "Visit links to continue" : "Continue to Game"}
           </Text>
         </TouchableOpacity>
       </View>

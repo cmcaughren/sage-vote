@@ -1,10 +1,9 @@
 // app/crossroads.tsx
-import React, { useState } from "react";
-import { 
-  View, 
-  Text, 
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
   SafeAreaView,
-  Dimensions
 } from "react-native";
 import { useRouter } from "expo-router";
 import DiceRoller from "../components/DiceRoller";
@@ -13,11 +12,14 @@ import { styles } from "../styles/screens/Crossroads.styles";
 import { COLORS } from "../styles/theme/colors";
 
 export default function CrossroadsScreen() {
-  const { setTransportMode } = useGameContext();
+  const { setTransportMode, setBoardPosition, pathLengths } = useGameContext();
   const router = useRouter();
-  const [showOptions, setShowOptions] = useState(true);
-  const screenWidth = Dimensions.get('window').width;
-  const cardSize = Math.min((screenWidth - 60) / 3, 100); // Divide available space by 3 for square cards
+
+  // Reset player position whenever they're at the crossroads
+  useEffect(() => {
+    console.log('Crossroads: Resetting player position to 0');
+    setBoardPosition(0);
+  }, []);
 
   const handleRollComplete = (result) => {
     // Set transport mode based on dice result
@@ -29,72 +31,80 @@ export default function CrossroadsScreen() {
     } else {
       mode = "bicycle";
     }
-    
-    // Update context
+
+    console.log(`Crossroads: Rolled ${result}, setting transport mode to ${mode}`);
+
+    // Update context - set transport mode and ensure position is 0
     setTransportMode(mode);
-    
-    // Keep options visible and navigate after a short delay
-    setTimeout(() => {
-      router.push("/gameboard");
-    }, 800);
+    setBoardPosition(0); // Explicitly ensure position is reset to 0
+
+    // Navigate to game board
+    router.push("/gameboard");
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>
-          You've reached a crossroads!
-        </Text>
-        
-        <Text style={styles.subtitle}>
-          Roll the dice to determine which transportation method you'll use to get to the polling station.
-        </Text>
-        
-        {/* Information blurb */}
-        <View style={styles.infoContainer}>
-          <Text style={styles.infoText}>
-            Each transportation method has its own path to the polling station with unique challenges and opportunities to learn about Canadian politics!
+        {/* Top Section - Title & Subtitle */}
+        <View style={styles.headerSection}>
+          <Text style={styles.title}>
+            You've reached a crossroads!
           </Text>
+
+          <Text style={styles.subtitle}>
+            Roll the dice to determine which transportation method you'll use.
+          </Text>
+
+          {/* Information blurb */}
+          <View style={styles.infoContainer}>
+            <Text style={styles.infoText}>
+              Each transportation method has its own path to the polling station with unique challenges and opportunities to learn about Canadian politics!
+            </Text>
+          </View>
         </View>
-        
-        {/* Transport options now ABOVE the dice roller */}
-        {showOptions && (
-          <View style={styles.optionsContainer}>
-            {/* Bus Option */}
-            <View style={[styles.optionCard, { width: cardSize, height: cardSize }]}>
-              <View style={[styles.optionIcon, { backgroundColor: COLORS.tertiary }]}>
+
+        {/* Dice roller in the middle */}
+        <View style={styles.diceContainer}>
+          <DiceRoller onRollComplete={handleRollComplete} />
+        </View>
+
+        {/* Transport options with improved responsive layout */}
+        <View style={styles.optionsContainer}>
+          {/* Bus Option */}
+          <View style={styles.optionCard}>
+            <View style={styles.optionContent}>
+              <View style={[styles.optionIcon, { backgroundColor: COLORS.busPath.base }]}>
                 <Text style={styles.optionEmoji}>🚌</Text>
               </View>
               <Text style={styles.optionTitle}>Public Transit</Text>
               <Text style={styles.optionDescription}>Roll 1-3</Text>
-              <Text style={styles.optionSubtext}>20 spaces</Text>
+              <Text style={styles.optionSubtext}>{pathLengths.bus} spaces</Text>
             </View>
-            
-            {/* Carpool Option */}
-            <View style={[styles.optionCard, { width: cardSize, height: cardSize }]}>
-              <View style={[styles.optionIcon, { backgroundColor: COLORS.secondary }]}>
+          </View>
+
+          {/* Carpool Option */}
+          <View style={styles.optionCard}>
+            <View style={styles.optionContent}>
+              <View style={[styles.optionIcon, { backgroundColor: COLORS.carpoolPath.base }]}>
                 <Text style={styles.optionEmoji}>🚗</Text>
               </View>
               <Text style={styles.optionTitle}>Carpool</Text>
               <Text style={styles.optionDescription}>Roll 4-5</Text>
-              <Text style={styles.optionSubtext}>13 spaces</Text>
+              <Text style={styles.optionSubtext}>{pathLengths.carpool} spaces</Text>
             </View>
-            
-            {/* Bicycle Option */}
-            <View style={[styles.optionCard, { width: cardSize, height: cardSize }]}>
-              <View style={[styles.optionIcon, { backgroundColor: COLORS.primary }]}>
+          </View>
+
+          {/* Bicycle Option */}
+          <View style={styles.optionCard}>
+            <View style={styles.optionContent}>
+              <View style={[styles.optionIcon, { backgroundColor: COLORS.bicyclePath.base }]}>
                 <Text style={styles.optionEmoji}>🚲</Text>
               </View>
               <Text style={styles.optionTitle}>Bicycle</Text>
               <Text style={styles.optionDescription}>Roll 6</Text>
-              <Text style={styles.optionSubtext}>11 spaces</Text>
+              <Text style={styles.optionSubtext}>{pathLengths.bicycle} spaces</Text>
             </View>
           </View>
-        )}
-
-        {/* Dice roller now below the options */}
-        <View style={styles.diceContainer}>
-          <DiceRoller onRollComplete={handleRollComplete} />
         </View>
       </View>
     </SafeAreaView>

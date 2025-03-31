@@ -1,205 +1,251 @@
 // app/gameboard.tsx
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, SafeAreaView, Alert, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useGameContext } from '../context/GameContext';
 import GameBoard from '../components/GameBoard';
 import Card from '../components/Card';
 import NotebookIcon from '../components/NotebookIcon';
 import WinningPopup from '../components/WinningPopup';
-import { getCards } from '../firebase/firebaseService';
-import { getNotebookEntries } from '../utilities/asyncStorage';
+import { getNotebookEntries, saveGameProgress } from '../utilities/asyncStorage';
 import { styles } from '../styles/screens/GameBoard.styles';
+import { COLORS } from '../styles/theme/colors';
 
 const GameBoardScreen = () => {
-  const { 
-    transportMode, 
-    boardPosition, 
-    setBoardPosition, 
+  const {
+    transportMode,
+    boardPosition,
+    setBoardPosition,
     pathLengths,
-    drawnCards,
-    markCardAsDrawn,
-    resetDeck,
-    devMode
+    cardsLoading,
+    availableCards,
+    allCards,
+    drawRandomCard,
+    devMode,
+    drawnCards
   } = useGameContext();
-  
-  const [allCards, setAllCards] = useState([]); // All cards from Firebase
-  const [availableCards, setAvailableCards] = useState([]); // Cards not yet drawn
+
   const [currentCard, setCurrentCard] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isDrawing, setIsDrawing] = useState(false);
   const [notebookCount, setNotebookCount] = useState(0);
   const [showWinningPopup, setShowWinningPopup] = useState(false);
+  // Track first render to prevent showing crossroads alert on initial load
+  const isFirstRender = useRef(true);
+  // Track previous position to detect landing on crossroads
+  const prevPosition = useRef(0);
+  // Flag to prevent multiple alerts during navigation
+  const [isNavigatingToCrossroads, setIsNavigatingToCrossroads] = useState(false);
+
   const router = useRouter();
-  
-  // Fetch all cards when component mounts or transport mode changes
+
+  // Load notebook count when component mounts
   useEffect(() => {
-    const loadCards = async () => {
-      if (transportMode) {
-        // Load all cards for this transport mode
-        const fetchedCards = await getCards(transportMode);
-        setAllCards(fetchedCards);
-        
-        // Filter out cards that have already been drawn
-        const availableForDrawing = fetchedCards.filter(card => {
-          // Skip card if it's been drawn for its specific transport mode
-          if (card.transport_type !== 'any' && 
-              drawnCards[card.transport_type].includes(card.id)) {
-            return false;
-          }
-          
-          // Skip card if it's an 'any' card that's been drawn
-          if (card.transport_type === 'any' && 
-              drawnCards['any'].includes(card.id)) {
-            return false;
-          }
-          
-          return true;
-        });
-        
-        setAvailableCards(availableForDrawing);
+    loadNotebookCount();
+
+    // Reset navigation flag when component mounts
+    setIsNavigatingToCrossroads(false);
+  }, []);
+
+  // Save game progress whenever important state changes
+  useEffect(() => {
+    const saveProgress = async () => {
+      try {
+        const gameState = {
+          transportMode,
+          boardPosition,
+          drawnCards
+        };
+        await saveGameProgress(gameState);
+      } catch (error) {
+        console.error('Error saving game progress:', error);
       }
     };
-    
-    loadCards();
-    loadNotebookCount();
-  }, [transportMode, drawnCards]);
-  
+
+    saveProgress();
+  }, [transportMode, boardPosition, drawnCards]);
+
+  // Check for victory condition whenever board position changes
+  useEffect(() => {
+    if (transportMode && boardPosition === pathLengths[transportMode]) {
+      // Player has reached the finish - show winning popup
+      setShowWinningPopup(true);
+    }
+  }, [boardPosition, transportMode, pathLengths]);
+
+  // Function to handle crossroads reroll with delayed flag setting
+  const handleCrossroadsReroll = () => {
+    console.log('Player is at crossroads, triggering reroll');
+
+    // Navigate to crossroads screen
+    router.push('/crossroads');
+
+    // Set the flag AFTER navigation starts to prevent duplicate alerts
+    // This ensures the alert has already been shown once
+    setTimeout(() => {
+      setIsNavigatingToCrossroads(true);
+    }, 100);
+  };
+
+  // Add effect to detect when player lands on position 0 (crossroads)
+  useEffect(() => {
+    // Skip the first render
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      prevPosition.current = boardPosition;
+      return;
+    }
+
+    // Only show alert if:
+    // 1. Current position is 0 (at crossroads)
+    // 2. Previous position was not 0 (they just landed here)
+    // 3. They have a transportation mode (already started the game)
+    // 4. Not already navigating to crossroads
+    if (boardPosition === 0 &&
+      prevPosition.current !== 0 &&
+      transportMode &&
+      !isNavigatingToCrossroads) {
+
+      console.log('Player landed on crossroads from position', prevPosition.current);
+
+      // Show alert without a "No" option
+      Alert.alert(
+        'Crossroads',
+        'You\'ve reached the crossroads! Roll again for a new transportation mode!',
+        [
+          {
+            text: 'Roll Again',
+            onPress: handleCrossroadsReroll
+          }
+        ],
+        { cancelable: false } // Prevent dismissing by tapping outside
+      );
+    }
+
+    // Update previous position for next comparison
+    prevPosition.current = boardPosition;
+  }, [boardPosition, transportMode, isNavigatingToCrossroads]);
+
   // Load the number of notebook entries for the badge
   const loadNotebookCount = async () => {
     const entries = await getNotebookEntries();
     setNotebookCount(entries.length);
   };
-  
+
   // Handle opening the notebook
   const handleOpenNotebook = () => {
     router.push('/notebook');
   };
-  
-  // Function to draw a card without replacement
+
+  // Function to draw a card
   const drawCard = () => {
-    if (availableCards.length === 0) {
-      // Check if we've drawn all cards
-      if (allCards.length > 0 && availableCards.length === 0) {
-        Alert.alert(
-          "Deck Empty",
-          "You've seen all available cards! Would you like to reshuffle the deck?",
-          [
-            {
-              text: "No",
-              style: "cancel"
-            },
-            {
-              text: "Yes, Reshuffle",
-              onPress: () => resetDeck()
-            }
-          ]
-        );
-        return; // Will trigger useEffect to reload available cards
-      } else {
-        Alert.alert("No Cards", "No cards available for this transportation mode!");
+    // Check if cards are still loading
+    if (cardsLoading) {
+      Alert.alert("Please Wait", "Cards are still loading. Please try again in a moment.");
+      return;
+    }
+
+    // Prevent multiple draws
+    if (isDrawing) return;
+
+    setIsDrawing(true);
+
+    // Use a small timeout to show the drawing indicator
+    setTimeout(() => {
+      // Check if we have a valid transport mode
+      if (!transportMode) {
+        Alert.alert("Error", "No transportation mode selected!");
+        setIsDrawing(false);
         return;
       }
-    }
-    
-    setIsLoading(true);
-    
-    // Select a random card from available cards
-    const randomIndex = Math.floor(Math.random() * availableCards.length);
-    const selectedCard = availableCards[randomIndex];
-    
-    // Mark this card as drawn
-    markCardAsDrawn(selectedCard.transport_type, selectedCard.id);
-    
-    // Update current card
-    setTimeout(() => {
-      setCurrentCard(selectedCard);
-      setIsLoading(false);
+
+      // Draw a random card for this transport mode
+      const selectedCard = drawRandomCard(transportMode);
+
+      if (selectedCard) {
+        setCurrentCard(selectedCard);
+        setIsDrawing(false);
+      } else {
+        // This should rarely happen since drawRandomCard now handles reshuffling
+        console.error("Failed to draw a card even after reset attempt");
+        Alert.alert("Error", "Something went wrong. Please try again later.");
+        setIsDrawing(false);
+      }
     }, 500);
   };
-  
+
   // Handle card action
   const handleCardAction = (action) => {
     if (action === "crossroads") {
-      // Return to crossroads
+      // Return to crossroads (position 0)
       setBoardPosition(0);
-      router.push('/crossroads');
+      // Let the position effect handle showing the alert
     } else if (action === "nothing") {
       // Do nothing, just close the card
       setCurrentCard(null);
     } else {
       // Convert action to number if it's a number string
       const moveSteps = parseInt(action);
-      
+
       if (!isNaN(moveSteps)) {
         // Calculate new position
         const newPosition = boardPosition + moveSteps;
-        
+        const maxPosition = pathLengths[transportMode];
+
         // Ensure new position is within bounds
         if (newPosition < 0) {
+          // For negative movement, set position to 0
+          // This will trigger the useEffect that shows the alert once
           setBoardPosition(0);
-        } else if (newPosition > pathLengths[transportMode]) {
-          // Reached the end
-          setBoardPosition(pathLengths[transportMode]);
-          
-          // Show winning popup (which contains the confetti)
+        } else if (newPosition >= maxPosition) {
+          // Reached or exceeded the end
+          setBoardPosition(maxPosition);
+          // Show winning popup
           setShowWinningPopup(true);
         } else {
           setBoardPosition(newPosition);
         }
       }
-      
+
       setCurrentCard(null);
     }
-    
+
     // Refresh notebook count after card is closed
     loadNotebookCount();
   };
 
-  // Test function to move player forward
+  // Test function to move player forward (dev mode)
   const movePlayerForward = () => {
     // Get maximum position from context
     const maxPosition = transportMode ? pathLengths[transportMode] : 0;
-    
-    if (boardPosition < (maxPosition - 1)) {
+
+    if (boardPosition < maxPosition) {
       setBoardPosition(boardPosition + 1);
-    }
-    else if (boardPosition < maxPosition){
-      setBoardPosition(boardPosition + 1);
-      // Show winning popup (which contains the confetti)
-      setShowWinningPopup(true);
+
+      // Check if we've reached the finish
+      if (boardPosition + 1 >= maxPosition) {
+        // Show winning popup (which contains the confetti)
+        setShowWinningPopup(true);
+      }
     }
     else {
       // Already at finish - show winning popup
       setShowWinningPopup(true);
     }
   };
-  
-  // Test function to move player backward
+
+  // Test function to move player backward (dev mode)
   const movePlayerBackward = () => {
     if (boardPosition > 0) {
       setBoardPosition(boardPosition - 1);
     } else {
-      // Player is already at start - offer to reroll
-      Alert.alert(
-        'Crossroads', 
-        'You\'re back at the crossroads! Would you like to reroll for a new transport mode?',
-        [
-          {
-            text: 'No',
-            style: 'cancel'
-          },
-          {
-            text: 'Yes, Reroll',
-            onPress: () => router.push('/crossroads')
-          }
-        ]
-      );
+      // Let normal alert system handle this
+      setBoardPosition(0);
     }
   };
 
   // Display active transport type and position
   const getTransportLabel = () => {
-    switch(transportMode) {
+    switch (transportMode) {
       case 'bus': return 'Public Transit 🚌';
       case 'carpool': return 'Car Pool 🚗';
       case 'bicycle': return 'Bicycle 🚲';
@@ -207,80 +253,142 @@ const GameBoardScreen = () => {
     }
   };
 
+  // Get available card count for the current transport mode
+  const getAvailableCardCount = () => {
+    if (!transportMode) return 0;
+
+    const specificCards = availableCards[transportMode]?.length || 0;
+    const anyCards = availableCards['any']?.length || 0;
+    return specificCards + anyCards;
+  };
+
+  // Get total card count for the current transport mode
+  const getTotalCardCount = () => {
+    if (!transportMode) return 0;
+
+    const specificCards = allCards[transportMode]?.length || 0;
+    const anyCards = allCards['any']?.length || 0;
+    return specificCards + anyCards;
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Journey to the Polling Station</Text>
+
+        {/* Transport mode is always shown in both dev and production mode */}
         <Text style={styles.subtitle}>
-          {getTransportLabel()} | Position: {boardPosition}
+          {getTransportLabel()}
+          {/* Only show position in dev mode */}
+          {devMode && ` | Position: ${boardPosition}`}
         </Text>
-        <Text style={styles.cardInfo}>
-          Cards: {availableCards.length} available / {allCards.length} total
-        </Text>
+
+        {/* Only show card information in dev mode */}
+        {devMode && (
+          cardsLoading ? (
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+              <ActivityIndicator size="small" color={COLORS.secondary} />
+              <Text style={[styles.cardInfo, { marginLeft: 8 }]}>
+                Loading cards...
+              </Text>
+            </View>
+          ) : (
+            <Text style={styles.cardInfo}>
+              Cards: {getAvailableCardCount()} available / {getTotalCardCount()} total
+            </Text>
+          )
+        )}
       </View>
-      
+
       {/* Notebook Icon in top-right corner */}
       <View style={styles.notebookIconContainer}>
         <NotebookIcon onPress={handleOpenNotebook} count={notebookCount} />
       </View>
-      
+
       <View style={styles.boardContainer}>
         <GameBoard />
       </View>
-      
-      <View style={styles.controlsContainer}>
-        {devMode && (
-          <TouchableOpacity 
-            style={[styles.button, styles.backButton]} 
+
+      {/* Conditional rendering of controls based on dev mode */}
+      {!devMode ? (
+        // Production mode: centered, consistent button
+        <View style={{
+          width: '100%',
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingHorizontal: 20,
+          paddingVertical: 15,
+        }}>
+          <TouchableOpacity
+            style={[
+              styles.primaryActionButton, // New style from GameBoard.styles.ts
+              (cardsLoading || isDrawing) && { opacity: 0.7 }
+            ]}
+            onPress={drawCard}
+            disabled={cardsLoading || isDrawing}
+          >
+            <Text style={styles.primaryActionButtonText}>
+              {isDrawing ? "Drawing..." : cardsLoading ? "Loading Cards..." : "Draw Card"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        // Dev mode: original controls layout
+        <View style={styles.controlsContainer}>
+          <TouchableOpacity
+            style={[styles.button, styles.backButton]}
             onPress={movePlayerBackward}
           >
             <Text style={styles.buttonText}>Move Back</Text>
           </TouchableOpacity>
-        )}
-        
-        <TouchableOpacity 
-          style={[styles.button, styles.cardButton]} 
-          onPress={drawCard}
-          disabled={isLoading}
-        >
-          <Text style={styles.buttonText}>
-            {isLoading ? "Drawing..." : "Draw Card"}
-          </Text>
-        </TouchableOpacity>
-        
-        {devMode && (
-          <TouchableOpacity 
-            style={[styles.button, styles.forwardButton]} 
+
+          <TouchableOpacity
+            style={[
+              styles.button,
+              styles.cardButton,
+              (cardsLoading || isDrawing) && { opacity: 0.7 }
+            ]}
+            onPress={drawCard}
+            disabled={cardsLoading || isDrawing}
+          >
+            <Text style={styles.buttonText}>
+              {isDrawing ? "Drawing..." : cardsLoading ? "Loading Cards..." : "Draw Card"}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.button, styles.forwardButton]}
             onPress={movePlayerForward}
           >
             <Text style={styles.buttonText}>Move Forward</Text>
           </TouchableOpacity>
-        )}
-      </View>
-      
+        </View>
+      )}
+
       {devMode && (
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.homeButton}
           onPress={() => router.push('/')}
         >
           <Text style={styles.buttonText}>Home</Text>
         </TouchableOpacity>
       )}
-      
+
       {/* Card modal */}
       {currentCard && (
-        <Card 
-          card={currentCard} 
+        <Card
+          card={currentCard}
           onClose={() => setCurrentCard(null)}
           onAction={handleCardAction}
           devMode={devMode}
         />
       )}
-      
+
       {/* Winning popup with integrated confetti */}
-      <WinningPopup 
-        visible={showWinningPopup} 
+      <WinningPopup
+        visible={showWinningPopup}
         onRequestClose={() => setShowWinningPopup(false)}
+        devMode={devMode}
       />
     </SafeAreaView>
   );

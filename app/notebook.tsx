@@ -1,14 +1,15 @@
 // app/notebook.tsx
 import React, { useState, useEffect } from 'react';
-import { 
-  View, 
-  Text, 
-  FlatList, 
-  TouchableOpacity, 
-  Linking, 
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Linking,
   SafeAreaView,
   ActivityIndicator,
-  Alert 
+  Alert,
+  SectionList
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { getNotebookEntries, clearNotebook } from '../utilities/asyncStorage';
@@ -22,10 +23,19 @@ interface NotebookEntry {
   url: string;
   description: string;
   timestamp: string;
+  category: string; // Added category
+}
+
+// Interface for section data
+interface SectionData {
+  title: string;
+  data: NotebookEntry[];
+  expanded: boolean;
 }
 
 export default function NotebookScreen() {
   const [entries, setEntries] = useState<NotebookEntry[]>([]);
+  const [sections, setSections] = useState<SectionData[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const { devMode } = useGameContext();
@@ -34,17 +44,39 @@ export default function NotebookScreen() {
     loadEntries();
   }, []);
 
-  // Load entries from AsyncStorage
+  // Load entries from AsyncStorage and organize into sections
   const loadEntries = async () => {
     setLoading(true);
     const notebookEntries = await getNotebookEntries();
-    
+
     // Sort by most recent first
-    const sortedEntries = notebookEntries.sort((a, b) => 
+    const sortedEntries = notebookEntries.sort((a, b) =>
       new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
-    
+
     setEntries(sortedEntries);
+
+    // Group entries by category
+    const entriesByCategory: { [key: string]: NotebookEntry[] } = {};
+
+    sortedEntries.forEach(entry => {
+      const category = entry.category || 'Uncategorized';
+      if (!entriesByCategory[category]) {
+        entriesByCategory[category] = [];
+      }
+      entriesByCategory[category].push(entry);
+    });
+
+    // Create sections for each category
+    const sectionData: SectionData[] = Object.keys(entriesByCategory)
+      .sort()
+      .map(category => ({
+        title: category,
+        data: entriesByCategory[category],
+        expanded: true // Start expanded
+      }));
+
+    setSections(sectionData);
     setLoading(false);
   };
 
@@ -58,11 +90,22 @@ export default function NotebookScreen() {
   // Format the timestamp
   const formatDate = (timestamp: string) => {
     const date = new Date(timestamp);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
     });
+  };
+
+  // Toggle section expansion
+  const toggleSection = (sectionTitle: string) => {
+    setSections(currentSections =>
+      currentSections.map(section =>
+        section.title === sectionTitle
+          ? { ...section, expanded: !section.expanded }
+          : section
+      )
+    );
   };
 
   // Handle clearing the notebook (dev feature)
@@ -72,12 +115,13 @@ export default function NotebookScreen() {
       'Are you sure you want to clear all notebook entries?',
       [
         { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Clear All', 
+        {
+          text: 'Clear All',
           style: 'destructive',
           onPress: async () => {
             await clearNotebook();
             setEntries([]);
+            setSections([]);
           }
         }
       ]
@@ -86,7 +130,7 @@ export default function NotebookScreen() {
 
   // Render each notebook entry
   const renderItem = ({ item }: { item: NotebookEntry }) => (
-    <TouchableOpacity 
+    <TouchableOpacity
       style={styles.entryCard}
       onPress={() => handleOpenLink(item.url)}
       activeOpacity={0.7}
@@ -101,7 +145,7 @@ export default function NotebookScreen() {
         {item.description}
       </Text>
       <View style={styles.linkContainer}>
-        <Text style={styles.linkText}>Learn more about Canadian politics</Text>
+        <Text style={styles.linkText}>Visit to learn more</Text>
         <View style={styles.arrowContainer}>
           <Text style={styles.arrowIcon}>→</Text>
         </View>
@@ -109,11 +153,24 @@ export default function NotebookScreen() {
     </TouchableOpacity>
   );
 
+  // Render a section header
+  const renderSectionHeader = ({ section }: { section: SectionData }) => (
+    <TouchableOpacity
+      style={styles.sectionHeader}
+      onPress={() => toggleSection(section.title)}
+    >
+      <Text style={styles.sectionTitle}>{section.title}</Text>
+      <Text style={styles.sectionToggle}>
+        {section.expanded ? '▼' : '►'}
+      </Text>
+    </TouchableOpacity>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Your Political Notebook</Text>
-        <TouchableOpacity 
+        <Text style={styles.title}>Notebook</Text>
+        <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.back()}
         >
@@ -135,17 +192,21 @@ export default function NotebookScreen() {
           </Text>
         </View>
       ) : (
-        <FlatList
-          data={entries}
-          renderItem={renderItem}
+        <SectionList
+          sections={sections}
+          renderItem={({ item, section }) =>
+            section.expanded ? renderItem({ item }) : null
+          }
+          renderSectionHeader={renderSectionHeader}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContainer}
           showsVerticalScrollIndicator={false}
+          stickySectionHeadersEnabled={true}
         />
       )}
 
       {devMode && (
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.clearButton}
           onPress={handleClearNotebook}
         >

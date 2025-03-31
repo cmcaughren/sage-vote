@@ -56,7 +56,7 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
   notebookButton: {
-    backgroundColor: COLORS.tertiary,
+    backgroundColor: COLORS.secondary,
     marginBottom: 15,
   },
   secondaryButton: {

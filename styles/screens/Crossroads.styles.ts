@@ -1,6 +1,22 @@
 // styles/screens/Crossroads.styles.ts
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions, Platform } from 'react-native';
 import { COLORS } from '../theme/colors';
+
+// Get screen dimensions
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+
+// Calculate responsive units
+const vw = screenWidth / 100; // 1% of viewport width
+const vh = screenHeight / 100; // 1% of viewport height
+
+// Spacing constants
+const SPACING = {
+  xs: 4,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 24
+};
 
 export const styles = StyleSheet.create({
   container: {
@@ -10,87 +26,113 @@ export const styles = StyleSheet.create({
   content: {
     flex: 1,
     alignItems: 'center',
-    padding: 20,
+    justifyContent: 'space-between',
+    padding: 5 * vw, // 5% of screen width
+    paddingTop: Platform.OS === 'ios' ? 2 * vh : 4 * vh, // Adjusted for platform
+    paddingBottom: 5 * vh, // 5% of screen height
+  },
+  headerSection: {
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: 90 * vw, // 90% of viewport width
   },
   title: {
-    fontSize: 24,
+    fontSize: Math.min(24, 6 * vw), // Responsive font size
     fontWeight: 'bold',
     color: COLORS.dark,
     textAlign: 'center',
-    marginBottom: 12,
-    marginTop: 20,
+    marginBottom: SPACING.sm,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: Math.min(16, 4 * vw), // Responsive font size
     color: COLORS.dark + 'CC',
     textAlign: 'center',
-    marginBottom: 15,
-    maxWidth: 400,
+    maxWidth: 90 * vw,
+    marginBottom: SPACING.lg,
   },
   infoContainer: {
-    backgroundColor: COLORS.primary + '20', // Light sage background
+    backgroundColor: COLORS.primary + '20',
     borderRadius: 10,
-    padding: 12,
-    marginBottom: 20,
-    maxWidth: 400,
+    padding: SPACING.md,
+    width: '100%',
+    maxWidth: 90 * vw,
+    marginTop: SPACING.md,
+    marginBottom: SPACING.lg,
+    borderWidth: 1,
+    borderColor: COLORS.primary + '30',
   },
   infoText: {
-    fontSize: 14,
+    fontSize: Math.min(14, 3.5 * vw),
     color: COLORS.dark,
     textAlign: 'center',
-    lineHeight: 20,
+    lineHeight: Math.min(20, 5 * vw),
   },
   diceContainer: {
-    marginBottom: 15,
+    width: '100%',
+    height: 45 * vh, // 45% of viewport height
+    marginTop: -5 * vh,
+    marginBottom: -5 * vh,
   },
+  // Responsive option container
   optionsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     width: '100%',
-    maxWidth: 350,
-    marginTop: 5,
+    maxWidth: 90 * vw,
+    paddingHorizontal: SPACING.sm,
   },
   optionCard: {
+    flex: 1, // Take equal space
+    aspectRatio: 0.9, // Slightly taller than wide
     backgroundColor: COLORS.white,
     borderRadius: 10,
-    padding: 8,
-    alignItems: 'center',
+    margin: SPACING.xs, // Space between cards
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
+    overflow: 'hidden', // Ensure content doesn't overflow
+    padding: SPACING.sm, // Consistent padding
+  },
+  // Content container inside card
+  optionContent: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between', // Space items evenly
+    paddingVertical: SPACING.sm, // Top/bottom padding
   },
   optionIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: Math.min(40, 10 * vw),
+    height: Math.min(40, 10 * vw),
+    borderRadius: Math.min(20, 5 * vw),
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 8,
+    marginBottom: SPACING.sm,
   },
   optionEmoji: {
-    fontSize: 20,
+    fontSize: Math.min(22, 5.5 * vw),
   },
   optionTitle: {
-    fontSize: 12,
+    fontSize: Math.min(13, 3.3 * vw),
     fontWeight: '600',
     color: COLORS.dark,
-    marginBottom: 2,
+    marginBottom: SPACING.xs,
     textAlign: 'center',
   },
   optionDescription: {
-    fontSize: 11,
+    fontSize: Math.min(12, 3 * vw),
     color: COLORS.dark + 'CC',
     fontWeight: '500',
     textAlign: 'center',
+    marginBottom: SPACING.xs,
   },
   optionSubtext: {
-    fontSize: 10,
+    fontSize: Math.min(11, 2.8 * vw),
     color: COLORS.dark + '80',
-    marginTop: 2,
     textAlign: 'center',
-  }
+    marginBottom: SPACING.sm,
+  },
 });
 
 export default styles;
