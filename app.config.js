@@ -14,18 +14,22 @@ module.exports = {
       backgroundColor: "#F5F9F2"
     },
     ios: {
-      buildNumber: "1",
       supportsTablet: false,
       googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
       bundleIdentifier: "com.carolyn.sagevote.app",
-      useFrameworks: "static",
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false
       }
     },
     plugins: [
       "expo-router",
-      "expo-splash-screen"
+      "expo-splash-screen",
+      "expo-build-properties",
+      {
+        ios: {
+          useFrameworks: "static"
+        }
+      }
     ],
     experiments: {
       typedRoutes: true
