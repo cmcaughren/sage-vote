@@ -24,12 +24,13 @@ module.exports = {
     plugins: [
       "expo-router",
       "expo-splash-screen",
-      "expo-build-properties",
-      {
-        "ios": {
-          "useFrameworks": "static"
+      ["expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
         }
-      }
+      ]
     ],
     experiments: {
       typedRoutes: true
