@@ -26,8 +26,8 @@ module.exports = {
       "expo-splash-screen",
       "expo-build-properties",
       {
-        ios: {
-          useFrameworks: "static"
+        "ios": {
+          "useFrameworks": "static"
         }
       }
     ],
