@@ -1,22 +1,26 @@
-// firebase/firebaseConfig.js
 import Constants from 'expo-constants';
 
 // Determine if we're running in Expo Go or a native build
-const isExpoGo = Constants.executionEnvironment === 'expo';
+const isExpoGo = Constants.appOwnership === 'expo';
 console.log(`Running in ${isExpoGo ? 'Expo Go' : 'Native'} environment`);
 
-let db = null;
-let webFirebase = null;
-let nativeFirebase = null;
+// Import both SDK types at the top level
+// For web SDK (Expo Go)
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore';
 
-// Async initialization to handle dynamic imports
+// For native SDK (production)
+import firebaseNative from '@react-native-firebase/app';
+import firestoreNative from '@react-native-firebase/firestore';
+
+let db = null;
+
+// Initializes the appropriate Firebase SDK
 const initializeFirebase = async () => {
   try {
     if (isExpoGo) {
       // Web Firebase SDK for Expo Go
       console.log("Initializing Web Firebase SDK for Expo Go");
-      import { initializeApp } from "firebase/app";
-      import { getFirestore } from "firebase/firestore";
 
       const firebaseConfig = {
         apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -26,19 +30,19 @@ const initializeFirebase = async () => {
         messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
         appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
       };
-      webFirebase = initializeApp(firebaseConfig);
-      db = getFirestore(app);
+
+      const webApp = initializeApp(firebaseConfig);
+      db = getFirestore(webApp);
       console.log("Web Firebase initialized successfully");
     } else {
       // React Native Firebase for production builds
       console.log("Initializing React Native Firebase for production build");
-      nativeFirebase = await import('@react-native-firebase/app');
-      const firestore = await import('@react-native-firebase/firestore');
 
       // Native Firebase initializes automatically from GoogleService-Info.plist
-      db = firestore.default();
+      db = firestoreNative.default();
       console.log("React Native Firebase initialized successfully");
     }
+
     return true;
   } catch (error) {
     console.error("Error initializing Firebase:", error);
@@ -53,3 +57,4 @@ initializeFirebase().catch(err => {
 
 // Export both the db and initialization function
 export { db, initializeFirebase, isExpoGo };
+
