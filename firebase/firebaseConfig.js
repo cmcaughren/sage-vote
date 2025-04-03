@@ -1,7 +1,8 @@
+// firebase/firebaseConfig.js
 import Constants from 'expo-constants';
 
 // Determine if we're running in Expo Go or a native build
-const isExpoGo = Constants.appOwnership === 'expo';
+const isExpoGo = Constants.executionEnvironment === 'expo';
 console.log(`Running in ${isExpoGo ? 'Expo Go' : 'Native'} environment`);
 
 // Import both SDK types at the top level
@@ -21,7 +22,6 @@ const initializeFirebase = async () => {
     if (isExpoGo) {
       // Web Firebase SDK for Expo Go
       console.log("Initializing Web Firebase SDK for Expo Go");
-
       const firebaseConfig = {
         apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
         authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -31,6 +31,7 @@ const initializeFirebase = async () => {
         appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
       };
 
+
       const webApp = initializeApp(firebaseConfig);
       db = getFirestore(webApp);
       console.log("Web Firebase initialized successfully");
@@ -38,9 +39,22 @@ const initializeFirebase = async () => {
       // React Native Firebase for production builds
       console.log("Initializing React Native Firebase for production build");
 
-      // Native Firebase initializes automatically from GoogleService-Info.plist
-      db = firestoreNative.default();
-      console.log("React Native Firebase initialized successfully");
+      // Make sure Firebase is initialized
+      if (!firebaseNative.apps.length) {
+        console.log("Initializing native Firebase app");
+        // Firebase will auto-initialize from GoogleService-Info.plist
+        firebaseNative.initializeApp({});
+      }
+
+      // Get the Firestore instance using the correct syntax
+      db = firestoreNative();
+
+      // Verify that the db instance is valid
+      if (db && typeof db.collection === 'function') {
+        console.log("React Native Firebase Firestore initialized successfully");
+      } else {
+        console.error("Failed to initialize Firestore properly");
+      }
     }
 
     return true;
@@ -57,4 +71,3 @@ initializeFirebase().catch(err => {
 
 // Export both the db and initialization function
 export { db, initializeFirebase, isExpoGo };
-
