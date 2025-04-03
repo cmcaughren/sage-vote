@@ -1,44 +1,79 @@
-import { db } from "./firebaseConfig";
-import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
+// firebase/firebaseService.js - SIMPLIFIED VERSION
+import { db, isExpoGo, initializeFirebase } from './firebaseConfig';
 
-// Function to add a sample card to Firestore
-export async function addCard(card) {
+/**
+ * Fetches cards of a specific transport type from Firestore
+ * @param {string} transportType - The transport type to fetch ('any', 'bus', 'carpool', 'bicycle')
+ * @returns {Array} Array of card objects
+ */
+export async function getCards(transportType) {
   try {
-    const docRef = await addDoc(collection(db, "cards"), card);
-    console.log("Card added with ID:", docRef.id);
-    return docRef.id;
-  } catch (error) {
-    console.error("Error adding card:", error);
-  }
-}
+    console.log(`Fetching cards for transport type: ${transportType}`);
 
-// Function to get all cards or filtered by transport type
-export async function getCards(transportType = null) {
-  try {
-    let cardsQuery;
-    
-    if (transportType) {
-      // Get cards specific to this transport type or "any"
-      cardsQuery = query(
-        collection(db, "cards"), 
-        where("transport_type", "in", [transportType, "any"])
-      );
-    } else {
-      // Get all cards
-      cardsQuery = collection(db, "cards");
+    // Ensure Firebase is initialized
+    if (!db) {
+      await initializeFirebase();
     }
-    
-    const querySnapshot = await getDocs(cardsQuery);
-    const cards = [];
-    
-    querySnapshot.forEach((doc) => {
-      cards.push({ id: doc.id, ...doc.data() });
-    });
-    
-    return cards;
+
+    // Use the appropriate SDK based on environment
+    if (isExpoGo) {
+      // Web Firebase SDK (for Expo Go)
+      const { collection, query, where, getDocs } = await import('firebase/firestore');
+
+      const cardsCollection = collection(db, 'cards');
+      const q = query(cardsCollection, where('transport_type', '==', transportType));
+      const querySnapshot = await getDocs(q);
+
+      const result = [];
+      querySnapshot.forEach((doc) => {
+        result.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+
+      return result;
+    } else {
+      // React Native Firebase SDK (for production)
+      const querySnapshot = await db.collection('cards')
+        .where('transport_type', '==', transportType)
+        .get();
+
+      return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+    }
   } catch (error) {
-    console.error("Error fetching cards:", error);
-    return [];
+    console.error(`Error fetching cards: ${error.message}`);
+    return []; // Return empty array on error
   }
 }
 
+/**
+ * Adds a new card to Firestore
+ * @param {Object} cardData - The card data to add
+ * @returns {string} The ID of the newly created card
+ */
+export async function addCard(cardData) {
+  try {
+    // Ensure Firebase is initialized
+    if (!db) {
+      await initializeFirebase();
+    }
+
+    if (isExpoGo) {
+      // Web Firebase SDK (for Expo Go)
+      const { collection, addDoc } = await import('firebase/firestore');
+      const docRef = await addDoc(collection(db, 'cards'), cardData);
+      return docRef.id;
+    } else {
+      // React Native Firebase SDK (for production)
+      const docRef = await db.collection('cards').add(cardData);
+      return docRef.id;
+    }
+  } catch (error) {
+    console.error('Error adding card:', error);
+    throw error;
+  }
+}
