@@ -10,8 +10,7 @@ import WinningPopup from '../components/WinningPopup';
 import { getNotebookEntries, saveGameProgress } from '../utilities/asyncStorage';
 import { styles } from '../styles/screens/GameBoard.styles';
 import { COLORS } from '../styles/theme/colors';
-import { collection, query, where, getDocs } from 'firebase/firestore';
-import { db } from '../firebase/firebaseConfig';
+import { getCards, testFirebaseConnection } from '../firebase/firebaseService';
 
 // Fallback emergency card as a last resort
 const FALLBACK_CARD = {
@@ -156,7 +155,22 @@ const GameBoardScreen = () => {
     router.push('/notebook');
   };
 
-  // Function to load cards directly from Firestore, bypassing context
+  // Function to test Firebase connection
+  const testFirebase = async () => {
+    try {
+      const result = await testFirebaseConnection();
+      Alert.alert(
+        result.success ? "Connection Success" : "Connection Failed",
+        result.success
+          ? `Successfully connected to Firebase! Found ${result.count} cards.`
+          : `Error: ${result.error}`
+      );
+    } catch (error) {
+      Alert.alert("Test Failed", `Error: ${error.message}`);
+    }
+  };
+
+  // Function to load cards directly from Firestore
   const loadCardsDirectly = async () => {
     if (isDirectlyLoading) return false;
 
@@ -164,52 +178,36 @@ const GameBoardScreen = () => {
     setDirectLoadError(null);
 
     try {
-      console.log("GameBoard directly loading cards from Firestore...");
+      console.log("Directly loading cards from Firestore...");
 
-      // First try to get any transport type cards
-      const cardCollection = collection(db, 'cards');
-      const anyQuery = query(cardCollection, where('transport_type', '==', 'any'));
-      const anySnapshot = await getDocs(anyQuery);
-
-      // Then get transport-specific cards if we have a transport mode
-      let specificSnapshot = null;
-      if (transportMode) {
-        const specificQuery = query(cardCollection, where('transport_type', '==', transportMode));
-        specificSnapshot = await getDocs(specificQuery);
+      // First test the connection
+      const test = await testFirebaseConnection();
+      if (!test.success) {
+        throw new Error(`Firebase connection test failed: ${test.error}`);
       }
 
-      // Process results
-      const anyCards = anySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      // If connection works, get the cards
+      const anyCards = await getCards('any');
+      let specificCards = [];
 
-      const specificCards = specificSnapshot ? specificSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) : [];
+      if (transportMode) {
+        specificCards = await getCards(transportMode);
+      }
 
-      // Create a structured object like the context version
       const loadedCards = {
-        any: anyCards,
+        any: anyCards
       };
 
-      // Only add transport-specific cards if we have a transport mode
       if (transportMode) {
         loadedCards[transportMode] = specificCards;
       }
 
-      // Store directly loaded cards
       setDirectlyLoadedCards(loadedCards);
-
-      console.log(`Directly loaded ${anyCards.length} 'any' cards`);
-      if (transportMode) {
-        console.log(`Directly loaded ${specificCards.length} '${transportMode}' cards`);
-      }
+      console.log(`Directly loaded ${anyCards.length} 'any' cards and ${specificCards.length} specific cards`);
 
       return true;
     } catch (error) {
-      console.error("Error directly loading cards:", error);
+      console.error("Error loading cards:", error);
       setDirectLoadError(error.message);
       return false;
     } finally {
@@ -234,7 +232,7 @@ const GameBoardScreen = () => {
     return combinedDeck[randomIndex];
   };
 
-  // Modified drawCard function with fallbacks
+  // Draw card function
   const drawCard = () => {
     // Check if cards are still loading
     if (isDrawing) return;
@@ -304,10 +302,12 @@ const GameBoardScreen = () => {
 
         // Set the selected card
         setCurrentCard(selectedCard);
-        setIsDrawing(false);
       } catch (error) {
         console.error("Error in drawCard:", error);
         Alert.alert("Error", "Something went wrong. Please try again later.");
+        // Use fallback card in case of error
+        setCurrentCard(FALLBACK_CARD);
+      } finally {
         setIsDrawing(false);
       }
     }, 500);
@@ -323,6 +323,16 @@ const GameBoardScreen = () => {
         {
           text: "Reload",
           onPress: async () => {
+            // Run the test first
+            const testResult = await testFirebaseConnection();
+            if (!testResult.success) {
+              Alert.alert(
+                "Connection Failed",
+                `Firebase connection test failed: ${testResult.error}`
+              );
+              return;
+            }
+
             const success = await loadCardsDirectly();
             if (success) {
               Alert.alert(
@@ -448,22 +458,6 @@ const GameBoardScreen = () => {
     const anyCards = directlyLoadedCards.any ? directlyLoadedCards.any.length : 0;
 
     return specificCards + anyCards;
-  };
-
-  // Function for dev testing - show a hard-coded card
-  const testDirectCardDisplay = () => {
-    const testCard = {
-      id: "test-card-1",
-      transport_type: "any",
-      election_type: "federal",
-      url: "https://www.elections.ca/",
-      description: "This is a test card to verify the card display mechanism.",
-      opt_actions: {
-        "1": ["1", "This is a test action. Move forward 1 space."]
-      }
-    };
-
-    setCurrentCard(testCard);
   };
 
   return (
@@ -604,21 +598,14 @@ const GameBoardScreen = () => {
 
             <TouchableOpacity
               style={[styles.button, { backgroundColor: '#34c759', padding: 10 }]}
-              onPress={() => {
-                Alert.alert(
-                  "Card Counts",
-                  `Context: ${getAvailableCardCount()}/${getTotalCardCount()}\n` +
-                  `Direct: ${getDirectCardCount()}\n` +
-                  `Transport: ${transportMode || 'none'}`
-                );
-              }}
+              onPress={testFirebase}
             >
-              <Text style={styles.buttonText}>Show Counts</Text>
+              <Text style={styles.buttonText}>Test Firebase</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={[styles.button, { backgroundColor: '#5856d6', padding: 10 }]}
-              onPress={testDirectCardDisplay}
+              onPress={() => setCurrentCard(FALLBACK_CARD)}
             >
               <Text style={styles.buttonText}>Test Card</Text>
             </TouchableOpacity>
