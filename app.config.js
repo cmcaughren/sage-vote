@@ -21,9 +21,13 @@ module.exports = {
         ITSAppUsesNonExemptEncryption: false
       }
     },
+    android: {
+      "package": "com.carolyn.sagevote.app"
+    },
     plugins: [
       "expo-router",
       "expo-splash-screen",
+      "@react-native-firebase/app",
       ["expo-build-properties",
         {
           "ios": {
