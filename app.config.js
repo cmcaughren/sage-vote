@@ -15,7 +15,7 @@ module.exports = {
     },
     ios: {
       supportsTablet: false,
-      googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
+      googleServicesFile: process.env.GOOGLE_SERVICE_IOS_PLIST,
       bundleIdentifier: "com.carolyn.sagevote.app",
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false
