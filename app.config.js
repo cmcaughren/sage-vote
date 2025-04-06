@@ -4,7 +4,7 @@ module.exports = {
     slug: "sage-vote",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/images/icon.png",
+    icon: "./assets/images/icon_alt2.png",
     scheme: "sage-vote",
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
