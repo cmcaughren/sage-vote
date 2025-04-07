@@ -1,4 +1,4 @@
-// app/index.tsx (Home Screen) - Updated structure
+// app/index.tsx
 import React from "react";
 import {
   View,
@@ -22,54 +22,50 @@ export default function HomeScreen() {
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.background} />
 
       <View style={styles.contentContainer}>
-        <View style={styles.topSection}>
-          {/* Logo */}
-          <View style={styles.logoContainer}>
-            <Image
-              source={require('../assets/images/logo.png')}
-              style={styles.logo}
-              resizeMode="contain"
-            />
-          </View>
-
-          {/* Tagline with better spacing */}
-          <View style={styles.taglineContainer}>
-            <Text style={styles.taglinePrimary}>Democracy is a Journey.</Text>
-            <Text style={styles.taglineSecondary}>Your path to Canadian Political Literacy starts here</Text>
-          </View>
+        {/* Logo */}
+        <View style={styles.logoContainer}>
+          <Image
+            source={require('../assets/images/logo.png')}
+            style={styles.logo}
+            resizeMode="contain"
+          />
         </View>
 
-        <View style={styles.middleSection}>
-          {/* Buttons */}
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={[styles.button, styles.primaryButton]}
-              onPress={() => router.push('/registertovote')}
-            >
-              <Text style={styles.buttonText}>Play</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.button, styles.notebookButton]}
-              onPress={() => router.push('/notebook')}
-            >
-              <Text style={styles.notebookButtonText}>Notebook</Text>
-            </TouchableOpacity>
-
-            {/* Dev mode button if needed */}
-            {devMode && (
-              <TouchableOpacity
-                style={[styles.button, styles.secondaryButton]}
-                onPress={() => router.push('/create-card')}
-              >
-                <Text style={styles.secondaryButtonText}>Create Cards</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-
-          {/* Version text */}
-          <Text style={styles.versionText}>Version 1.0.0</Text>
+        {/* Tagline */}
+        <View style={styles.taglineContainer}>
+          <Text style={styles.taglinePrimary}>Democracy is a Journey.</Text>
+          <Text style={styles.taglineSecondary}>Your path to Canadian Political Literacy starts here</Text>
         </View>
+
+        {/* Buttons */}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.button, styles.primaryButton]}
+            onPress={() => router.push('/registertovote')}
+          >
+            <Text style={styles.buttonText}>Play</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.button, styles.notebookButton]}
+            onPress={() => router.push('/notebook')}
+          >
+            <Text style={styles.notebookButtonText}>Notebook</Text>
+          </TouchableOpacity>
+
+          {/* Dev mode button if needed */}
+          {devMode && (
+            <TouchableOpacity
+              style={[styles.button, styles.secondaryButton]}
+              onPress={() => router.push('/create-card')}
+            >
+              <Text style={styles.secondaryButtonText}>Create Cards</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {/* Version text */}
+        <Text style={styles.versionText}>Version 1.0.0</Text>
       </View>
     </SafeAreaView>
   );
