@@ -33,40 +33,40 @@ export default function HomeScreen() {
 
         {/* Tagline */}
         <View style={styles.taglineContainer}>
-          <Text style={styles.taglinePrimary}>Become an informed voter.</Text>
-          <Text style={styles.taglineSecondary}>Learn about Canadian politics & civic responsibility through this educational board game. Roll the dice and navigate to the polls!</Text>
+          <Text style={styles.taglinePrimary}>Learn Canadian Politics<Text>
+            <Text style={styles.taglineSecondary}>Roll the dice, learn the system, cast your vote with confidence.</Text>
+          </View>
+
+            {/* Buttons */}
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={[styles.button, styles.primaryButton]}
+                onPress={() => router.push('/registertovote')}
+              >
+                <Text style={styles.buttonText}>Play</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.button, styles.notebookButton]}
+                onPress={() => router.push('/notebook')}
+              >
+                <Text style={styles.notebookButtonText}>Notebook</Text>
+              </TouchableOpacity>
+
+              {/* Dev mode button if needed */}
+              {devMode && (
+                <TouchableOpacity
+                  style={[styles.button, styles.secondaryButton]}
+                  onPress={() => router.push('/create-card')}
+                >
+                  <Text style={styles.secondaryButtonText}>Create Cards</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+
+            {/* Version text */}
+            <Text style={styles.versionText}>Version 1.0.0</Text>
         </View>
-
-        {/* Buttons */}
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={[styles.button, styles.primaryButton]}
-            onPress={() => router.push('/registertovote')}
-          >
-            <Text style={styles.buttonText}>Play</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.button, styles.notebookButton]}
-            onPress={() => router.push('/notebook')}
-          >
-            <Text style={styles.notebookButtonText}>Notebook</Text>
-          </TouchableOpacity>
-
-          {/* Dev mode button if needed */}
-          {devMode && (
-            <TouchableOpacity
-              style={[styles.button, styles.secondaryButton]}
-              onPress={() => router.push('/create-card')}
-            >
-              <Text style={styles.secondaryButtonText}>Create Cards</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-
-        {/* Version text */}
-        <Text style={styles.versionText}>Version 1.0.0</Text>
-      </View>
     </SafeAreaView>
   );
 }
