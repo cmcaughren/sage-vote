@@ -33,8 +33,8 @@ export default function HomeScreen() {
 
         {/* Tagline */}
         <View style={styles.taglineContainer}>
-          <Text style={styles.taglinePrimary}>Democracy is a Journey.</Text>
-          <Text style={styles.taglineSecondary}>Your path to Canadian Political Literacy starts here</Text>
+          <Text style={styles.taglinePrimary}>Become an informed voter.</Text>
+          <Text style={styles.taglineSecondary}>Learn about Canadian politics & civic responsibility through this educational board game. Roll the dice and navigate to the polls!</Text>
         </View>
 
         {/* Buttons */}

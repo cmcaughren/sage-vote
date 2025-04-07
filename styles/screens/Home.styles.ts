@@ -20,10 +20,10 @@ export const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 40, // Spacing between logo and tagline
+    marginBottom: 20, // Spacing between logo and tagline
   },
   logo: {
-    width: width * 0.8, // 80% of screen width
+    width: width, // full width of screen
     height: undefined,
     aspectRatio: 1,
   },
