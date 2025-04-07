@@ -315,3 +315,39 @@ export default function RegisterToVoteScreen() {
           {selectedTab === "register" && (
             <View style={styles.tabContent}>
               <Text style={styles.sectionTitle}>Register with Elections Canada</Text>
+              <Text style={styles.sectionDescription}>
+                Even if you have ID, you need to be registered on the voters list.
+                You can register online, by mail, or in person on election day.
+              </Text>
+
+              <TouchableOpacity
+                style={getButtonStyle(voterRegistered, voterClickedThisSession, styles.actionButton)}
+                onPress={handleVoterRegistration}
+              >
+                <Text style={styles.actionButtonText}>
+                  {getButtonText(voterRegistered, voterClickedThisSession, "Go to Voter Registration")}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+
+        {/* Continue Button */}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[
+              styles.continueButton,
+              !canContinue && styles.disabledButton,
+            ]}
+            disabled={!canContinue}
+            onPress={() => router.push("/crossroads")}
+          >
+            <Text style={styles.continueButtonText}>
+              {!canContinue ? "Visit links to continue" : "Continue to Game"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
