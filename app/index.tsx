@@ -59,7 +59,10 @@ export default function HomeScreen() {
         </View>
 
         {/* Tagline */}
-        <Text style={styles.tagline}>Democracy is a Journey: Your path to Canadian Political Literacy starts here!</Text>
+        <View style={styles.taglineContainer}>
+          <Text style={styles.taglinePrimary}>Democracy is a Journey.</Text>
+          <Text style={styles.taglineSecondary}>Your path to Canadian Political Literacy starts here</Text>
+        </View>
 
         {/* Buttons */}
         <View style={styles.buttonContainer}>

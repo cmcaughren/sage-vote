@@ -28,19 +28,28 @@ export const styles = StyleSheet.create({
     aspectRatio: 1, // This will maintain the aspect ratio while spanning the full width
     marginBottom: 10,
   },
-  tagline: {
+  taglineContainer: {
+    marginTop: 10, // Reduced gap after logo
+    marginBottom: 30,
+    alignItems: 'center',
+  },
+  taglinePrimary: {
     fontSize: 22,
-    fontWeight: '500',
-    fontStyle: 'italic',
-    color: COLORS.primary,
+    fontWeight: '600',
+    color: COLORS.info, // Periwinkle color
     textAlign: 'center',
-    marginVertical: 30,
-    letterSpacing: 0.5,
     maxWidth: 320,
+    marginBottom: 8, // Space between the two lines
+    letterSpacing: 0.5,
     lineHeight: 28,
-    textShadowColor: 'rgba(0, 0, 0, 0.1)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
+  },
+  taglineSecondary: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: COLORS.info, // Same color for consistency
+    textAlign: 'center',
+    maxWidth: 300,
+    lineHeight: 22,
   },
   buttonContainer: {
     width: '100%',
