@@ -2,7 +2,7 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import { COLORS } from '../theme/colors';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
   container: {
@@ -12,49 +12,60 @@ export const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between', // This distributes space more evenly
     padding: 20,
     width: '100%',
+    paddingTop: height * 0.12, // Top padding as percentage of screen height
+    paddingBottom: height * 0.08, // Bottom padding as percentage of screen height
+  },
+  topSection: {
+    alignItems: 'center',
+    width: '100%',
+    flex: 1, // This allows the top section to take available space
   },
   logoContainer: {
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
+    marginBottom: 10, // Reduced from 20
   },
   logo: {
     width: '100%',
     height: undefined,
-    aspectRatio: 1, // This will maintain the aspect ratio while spanning the full width
-    marginBottom: 10,
+    aspectRatio: 1,
+    marginBottom: 0, // Removed extra margin
   },
   taglineContainer: {
-    marginTop: 10, // Reduced gap after logo
-    marginBottom: 30,
+    marginTop: height * 0.03, // Dynamic spacing based on screen height
+    marginBottom: height * 0.05, // Dynamic spacing based on screen height
     alignItems: 'center',
   },
   taglinePrimary: {
     fontSize: 22,
     fontWeight: '600',
-    color: COLORS.info, // Periwinkle color
+    color: COLORS.info,
     textAlign: 'center',
     maxWidth: 320,
-    marginBottom: 8, // Space between the two lines
+    marginBottom: 8,
     letterSpacing: 0.5,
     lineHeight: 28,
   },
   taglineSecondary: {
     fontSize: 16,
     fontWeight: '500',
-    color: COLORS.info, // Same color for consistency
+    color: COLORS.info,
     textAlign: 'center',
     maxWidth: 300,
     lineHeight: 22,
   },
+  middleSection: {
+    flex: 0.5, // Takes less space than top section
+    justifyContent: 'center',
+  },
   buttonContainer: {
     width: '100%',
     maxWidth: 300,
-    marginBottom: 40,
+    marginBottom: 20, // Reduced from 40
   },
   button: {
     paddingVertical: 15,
@@ -89,31 +100,15 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
   },
-  emojiText: {
-    fontSize: 20,
-  },
   secondaryButtonText: {
     color: COLORS.primary,
     fontSize: 18,
     fontWeight: '600',
   },
-  devModeContainer: {
-    backgroundColor: '#ff000030',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-    marginBottom: 20,
-  },
-  devModeText: {
-    color: '#E53935',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
   versionText: {
-    position: 'absolute',
-    bottom: 20,
     color: COLORS.dark + '80',
     fontSize: 12,
+    marginTop: 10,
   }
 });
 
