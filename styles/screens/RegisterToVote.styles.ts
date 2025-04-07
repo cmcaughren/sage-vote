@@ -1,39 +1,44 @@
 // styles/screens/RegisterToVote.styles.ts
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { COLORS } from '../theme/colors';
+
+const { width, height } = Dimensions.get('window');
+const isSmallDevice = height < 700;
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
   },
-  content: {
-    flex: 1,
-    padding: 20,
-    alignItems: 'center',
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 30,
+    justifyContent: 'space-between',
   },
   headerSection: {
     width: '100%',
     maxWidth: 600,
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: isSmallDevice ? 15 : 25,
   },
   title: {
-    fontSize: 24,
+    fontSize: isSmallDevice ? 22 : 24,
     fontWeight: 'bold',
     color: COLORS.dark,
     textAlign: 'center',
     marginBottom: 10,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: isSmallDevice ? 14 : 16,
     color: COLORS.dark + 'CC',
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: isSmallDevice ? 15 : 20,
   },
   eligibilityList: {
     width: '100%',
-    marginTop: 15,
+    marginTop: 5,
   },
   eligibilityItem: {
     flexDirection: 'row',
@@ -44,7 +49,7 @@ export const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: COLORS.secondary, // Golden yellow for checkmarks
+    backgroundColor: COLORS.secondary,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 10,
@@ -54,7 +59,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   eligibilityText: {
-    fontSize: 16,
+    fontSize: isSmallDevice ? 14 : 16,
     color: COLORS.dark,
     flex: 1,
   },
@@ -63,9 +68,8 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.lightGray,
     borderRadius: 8,
     padding: 4,
-    marginBottom: 20,
+    marginBottom: isSmallDevice ? 15 : 20,
     width: '100%',
-    maxWidth: 400,
   },
   tabButton: {
     flex: 1,
@@ -86,14 +90,20 @@ export const styles = StyleSheet.create({
     fontWeight: '500',
   },
   activeTabButtonText: {
-    color: COLORS.primary, // Sage green
+    color: COLORS.primary,
     fontWeight: '600',
+  },
+  contentWrapper: {
+    flex: 1,
+    width: '100%',
+    minHeight: isSmallDevice ? 220 : 280,
+    marginBottom: isSmallDevice ? 15 : 25,
   },
   tabContent: {
     width: '100%',
     maxWidth: 400,
+    alignSelf: 'center',
     alignItems: 'center',
-    marginBottom: 30,
   },
   sectionTitle: {
     fontSize: 18,
@@ -111,7 +121,7 @@ export const styles = StyleSheet.create({
   provinceSelector: {
     backgroundColor: COLORS.white,
     borderWidth: 1,
-    borderColor: COLORS.primary, // Sage green
+    borderColor: COLORS.primary,
     borderRadius: 8,
     padding: 12,
     width: '100%',
@@ -119,13 +129,13 @@ export const styles = StyleSheet.create({
     marginBottom: 20,
   },
   provinceSelectorText: {
-    color: COLORS.primary, // Sage green
+    color: COLORS.primary,
     fontSize: 16,
   },
   pickerContainer: {
     backgroundColor: COLORS.white,
     borderWidth: 1,
-    borderColor: COLORS.primary, // Sage green
+    borderColor: COLORS.primary,
     borderRadius: 8,
     width: '100%',
     marginBottom: 20,
@@ -134,10 +144,10 @@ export const styles = StyleSheet.create({
   picker: {
     height: 50,
     width: '100%',
-    color: COLORS.primary, // Sage green
+    color: COLORS.primary,
   },
   actionButton: {
-    backgroundColor: COLORS.primary, // Sage green
+    backgroundColor: COLORS.primary,
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,
@@ -149,15 +159,18 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+  buttonContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 'auto',
+  },
   continueButton: {
-    backgroundColor: COLORS.secondary, // Golden yellow
+    backgroundColor: COLORS.secondary,
     paddingVertical: 14,
     paddingHorizontal: 32,
     borderRadius: 8,
     alignItems: 'center',
-    marginTop: 'auto',
-    marginBottom: 20,
-    width: '80%',
+    width: '90%',
     maxWidth: 300,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
@@ -175,5 +188,3 @@ export const styles = StyleSheet.create({
     opacity: 0.7,
   },
 });
-
-export default styles;

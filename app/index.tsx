@@ -33,7 +33,7 @@ export default function HomeScreen() {
 
         {/* Tagline */}
         <View style={styles.taglineContainer}>
-          <Text style={styles.taglinePrimary}>Learn Canadian Politics</Text>
+          <Text style={styles.taglinePrimary}>Learn Canadian Politics.</Text>
           <Text style={styles.taglineSecondary}>Roll the dice, learn the system, cast your vote with confidence.</Text>
         </View>
 

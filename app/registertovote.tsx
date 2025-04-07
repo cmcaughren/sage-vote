@@ -1,4 +1,4 @@
-// Updated app/registertovote.tsx with link requirements
+// app/registertovote.tsx
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -9,6 +9,8 @@ import {
   ActionSheetIOS,
   SafeAreaView,
   ActivityIndicator,
+  StatusBar,
+  ScrollView,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useRouter } from "expo-router";
@@ -199,7 +201,13 @@ export default function RegisterToVoteScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+      <StatusBar barStyle="dark-content" backgroundColor={COLORS.background} />
+
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        bounces={false}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Title Section */}
         <View style={styles.headerSection}>
           <Text style={styles.title}>
@@ -258,83 +266,52 @@ export default function RegisterToVoteScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Identification Section */}
-        {selectedTab === "identification" && (
-          <View style={styles.tabContent}>
-            <Text style={styles.sectionTitle}>Get Government ID</Text>
-            <Text style={styles.sectionDescription}>
-              To vote in a federal election, you'll need valid government-issued
-              identification. Choose your province to find out how to get ID.
-            </Text>
+        {/* Content Section with better spacing */}
+        <View style={styles.contentWrapper}>
+          {/* Identification Section */}
+          {selectedTab === "identification" && (
+            <View style={styles.tabContent}>
+              <Text style={styles.sectionTitle}>Get Government ID</Text>
+              <Text style={styles.sectionDescription}>
+                To vote in a federal election, you'll need valid government-issued
+                identification. Choose your province to find out how to get ID.
+              </Text>
 
-            {Platform.OS === "ios" ? (
-              <TouchableOpacity
-                style={styles.provinceSelector}
-                onPress={showActionSheet}
-              >
-                <Text style={styles.provinceSelectorText}>{selectedProvince}</Text>
-              </TouchableOpacity>
-            ) : (
-              <View style={styles.pickerContainer}>
-                <Picker
-                  selectedValue={selectedProvince}
-                  style={styles.picker}
-                  onValueChange={(itemValue) => setSelectedProvince(itemValue)}
-                  dropdownIconColor={COLORS.primary}
+              {Platform.OS === "ios" ? (
+                <TouchableOpacity
+                  style={styles.provinceSelector}
+                  onPress={showActionSheet}
                 >
-                  <Picker.Item label="Select Province" value="Select Province" />
-                  {provinces.map((province, index) => (
-                    <Picker.Item key={index} label={province} value={province} />
-                  ))}
-                </Picker>
-              </View>
-            )}
+                  <Text style={styles.provinceSelectorText}>{selectedProvince}</Text>
+                </TouchableOpacity>
+              ) : (
+                <View style={styles.pickerContainer}>
+                  <Picker
+                    selectedValue={selectedProvince}
+                    style={styles.picker}
+                    onValueChange={(itemValue) => setSelectedProvince(itemValue)}
+                    dropdownIconColor={COLORS.primary}
+                  >
+                    <Picker.Item label="Select Province" value="Select Province" />
+                    {provinces.map((province, index) => (
+                      <Picker.Item key={index} label={province} value={province} />
+                    ))}
+                  </Picker>
+                </View>
+              )}
 
-            <TouchableOpacity
-              style={getButtonStyle(idApplied, idClickedThisSession, styles.actionButton)}
-              onPress={handleApplyForID}
-            >
-              <Text style={styles.actionButtonText}>
-                {getButtonText(idApplied, idClickedThisSession, "Apply for ID")}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
+              <TouchableOpacity
+                style={getButtonStyle(idApplied, idClickedThisSession, styles.actionButton)}
+                onPress={handleApplyForID}
+              >
+                <Text style={styles.actionButtonText}>
+                  {getButtonText(idApplied, idClickedThisSession, "Apply for ID")}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
 
-        {/* Register to Vote Section */}
-        {selectedTab === "register" && (
-          <View style={styles.tabContent}>
-            <Text style={styles.sectionTitle}>Register with Elections Canada</Text>
-            <Text style={styles.sectionDescription}>
-              Even if you have ID, you need to be registered on the voters list.
-              You can register online, by mail, or in person on election day.
-            </Text>
-
-            <TouchableOpacity
-              style={getButtonStyle(voterRegistered, voterClickedThisSession, styles.actionButton)}
-              onPress={handleVoterRegistration}
-            >
-              <Text style={styles.actionButtonText}>
-                {getButtonText(voterRegistered, voterClickedThisSession, "Go to Voter Registration")}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
-
-        {/* Continue Button */}
-        <TouchableOpacity
-          style={[
-            styles.continueButton,
-            !canContinue && styles.disabledButton,
-          ]}
-          disabled={!canContinue}
-          onPress={() => router.push("/crossroads")}
-        >
-          <Text style={styles.continueButtonText}>
-            {!canContinue ? "Visit links to continue" : "Continue to Game"}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
-  );
-}
+          {/* Register to Vote Section */}
+          {selectedTab === "register" && (
+            <View style={styles.tabContent}>
+              <Text style={styles.sectionTitle}>Register with Elections Canada</Text>
