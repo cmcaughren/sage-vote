@@ -3,7 +3,9 @@ import { StyleSheet, Dimensions } from 'react-native';
 import { COLORS } from '../theme/colors';
 
 const { width, height } = Dimensions.get('window');
-const isSmallDevice = height < 700;
+// Calculate responsive proportions
+const vw = width / 100; // 1% of viewport width
+const vh = height / 100; // 1% of viewport height
 
 export const styles = StyleSheet.create({
   container: {
@@ -12,54 +14,54 @@ export const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 30,
-    justifyContent: 'space-between',
+    paddingHorizontal: 5 * vw, // 5% of screen width
+    paddingTop: 3 * vh, // 3% of screen height
+    paddingBottom: 3 * vh, // 3% of screen height
+    justifyContent: 'space-between', // Key for even distribution
   },
   headerSection: {
     width: '100%',
-    maxWidth: 600,
     alignItems: 'center',
-    marginBottom: isSmallDevice ? 15 : 25,
+    marginBottom: 3 * vh, // 3% of screen height
   },
   title: {
-    fontSize: isSmallDevice ? 22 : 24,
+    fontSize: Math.min(24, 6 * vw), // Responsive font size
     fontWeight: 'bold',
     color: COLORS.dark,
     textAlign: 'center',
-    marginBottom: 10,
+    marginBottom: 1.5 * vh, // 1.5% of screen height
   },
   subtitle: {
-    fontSize: isSmallDevice ? 14 : 16,
+    fontSize: Math.min(16, 4 * vw), // Responsive font size
     color: COLORS.dark + 'CC',
     textAlign: 'center',
-    marginBottom: isSmallDevice ? 15 : 20,
+    marginBottom: 2 * vh, // 2% of screen height
   },
   eligibilityList: {
     width: '100%',
-    marginTop: 5,
+    marginVertical: 1 * vh, // 1% of screen height
   },
   eligibilityItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 1.5 * vh, // 1.5% of screen height
   },
   checkmarkCircle: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    width: Math.min(24, 6 * vw), // Responsive size
+    height: Math.min(24, 6 * vw), // Responsive size
+    borderRadius: Math.min(12, 3 * vw), // Half of width/height
     backgroundColor: COLORS.secondary,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 10,
+    marginRight: 2 * vw, // 2% of screen width
   },
   checkmark: {
     color: COLORS.white,
     fontWeight: 'bold',
+    fontSize: Math.min(16, 4 * vw), // Responsive font size
   },
   eligibilityText: {
-    fontSize: isSmallDevice ? 14 : 16,
+    fontSize: Math.min(16, 4 * vw), // Responsive font size
     color: COLORS.dark,
     flex: 1,
   },
@@ -68,12 +70,12 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.lightGray,
     borderRadius: 8,
     padding: 4,
-    marginBottom: isSmallDevice ? 15 : 20,
+    marginBottom: 2 * vh, // 2% of screen height
     width: '100%',
   },
   tabButton: {
     flex: 1,
-    paddingVertical: 12,
+    paddingVertical: 1.5 * vh, // 1.5% of screen height
     borderRadius: 6,
     alignItems: 'center',
   },
@@ -88,6 +90,7 @@ export const styles = StyleSheet.create({
   tabButtonText: {
     color: COLORS.dark + 'AA',
     fontWeight: '500',
+    fontSize: Math.min(14, 3.5 * vw), // Responsive font size
   },
   activeTabButtonText: {
     color: COLORS.primary,
@@ -96,41 +99,40 @@ export const styles = StyleSheet.create({
   contentWrapper: {
     flex: 1,
     width: '100%',
-    minHeight: isSmallDevice ? 220 : 280,
-    marginBottom: isSmallDevice ? 15 : 25,
+    minHeight: 30 * vh, // 30% of screen height - key to filling space
+    marginBottom: 3 * vh, // 3% of screen height
   },
   tabContent: {
     width: '100%',
-    maxWidth: 400,
     alignSelf: 'center',
     alignItems: 'center',
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: Math.min(18, 4.5 * vw), // Responsive font size
     fontWeight: '600',
     color: COLORS.dark,
-    marginBottom: 10,
+    marginBottom: 1 * vh, // 1% of screen height
     alignSelf: 'flex-start',
   },
   sectionDescription: {
-    fontSize: 14,
+    fontSize: Math.min(14, 3.5 * vw), // Responsive font size
     color: COLORS.dark + 'CC',
-    marginBottom: 20,
-    lineHeight: 20,
+    marginBottom: 2 * vh, // 2% of screen height
+    lineHeight: Math.min(20, 5 * vw), // Responsive line height
   },
   provinceSelector: {
     backgroundColor: COLORS.white,
     borderWidth: 1,
     borderColor: COLORS.primary,
     borderRadius: 8,
-    padding: 12,
+    padding: 1.5 * vh, // 1.5% of screen height
     width: '100%',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 2 * vh, // 2% of screen height
   },
   provinceSelectorText: {
     color: COLORS.primary,
-    fontSize: 16,
+    fontSize: Math.min(16, 4 * vw), // Responsive font size
   },
   pickerContainer: {
     backgroundColor: COLORS.white,
@@ -138,17 +140,17 @@ export const styles = StyleSheet.create({
     borderColor: COLORS.primary,
     borderRadius: 8,
     width: '100%',
-    marginBottom: 20,
+    marginBottom: 2 * vh, // 2% of screen height
     overflow: 'hidden',
   },
   picker: {
-    height: 50,
+    height: 6 * vh, // 6% of screen height
     width: '100%',
     color: COLORS.primary,
   },
   actionButton: {
     backgroundColor: COLORS.primary,
-    paddingVertical: 12,
+    paddingVertical: 1.5 * vh, // 1.5% of screen height
     paddingHorizontal: 24,
     borderRadius: 8,
     width: '100%',
@@ -156,17 +158,18 @@ export const styles = StyleSheet.create({
   },
   actionButtonText: {
     color: COLORS.white,
-    fontSize: 16,
+    fontSize: Math.min(16, 4 * vw), // Responsive font size
     fontWeight: '600',
   },
   buttonContainer: {
     width: '100%',
     alignItems: 'center',
-    marginTop: 'auto',
+    paddingTop: 2 * vh, // 2% of screen height
+    marginTop: 'auto', // Push to bottom of available space
   },
   continueButton: {
     backgroundColor: COLORS.secondary,
-    paddingVertical: 14,
+    paddingVertical: 1.8 * vh, // 1.8% of screen height
     paddingHorizontal: 32,
     borderRadius: 8,
     alignItems: 'center',
@@ -180,7 +183,7 @@ export const styles = StyleSheet.create({
   },
   continueButtonText: {
     color: COLORS.white,
-    fontSize: 18,
+    fontSize: Math.min(18, 4.5 * vw), // Responsive font size
     fontWeight: '600',
   },
   disabledButton: {
