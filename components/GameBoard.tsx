@@ -43,11 +43,11 @@ const GameBoard = () => {
     const pathColors = PATH_COLORS[pathType] || ['#cccccc'];
 
     // Get highlight color based on path type
-    let highlightColor = '#FFD700'; // Default yellow
+    let glowColor = '#FFD700'; // Default yellow
     if (pathType === transportMode) {
-      if (pathType === 'carpool') highlightColor = COLORS.error;
-      else if (pathType === 'bus') highlightColor = COLORS.info;
-      else if (pathType === 'bicycle') highlightColor = COLORS.warning;
+      if (pathType === 'carpool') glowColor = COLORS.error;
+      else if (pathType === 'bus') glowColor = COLORS.info;
+      else if (pathType === 'bicycle') glowColor = '#c0bc00';//COLORS.warning;
     }
     // Choose color based on index to create color variation
     const colorIndex = index % (pathColors.length || 1);
@@ -91,10 +91,24 @@ const GameBoard = () => {
       (tile.type === 'start' && (pathType === transportMode || (transportMode === null && pathType === 'bus'))) ||
       (tile.type === 'finish' && (pathType === transportMode || (transportMode === null && pathType === 'bus')));
 
-    const opacity = pathType === transportMode ? 1 : 0.6;
     const isActivePath = pathType === transportMode;
     const isCurrentTile = isActivePath && index === boardPosition;
 
+    // Create glow effect parameters 
+    const glowParams = isActivePath ? {
+      shadowColor: glowColor,
+      shadowOffset: { width: 0, height: 0 }, // No offset for even glow
+      shadowOpacity: isCurrentTile ? 0.9 : 0.7, // Stronger glow for current tile
+      shadowRadius: isCurrentTile ? 8 : 5, // Larger radius for current tile
+      elevation: isCurrentTile ? 10 : 6, // Higher elevation for current tile on Android
+    } : {
+      // Default shadow for non-active paths
+      shadowColor: COLORS.black,
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.2,
+      shadowRadius: 1,
+      elevation: 2,
+    };
     return (
       <View key={`tile-${pathType}-${tile.id}`}>
         {/* Tile square */}
@@ -107,24 +121,30 @@ const GameBoard = () => {
               backgroundColor: bgColor,
               left: tile.x - adjustedTileSize / 2,
               top: tile.y - adjustedTileSize / 2,
-              opacity,
+              opacity: isActivePath ? 1 : 0.6,
               ...borderRadius,
-              // Add border for all tiles in the active path
-              ...(isActivePath && {
-                borderWidth: 2,
-                borderColor: highlightColor,
-              }),
-              // Keep special styling for current tile (make border thicker)
-              ...(isCurrentTile && {
-                borderWidth: 4,
-                borderColor: highlightColor,
-                zIndex: 15,
-              }),
+              ...glowParams, // Apply the glow effect
+              // Keep a subtle border for definition
+              borderWidth: isCurrentTile ? 2 : 0,
+              borderColor: glowColor,
             },
-            isActive && pathType === transportMode && styles.activeTile,
-            // Special styling for common start/finish tiles
-            tile.type === 'start' && { borderColor: '#FFD700', borderWidth: 3, zIndex: 5 },
-            tile.type === 'finish' && { borderColor: '#FFD700', borderWidth: 3, zIndex: 5 }
+            // Special styling for start/finish tiles
+            tile.type === 'start' && {
+              borderColor: '#FFD700',
+              borderWidth: 3,
+              zIndex: 5,
+              shadowColor: '#FFD700',
+              shadowOpacity: 0.8,
+              shadowRadius: 6,
+            },
+            tile.type === 'finish' && {
+              borderColor: '#FFD700',
+              borderWidth: 3,
+              zIndex: 5,
+              shadowColor: '#FFD700',
+              shadowOpacity: 0.8,
+              shadowRadius: 6,
+            }
           ]}
         >
           <Text style={styles.tileNumber}>{tile.id}</Text>
