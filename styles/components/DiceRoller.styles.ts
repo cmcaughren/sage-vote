@@ -8,7 +8,8 @@ export const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     padding: 20,
     height: 400,
-    //paddingTop: , // Reduced from default padding
+    paddingTop: 15, // Reduced from default padding
+    paddingBottom: 15,
     backgroundColor: COLORS.error, // Very light green with low opacity
   },
   compactContainer: {
@@ -28,8 +29,8 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 5,
-    marginBottom: 30,
-    marginTop: 10, // Add this - creates some space at top
+    marginBottom: 20,
+    marginTop: 20,
   },
   compactDiceContainer: {
     width: 120,
@@ -71,11 +72,13 @@ export const styles = StyleSheet.create({
   },
   resultContainer: {
     alignItems: 'center',
+    marginTop: 5,
+    position: 'relative',
   },
   resultText: {
     fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 5,
   },
   compactResultText: {
     fontSize: 18,
@@ -84,13 +87,18 @@ export const styles = StyleSheet.create({
   transportText: {
     fontSize: 18,
     color: COLORS.primary,
-    marginBottom: 10,
+    marginBottom: 5,
   },
   rollButton: {
     backgroundColor: COLORS.primary,
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 5,
+    alignSelf: 'center', // Ensures horizontal centering
+    marginTop: 10, // Adds a bit of space
+    // Same position as continue button
+    position: 'relative',
+    bottom: 0,
   },
   rollButtonText: {
     color: COLORS.white,
@@ -102,7 +110,11 @@ export const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 5,
-    marginTop: 5,
+    marginTop: 10, // Added margin to create consistent space
+    alignSelf: 'center', // Ensures horizontal centering
+    // Same position as roll button
+    position: 'relative',
+    bottom: 0,
   },
   compactButton: {
     paddingVertical: 8,

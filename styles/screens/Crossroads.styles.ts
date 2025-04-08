@@ -36,8 +36,8 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     maxWidth: 90 * vw, // 90% of viewport width
-    marginBottom: 8 * vh, // Increased from whatever you had before
-    paddingBottom: 4 * vh, // Add padding to create more space
+    marginBottom: 4 * vh, // Increased from whatever you had before
+    paddingBottom: 1 * vh, // Add padding to create more space
   },
   title: {
     fontSize: Math.min(24, 6 * vw), // Responsive font size
@@ -73,11 +73,12 @@ export const styles = StyleSheet.create({
   diceContainer: {
     width: '100%',
     height: 45 * vh, // 45% of viewport height
-    marginTop: -2 * vh,
-    marginBottom: -2 * vh,
+    marginTop: 0 * vh,
+    marginBottom: 0 * vh,
     position: 'relative', // Add this
     zIndex: 10, // Ensure dice stays on top
     overflow: 'visible', // CRITICAL: Allow animation to extend outside container
+    backgroundColor: '#E74C3C', // Comment out when done! Testing 
   },
   // Responsive option container
   optionsContainer: {
@@ -86,7 +87,7 @@ export const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 90 * vw,
     paddingHorizontal: SPACING.md,
-    marginBottom: 3 * vh,
+    marginBottom: 2 * vh,
   },
   optionCard: {
     flex: 1, // Take equal space
