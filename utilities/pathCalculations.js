@@ -11,7 +11,7 @@ export function generatePathData() {
   const tileSize = Math.min(screenWidth / 12, screenHeight / 14);
 
   // Calculate vertical spacing factor (how much extra space between rows)
-  const verticalSpacingFactor = 1.5; // Adjust this value as needed (1.0 = no extra space, 2.0 = double space)
+  const verticalSpacingFactor = 1.25; // Adjust this value as needed (1.0 = no extra space, 2.0 = double space)
 
   // Create a grid system for positioning
   const grid = [];

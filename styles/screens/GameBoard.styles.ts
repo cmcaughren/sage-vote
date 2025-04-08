@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
   },
   notebookIconContainer: {
     position: 'absolute',
-    top: 10,
+    top: 50,
     right: 10,
     zIndex: 10,
   },
