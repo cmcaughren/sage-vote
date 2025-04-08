@@ -80,7 +80,7 @@ export const styles = StyleSheet.create({
   transportText: {
     fontSize: 18,
     color: COLORS.primary,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   rollButton: {
     backgroundColor: COLORS.primary,
@@ -98,7 +98,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 5,
-    marginTop: 10,
+    marginTop: 5,
   },
   compactButton: {
     paddingVertical: 8,
