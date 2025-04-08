@@ -3,6 +3,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { useGameContext } from '../context/GameContext';
 import { styles, PATH_COLORS, EMOJI } from '../styles/components/GameBoard.styles';
+import { COLORS } from '../stlyes/theme/colors.ts';
 
 const GameBoard = () => {
   const {
@@ -41,13 +42,20 @@ const GameBoard = () => {
     // Get colors based on path type with safe fallback
     const pathColors = PATH_COLORS[pathType] || ['#cccccc'];
 
+    // Get highlight color based on path type
+    let highlightColor = '#FFD700'; // Default yellow
+    if (pathType === transportMode) {
+      if (pathType === 'carpool') highlightColor = COLORS.error;
+      else if (pathType === 'bus') highlightColor = COLORS.info;
+      else if (pathType === 'bicycle') highlightColor = COLORS.warning;
+    }
     // Choose color based on index to create color variation
     const colorIndex = index % (pathColors.length || 1);
     const bgColor = pathColors[colorIndex] || '#cccccc';
 
     // Calculate tile size adjustments
-    const tileSizeMultiplier = pathType === transportMode ? 1.1 : 0.9;
-    const adjustedTileSize = (tileSize || 30) * tileSizeMultiplier;
+    //const tileSizeMultiplier = pathType === transportMode ? 1.1 : 0.9;
+    const adjustedTileSize = (tileSize || 30); // * tileSizeMultiplier;
 
     // Apply different styling based on corner type
     let borderRadius = {};
@@ -84,6 +92,8 @@ const GameBoard = () => {
       (tile.type === 'finish' && (pathType === transportMode || (transportMode === null && pathType === 'bus')));
 
     const opacity = pathType === transportMode ? 1 : 0.6;
+    const isActivePath = pathType === transportMode;
+    const isCurrentTile = isActivePath && index === boardPosition;
 
     return (
       <View key={`tile-${pathType}-${tile.id}`}>
@@ -98,7 +108,18 @@ const GameBoard = () => {
               left: tile.x - adjustedTileSize / 2,
               top: tile.y - adjustedTileSize / 2,
               opacity,
-              ...borderRadius
+              ...borderRadius,
+              // Add border for all tiles in the active path
+              ...(isActivePath && {
+                borderWidth: 2,
+                borderColor: highlightColor,
+              }),
+              // Keep special styling for current tile (make border thicker)
+              ...(isCurrentTile && {
+                borderWidth: 4,
+                borderColor: highlightColor,
+                zIndex: 15,
+              }),
             },
             isActive && pathType === transportMode && styles.activeTile,
             // Special styling for common start/finish tiles
@@ -116,8 +137,8 @@ const GameBoard = () => {
           )}
         </View>
 
-        {/* Player token - now separate from tile and with higher z-index */}
-        {isActive && pathType === transportMode && (
+        {/* Player token - keep this separate for proper layering */}
+        {isCurrentTile && (
           <View style={[
             styles.playerTokenContainer,
             {
