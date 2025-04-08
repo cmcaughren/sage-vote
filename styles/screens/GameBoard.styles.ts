@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
   },
   notebookIconContainer: {
     position: 'absolute',
-    top: 50,
+    top: 60,
     right: 10,
     zIndex: 10,
     paddingTop: 10,
@@ -37,8 +37,6 @@ export const styles = StyleSheet.create({
   boardContainer: {
     flex: 1,
     margin: 10,
-    marginTop: 60, // Increased to account for notebook icon
-    marginBottom: 80, // Ensure space for the button at bottom
     borderRadius: 10,
     overflow: 'hidden',
     backgroundColor: COLORS.white,
