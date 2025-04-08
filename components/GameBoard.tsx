@@ -185,27 +185,57 @@ const GameBoard = () => {
             </Text>
           </View>
         )}
-        {/* REPOSITIONED: Special emojis outside tiles */}
+        // In components/GameBoard.tsx - update the special emoji section
+
+        {/* REPOSITIONED: Special emojis aligned with grid */}
         {showSpecialEmoji && (
           <View
             style={{
               position: 'absolute',
-              left: tile.type === 'start' ? tile.x - 28 : tile.x + 2, // Left of start, right of finish
-              top: tile.type === 'start' ? tile.y + 20 : tile.y - 20, // Below start, above finish
+              // Position based on the tile position - locked to grid
+              left: tile.x - (adjustedTileSize * 0.5), // Center horizontally with the tile
+              // Position above or below the tile by a full tile height
+              top: tile.type === 'finish'
+                ? tile.y - (adjustedTileSize * 1.5) // Above for finish/poll
+                : tile.y + (adjustedTileSize * 1.2), // Below for start/home
               zIndex: 20,
-              backgroundColor: COLORS.primary + '40', // Semi-transparent sage background
-              padding: 4,
-              borderRadius: 8,
-              borderWidth: 1,
-              borderColor: COLORS.primary,
+              alignItems: 'center', // Center contents
+              width: adjustedTileSize * 2, // Make it wider than a tile for text
             }}
           >
+            {/* For finish/poll, render text first (above) */}
+            {tile.type === 'finish' && (
+              <Text style={{
+                fontSize: 14,
+                color: COLORS.info, // Use info color as requested
+                fontWeight: 'bold',
+                marginBottom: 4,
+                textAlign: 'center',
+              }}>
+                Poll
+              </Text>
+            )}
+
+            {/* Emoji */}
             <Text style={{
-              fontSize: 16,
+              fontSize: 24, // Larger emoji
               textAlign: 'center',
             }}>
-              {tile.type === 'start' ? '🏠 Home' : '🗳️ Poll'}
+              {tile.type === 'start' ? '🏠' : '🗳️'}
             </Text>
+
+            {/* For start/home, render text last (below) */}
+            {tile.type === 'start' && (
+              <Text style={{
+                fontSize: 14,
+                color: COLORS.info, // Use info color as requested
+                fontWeight: 'bold',
+                marginTop: 4,
+                textAlign: 'center',
+              }}>
+                Home
+              </Text>
+            )}
           </View>
         )}
       </View>
