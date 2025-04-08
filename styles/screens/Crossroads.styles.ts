@@ -81,12 +81,13 @@ export const styles = StyleSheet.create({
   // Responsive option container
   optionsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
     width: '100%',
     maxWidth: 100 * vw,
-    paddingHorizontal: SPACING.md,
+    paddingHorizontal: SPACING.xs,
     marginTop: -2 * vh,
     minHeight: 15 * vh, // Minimum height of 15% of screen height
+    marginHorizontal: '2%', // Center the container
     paddingBottom: 1 * vh, // Add some padding at bottom
   },
   optionCard: {
@@ -101,14 +102,14 @@ export const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
     overflow: 'visible', // Ensure content doesn't overflow
-    padding: SPACING.sm, // Consistent padding
+    padding: SPACING.xs, // Consistent padding
     //maxWidth: 28 * vw,
   },
   // Content container inside card
   optionContent: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-start', // Space items evenly
+    justifyContent: 'space-between', // Space items evenly
     paddingVertical: SPACING.xs, // Top/bottom padding
   },
   optionIcon: {
@@ -140,7 +141,7 @@ export const styles = StyleSheet.create({
     fontSize: Math.min(10, 2.8 * vw),
     color: COLORS.dark + '80',
     textAlign: 'center',
-    marginBottom: SPACING.xs,
+    marginBottom: SPACING.sm,
   },
 
 });
