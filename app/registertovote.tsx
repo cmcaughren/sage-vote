@@ -207,6 +207,7 @@ export default function RegisterToVoteScreen() {
         contentContainerStyle={styles.scrollContent}
         bounces={false}
         showsVerticalScrollIndicator={false}
+        scrollEnabled={false}
       >
         {/* Title Section */}
         <View style={styles.headerSection}>
