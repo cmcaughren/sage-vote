@@ -86,27 +86,29 @@ export const styles = StyleSheet.create({
     maxWidth: 90 * vw,
     paddingHorizontal: SPACING.md,
     marginTop: 2 * vh,
+    minHeight: 15 * vh, // Minimum height of 15% of screen height
+    paddingBottom: 1 * vh, // Add some padding at bottom
   },
   optionCard: {
     flex: 1, // Take equal space
     aspectRatio: 1, // Slightly taller than wide
     backgroundColor: COLORS.white,
     borderRadius: 10,
-    margin: SPACING.md, // Space between cards
+    margin: SPACING.xs, // Space between cards
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
-    shadowRadius: 3,
+    shadowRadius: 2,
     elevation: 2,
-    overflow: 'hidden', // Ensure content doesn't overflow
+    overflow: 'visible', // Ensure content doesn't overflow
     padding: SPACING.sm, // Consistent padding
   },
   // Content container inside card
   optionContent: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-between', // Space items evenly
-    paddingVertical: SPACING.sm, // Top/bottom padding
+    justifyContent: 'flex-start', // Space items evenly
+    paddingVertical: SPACING.xs, // Top/bottom padding
   },
   optionIcon: {
     width: Math.min(40, 10 * vw),
@@ -120,25 +122,26 @@ export const styles = StyleSheet.create({
     fontSize: Math.min(22, 5.5 * vw),
   },
   optionTitle: {
-    fontSize: Math.min(13, 3.3 * vw),
+    fontSize: Math.min(12, 3.3 * vw),
     fontWeight: '600',
     color: COLORS.dark,
     marginBottom: SPACING.xs,
     textAlign: 'center',
   },
   optionDescription: {
-    fontSize: Math.min(12, 3 * vw),
+    fontSize: Math.min(11, 3 * vw),
     color: COLORS.dark + 'CC',
     fontWeight: '500',
     textAlign: 'center',
     marginBottom: SPACING.xs,
   },
   optionSubtext: {
-    fontSize: Math.min(11, 2.8 * vw),
+    fontSize: Math.min(10, 2.8 * vw),
     color: COLORS.dark + '80',
     textAlign: 'center',
-    marginBottom: SPACING.sm,
+    marginBottom: SPACING.xs,
   },
+
 });
 
 export default styles;
