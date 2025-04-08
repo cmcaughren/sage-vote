@@ -3,7 +3,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { useGameContext } from '../context/GameContext';
 import { styles, PATH_COLORS, EMOJI } from '../styles/components/GameBoard.styles';
-import { COLORS } from '../stlyes/theme/colors.ts';
+import { COLORS } from '../styles/theme/colors';
 
 const GameBoard = () => {
   const {
