@@ -53,9 +53,7 @@ const GameBoard = () => {
     const colorIndex = index % (pathColors.length || 1);
     const bgColor = pathColors[colorIndex] || '#cccccc';
 
-    // Calculate tile size adjustments
-    //const tileSizeMultiplier = pathType === transportMode ? 1.1 : 0.9;
-    const adjustedTileSize = (tileSize || 30); // * tileSizeMultiplier;
+
 
     // Apply different styling based on corner type
     let borderRadius = {};
@@ -94,6 +92,11 @@ const GameBoard = () => {
     const isActivePath = pathType === transportMode;
     const isCurrentTile = isActivePath && index === boardPosition;
 
+    // Calculate tile size adjustments
+    // Make current tile slightly larger (1.15x)
+    const sizeMultiplier = isCurrentTile ? 1.15 : 1;
+    const adjustedTileSize = (tileSize || 30) * sizeMultiplier;
+
     // Create glow effect parameters 
     const glowParams = isActivePath ? {
       shadowColor: glowColor,
@@ -124,15 +127,17 @@ const GameBoard = () => {
               opacity: isActivePath ? 1 : 0.6,
               ...borderRadius,
               ...glowParams, // Apply the glow effect
-              // Keep a subtle border for definition
-              borderWidth: 1, //isCurrentTile ? 2 : 0,
-              borderColor: 'rgba(255,255,255,0.5)', //glowColor,
-              // Overlay special border for current and special tiles
-              ...(isCurrentTile && {
-                borderWidth: 3,
-                borderColor: glowColor,
-              }),
 
+              // Add back the default border for ALL tiles
+              borderWidth: 1,
+              borderColor: 'rgba(255,255,255,0.5)', // Light border for all tiles
+
+              // For current tile: thinner border in glow color
+              ...(isCurrentTile && {
+                borderWidth: 1.5, // Thinner border (was 3)
+                borderColor: glowColor,
+                zIndex: 15, // Higher z-index to ensure it stays on top
+              }),
             },
             // Special styling for start/finish tiles
             tile.type === 'start' && {
