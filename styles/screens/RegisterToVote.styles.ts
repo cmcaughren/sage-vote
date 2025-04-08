@@ -10,6 +10,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
+    paddingBottom: 70,
   },
   scrollContent: {
     flexGrow: 1,
@@ -164,10 +165,12 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
   },
   buttonContainer: {
-    width: '100%',
+    position: 'absolute',
+    bottom: 20, // Distance from bottom of screen
+    left: 0,
+    right: 0,
     alignItems: 'center',
-    marginTop: 'auto', // Push to bottom
-    marginBottom: 2 * vh, // Add space at the bottom
+    width: '100%',
   },
   continueButton: {
     backgroundColor: COLORS.secondary,
