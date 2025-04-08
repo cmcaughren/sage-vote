@@ -37,7 +37,7 @@ export const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 90 * vw, // 90% of viewport width
     marginBottom: 8 * vh, // Increased from whatever you had before
-    paddingBottom: 2 * vh, // Add padding to create more space
+    paddingBottom: 4 * vh, // Add padding to create more space
   },
   title: {
     fontSize: Math.min(24, 6 * vw), // Responsive font size
@@ -86,7 +86,7 @@ export const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 90 * vw,
     paddingHorizontal: SPACING.md,
-    //marginTop: 3 * vh, // Add spacing above options container
+    marginBottom: 3 * vh,
   },
   optionCard: {
     flex: 1, // Take equal space
