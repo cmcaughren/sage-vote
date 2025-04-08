@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 5 * vw, // 5% of screen width
-    paddingTop: 8 * vh,
+    paddingTop: 5 * vh,
     paddingBottom: 5 * vh, // 5% of screen height
     overflow: 'visible', // Add this to allow child elements to overflow
   },
@@ -60,7 +60,7 @@ export const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 90 * vw,
     marginTop: SPACING.md,
-    marginBottom: SPACING.lg,
+    //marginBottom: SPACING.lg,
     borderWidth: 1,
     borderColor: COLORS.primary + '30',
   },
