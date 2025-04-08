@@ -5,10 +5,13 @@ import { Dimensions } from 'react-native';
 export function generatePathData() {
   // Get screen dimensions 
   const screenWidth = Dimensions.get('window').width;
-  const screenHeight = Dimensions.get('window').height * 0.55;
+  const screenHeight = Dimensions.get('window').height * 0.75;
 
   // Calculate tile size for a good fit
-  const tileSize = Math.min(screenWidth / 12, screenHeight / 14);
+  const tileSize = Math.min(screenWidth / 12, screenHeight / 16);
+
+  // Calculate vertical spacing factor (how much extra space between rows)
+  const verticalSpacingFactor = 1.5; // Adjust this value as needed (1.0 = no extra space, 2.0 = double space)
 
   // Create a grid system for positioning
   const grid = [];
@@ -17,7 +20,7 @@ export function generatePathData() {
     for (let y = 0; y <= 13; y++) {
       grid[x][y] = {
         x: (x + 0.5) * tileSize,
-        y: (y + 0.5) * tileSize
+        y: (y + 0.5) * tileSize * verticalSpacingFactor
       };
     }
   }
@@ -42,7 +45,8 @@ export function generatePathData() {
       bicycle: bicyclePath.length - 1
     },
     // Tile size for consistent rendering
-    tileSize: tileSize
+    tileSize: tileSize,
+    verticalSpacingFactor
   };
 }
 
@@ -110,7 +114,7 @@ function createBusPath(grid) {
   // Right 3, 26, 27, 28
   tiles.push({ id: currentId++, x: grid[2][4].x, y: grid[2][4].y, corner: 'none' });
   tiles.push({ id: currentId++, x: grid[3][4].x, y: grid[3][4].y, corner: 'none' });
-  tiles.push({ id: currentId++, x: grid[4][4].x, y: grid[4][4].y, corner: 'bottom-right'});
+  tiles.push({ id: currentId++, x: grid[4][4].x, y: grid[4][4].y, corner: 'bottom-right' });
 
   // Up 1 29
   tiles.push({ id: currentId++, x: grid[4][3].x, y: grid[4][3].y, corner: 'top-right' }); // Turn corner

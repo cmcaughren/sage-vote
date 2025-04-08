@@ -2,6 +2,22 @@
 import { StyleSheet } from 'react-native';
 import { COLORS } from '../theme/colors';
 
+// Get screen dimensions
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+
+// Calculate responsive units
+const vw = screenWidth / 100; // 1% of viewport width
+const vh = screenHeight / 100; // 1% of viewport height
+
+// Spacing constants
+const SPACING = {
+  xs: 4,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 24
+};
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -29,8 +45,8 @@ export const styles = StyleSheet.create({
   },
   notebookIconContainer: {
     position: 'absolute',
-    top: 10,
-    right: 10,
+    top: 20 * vw,
+    right: 10 * vw,
     zIndex: 10,
   },
   boardContainer: {
