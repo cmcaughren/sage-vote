@@ -141,7 +141,7 @@ export const styles = StyleSheet.create({
     borderColor: COLORS.primary,
     borderRadius: 8,
     width: '100%',
-    marginBottom: 4 * vh, // More space after picker
+    marginBottom: 2 * vh, // More space after picker
     overflow: 'hidden',
   },
   picker: {
