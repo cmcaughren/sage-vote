@@ -83,7 +83,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     width: '100%',
-    maxWidth: 90 * vw,
+    maxWidth: 95 * vw,
     paddingHorizontal: SPACING.md,
     marginTop: -2 * vh,
     minHeight: 15 * vh, // Minimum height of 15% of screen height
