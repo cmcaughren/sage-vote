@@ -102,7 +102,7 @@ export const styles = StyleSheet.create({
     elevation: 2,
     overflow: 'visible', // Ensure content doesn't overflow
     padding: SPACING.sm, // Consistent padding
-    maxWidth: 28 * vw,
+    //maxWidth: 28 * vw,
   },
   // Content container inside card
   optionContent: {
