@@ -125,8 +125,14 @@ const GameBoard = () => {
               ...borderRadius,
               ...glowParams, // Apply the glow effect
               // Keep a subtle border for definition
-              borderWidth: isCurrentTile ? 2 : 0,
-              borderColor: glowColor,
+              borderWidth: 1, //isCurrentTile ? 2 : 0,
+              borderColor: 'rgba(255,255,255,0.5)', //glowColor,
+              // Overlay special border for current and special tiles
+              ...(isCurrentTile && {
+                borderWidth: 3,
+                borderColor: glowColor,
+              }),
+
             },
             // Special styling for start/finish tiles
             tile.type === 'start' && {
