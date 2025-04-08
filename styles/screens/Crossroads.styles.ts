@@ -85,8 +85,8 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     width: '100%',
     maxWidth: 90 * vw,
-    paddingHorizontal: SPACING.sm,
-    marginTop: 3 * vh, // Add spacing above options container
+    paddingHorizontal: SPACING.md,
+    //marginTop: 3 * vh, // Add spacing above options container
   },
   optionCard: {
     flex: 1, // Take equal space
