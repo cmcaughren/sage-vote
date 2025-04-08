@@ -49,11 +49,17 @@ const GameBoard = () => {
       else if (pathType === 'bus') glowColor = COLORS.info;
       else if (pathType === 'bicycle') glowColor = '#c0bc00';//COLORS.warning;
     }
+
     // Choose color based on index to create color variation
     const colorIndex = index % (pathColors.length || 1);
     const bgColor = pathColors[colorIndex] || '#cccccc';
 
+    const isActivePath = pathType === transportMode;
+    const isCurrentTile = isActivePath && index === boardPosition;
 
+    // MOVE THIS SECTION UP - Calculate tile size adjustments first!
+    const sizeMultiplier = isCurrentTile ? 1.15 : 1;
+    const adjustedTileSize = (tileSize || 30) * sizeMultiplier;
 
     // Apply different styling based on corner type
     let borderRadius = {};
@@ -88,14 +94,6 @@ const GameBoard = () => {
     const showSpecialEmoji =
       (tile.type === 'start' && (pathType === transportMode || (transportMode === null && pathType === 'bus'))) ||
       (tile.type === 'finish' && (pathType === transportMode || (transportMode === null && pathType === 'bus')));
-
-    const isActivePath = pathType === transportMode;
-    const isCurrentTile = isActivePath && index === boardPosition;
-
-    // Calculate tile size adjustments
-    // Make current tile slightly larger (1.15x)
-    const sizeMultiplier = isCurrentTile ? 1.15 : 1;
-    const adjustedTileSize = (tileSize || 30) * sizeMultiplier;
 
     // Create glow effect parameters 
     const glowParams = isActivePath ? {
