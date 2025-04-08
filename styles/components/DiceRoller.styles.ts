@@ -5,9 +5,11 @@ import { COLORS } from '../theme/colors';
 export const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     padding: 20,
     height: 400,
+    paddingTop: 40, // Reduced from default padding
+    backgroundColor: 'rgba(200, 240, 200, 0.1)', // Very light green with low opacity
   },
   compactContainer: {
     height: 200, // Reduced from 300
@@ -26,7 +28,8 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 5,
-    marginBottom: 40,
+    marginBottom: 30,
+    marginTop: 10, // Add this - creates some space at top
   },
   compactDiceContainer: {
     width: 120,
@@ -37,6 +40,7 @@ export const styles = StyleSheet.create({
   bottomSection: {
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 20, // Add explicit margin top
   },
   compactBottomSection: {
     marginTop: 0,
