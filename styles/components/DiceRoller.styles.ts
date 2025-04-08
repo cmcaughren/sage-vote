@@ -10,7 +10,6 @@ export const styles = StyleSheet.create({
     height: 400,
     paddingTop: 15, // Reduced from default padding
     paddingBottom: 15,
-    backgroundColor: COLORS.error, // Very light green with low opacity
   },
   compactContainer: {
     height: 200, // Reduced from 300

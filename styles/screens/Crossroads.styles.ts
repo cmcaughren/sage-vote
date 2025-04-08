@@ -78,7 +78,6 @@ export const styles = StyleSheet.create({
     position: 'relative', // Add this
     zIndex: 10, // Ensure dice stays on top
     overflow: 'visible', // CRITICAL: Allow animation to extend outside container
-    backgroundColor: '#E74C3C', // Comment out when done! Testing 
   },
   // Responsive option container
   optionsContainer: {
