@@ -8,8 +8,8 @@ export const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     padding: 20,
     height: 400,
-    paddingTop: 40, // Reduced from default padding
-    backgroundColor: 'rgba(200, 240, 200, 0.1)', // Very light green with low opacity
+    //paddingTop: , // Reduced from default padding
+    backgroundColor: COLORS.error, // Very light green with low opacity
   },
   compactContainer: {
     height: 200, // Reduced from 300
