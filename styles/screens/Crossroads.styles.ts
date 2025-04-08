@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 5 * vw, // 5% of screen width
-    paddingTop: Platform.OS === 'ios' ? 2 * vh : 4 * vh, // Adjusted for platform
+    paddingTop: 8 * vh,
     paddingBottom: 5 * vh, // 5% of screen height
     overflow: 'visible', // Add this to allow child elements to overflow
   },
