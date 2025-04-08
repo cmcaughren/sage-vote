@@ -156,7 +156,7 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
     width: '100%',
     alignItems: 'center',
-    marginBottom: 6 * vh, // Add significant space after action button
+    marginBottom: 2 * vh, // Add significant space after action button
   },
   actionButtonText: {
     color: COLORS.white,
