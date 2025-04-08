@@ -60,7 +60,6 @@ export const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 90 * vw,
     marginTop: SPACING.md,
-    //marginBottom: SPACING.lg,
     borderWidth: 1,
     borderColor: COLORS.primary + '30',
   },
@@ -86,18 +85,18 @@ export const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 90 * vw,
     paddingHorizontal: SPACING.md,
-    marginBottom: 2 * vh,
+    marginTop: 2 * vh,
   },
   optionCard: {
     flex: 1, // Take equal space
-    aspectRatio: 0.9, // Slightly taller than wide
+    aspectRatio: 1, // Slightly taller than wide
     backgroundColor: COLORS.white,
     borderRadius: 10,
-    margin: SPACING.xs, // Space between cards
+    margin: SPACING.md, // Space between cards
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
-    shadowRadius: 2,
+    shadowRadius: 3,
     elevation: 2,
     overflow: 'hidden', // Ensure content doesn't overflow
     padding: SPACING.sm, // Consistent padding

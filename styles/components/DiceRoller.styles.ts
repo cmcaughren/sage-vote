@@ -5,7 +5,7 @@ import { COLORS } from '../theme/colors';
 export const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     padding: 20,
     height: 400,
     paddingTop: 15, // Reduced from default padding
