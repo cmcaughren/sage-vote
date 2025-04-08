@@ -166,12 +166,13 @@ export const styles = StyleSheet.create({
   },
   buttonContainer: {
     position: 'absolute',
-    bottom: 20, // Distance from bottom of screen
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    width: '100%',
-    justifyContent: 'center', // Help with centering
+    bottom: 20,
+    left: '5%', // 5% from left
+    right: '5%', // 5% from right
+    // No width setting - let it be determined by left/right
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center', // Center the child horizontally
   },
   continueButton: {
     backgroundColor: COLORS.secondary,
@@ -180,7 +181,6 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     width: '90%',
-    alignSelf: 'center', // Additional centering
     maxWidth: 300,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
