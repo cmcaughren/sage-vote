@@ -98,18 +98,33 @@ const GameBoard = () => {
     // Create glow effect parameters 
     const glowParams = isActivePath ? {
       shadowColor: glowColor,
-      shadowOffset: { width: 0, height: 0 }, // No offset for even glow
+      shadowOffset: { width: -1, height: -1 }, //Changed to negative for "pop up" effect
       shadowOpacity: isCurrentTile ? 0.9 : 0.7, // Stronger glow for current tile
       shadowRadius: isCurrentTile ? 8 : 5, // Larger radius for current tile
       elevation: isCurrentTile ? 10 : 6, // Higher elevation for current tile on Android
     } : {
       // Default shadow for non-active paths
       shadowColor: COLORS.black,
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.2,
-      shadowRadius: 1,
-      elevation: 2,
+      shadowOffset: { width: -1, height: -1 },
+      shadowOpacity: 0.3,
+      shadowRadius: 2,
+      elevation: 3,
     };
+
+    // Add highlight effect on opposite sides to enhance "pop up" appearance
+    const highlightEffect = {
+      borderTopWidth: 1,
+      borderLeftWidth: 1,
+      borderTopColor: 'rgba(255,255,255,0.8)', // Lighter top border
+      borderLeftColor: 'rgba(255,255,255,0.8)', // Lighter left border
+      borderRightWidth: 1,
+      borderBottomWidth: 1,
+      borderRightColor: 'rgba(0,0,0,0.1)', // Darker right border
+      borderBottomColor: 'rgba(0,0,0,0.1)', // Darker bottom border
+    };
+
+    // Determine if this is a start/finish tile
+    const isSpecialTile = tile.type === 'start' || tile.type === 'finish';
     return (
       <View key={`tile-${pathType}-${tile.id}`}>
         {/* Tile square */}
@@ -119,16 +134,16 @@ const GameBoard = () => {
             {
               width: adjustedTileSize,
               height: adjustedTileSize,
-              backgroundColor: bgColor,
+              backgroundColor: isSpecialTile ? COLORS.primary : bgColor,
               left: tile.x - adjustedTileSize / 2,
               top: tile.y - adjustedTileSize / 2,
               opacity: isActivePath ? 1 : 0.6,
               ...borderRadius,
               ...glowParams, // Apply the glow effect
-
+              ...highlightEffect, // Add highlight effect for "pop up" appearance
               // Add back the default border for ALL tiles
-              borderWidth: 1,
-              borderColor: 'rgba(255,255,255,0.5)', // Light border for all tiles
+              //borderWidth: 1,
+              //borderColor: 'rgba(255,255,255,0.5)', // Light border for all tiles
 
               // For current tile: thinner border in glow color
               ...(isCurrentTile && {
@@ -137,26 +152,21 @@ const GameBoard = () => {
                 zIndex: 15, // Higher z-index to ensure it stays on top
               }),
             },
-            // Special styling for start/finish tiles
-            tile.type === 'start' && {
-              borderColor: '#FFD700',
+            // Special styling for start/finish tiles - now sage colored
+            isSpecialTile && {
+              borderColor: COLORS.primary, // Sage border instead of gold
               borderWidth: 3,
               zIndex: 5,
-              shadowColor: '#FFD700',
-              shadowOpacity: 0.8,
-              shadowRadius: 6,
-            },
-            tile.type === 'finish' && {
-              borderColor: '#FFD700',
-              borderWidth: 3,
-              zIndex: 5,
-              shadowColor: '#FFD700',
+              shadowColor: COLORS.primary, // Sage glow
               shadowOpacity: 0.8,
               shadowRadius: 6,
             }
           ]}
         >
-          <Text style={styles.tileNumber}>{tile.id}</Text>
+          {/* Only show numbers on regular tiles, not on special tiles */}
+          {!isSpecialTile && (
+            <Text style={styles.tileNumber}>{tile.id}</Text>
+          )}
 
           {/* Special emoji below player icon */}
           {showSpecialEmoji && (
