@@ -190,18 +190,18 @@ const GameBoard = () => {
           <View
             style={{
               position: 'absolute',
-              left: tile.type === 'start' ? tile.x - 30 : tile.x + 5, // Left of start, right of finish
-              top: tile.type === 'start' ? tile.y + 30 : tile.y - 30, // Below start, above finish
+              left: tile.type === 'start' ? tile.x - 28 : tile.x + 2, // Left of start, right of finish
+              top: tile.type === 'start' ? tile.y + 20 : tile.y - 20, // Below start, above finish
               zIndex: 20,
               backgroundColor: COLORS.primary + '40', // Semi-transparent sage background
-              padding: 5,
-              borderRadius: 10,
+              padding: 4,
+              borderRadius: 8,
               borderWidth: 1,
               borderColor: COLORS.primary,
             }}
           >
             <Text style={{
-              fontSize: 20,
+              fontSize: 16,
               textAlign: 'center',
             }}>
               {tile.type === 'start' ? '🏠 Home' : '🗳️ Poll'}
@@ -220,8 +220,8 @@ const GameBoard = () => {
   ].filter(path => Array.isArray(path.tiles) && path.tiles.length > 0);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.board}>
+    <View style={[styles.container, { flex: 1, height: '90%' }]}>
+      <View style={[styles.board, { height: '100%' }]}>
         {/* Render all paths - bottom to top for proper layering */}
         {pathsToRender.map(path =>
           path.tiles.map((tile, index) =>
