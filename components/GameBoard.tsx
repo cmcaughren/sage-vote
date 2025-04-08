@@ -1,6 +1,6 @@
 // components/GameBoard.tsx
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Dimensions } from 'react-native';
 import { useGameContext } from '../context/GameContext';
 import { styles, PATH_COLORS, EMOJI } from '../styles/components/GameBoard.styles';
 import { COLORS } from '../styles/theme/colors';
@@ -37,6 +37,84 @@ const GameBoard = () => {
     }
   };
 
+  // Grid calculation function - recreates grid from pathCalculations.js
+  const calculateGridPosition = (gridX, gridY) => {
+    // This recreates the same grid calculation used in pathCalculations.js
+    const screenWidth = Dimensions.get('window').width;
+    const screenHeight = Dimensions.get('window').height * 0.65;
+
+    // Calculate tile sizes consistent with pathCalculations.js
+    const calculatedTileSize = Math.min(screenWidth / 12, screenHeight / 16);
+    const verticalSpacingFactor = 1.3; // Same factor used in path calculations
+
+    // Return the exact X,Y coordinates for the given grid position
+    return {
+      x: (gridX + 0.5) * calculatedTileSize,
+      y: (gridY + 0.5) * calculatedTileSize * verticalSpacingFactor
+    };
+  };
+
+  // Function to render special labels for start/finish tiles
+  const renderSpecialTileLabel = (tileType) => {
+    // Get the grid coordinates for the labels based on known start/finish positions
+    let labelGridPos;
+
+    if (tileType === 'start') {
+      // Home should be at grid position (6,13) - below the start tile at (6,12)
+      labelGridPos = calculateGridPosition(6, 13);
+    } else if (tileType === 'finish') {
+      // Poll should be at grid position (5,0) - above the finish tile at (5,1)
+      labelGridPos = calculateGridPosition(5, 0);
+    }
+
+    return (
+      <View
+        style={{
+          position: 'absolute',
+          left: labelGridPos.x - (tileSize * 0.75), // Center it
+          top: labelGridPos.y - (tileSize * 0.75), // Center it
+          zIndex: 20,
+          alignItems: 'center',
+          width: tileSize * 1.5,
+        }}
+      >
+        {/* For finish/poll, render text first (above) */}
+        {tileType === 'finish' && (
+          <Text style={{
+            fontSize: 14,
+            color: COLORS.info,
+            fontWeight: 'bold',
+            marginBottom: 4,
+            textAlign: 'center',
+          }}>
+            Poll
+          </Text>
+        )}
+
+        {/* Emoji */}
+        <Text style={{
+          fontSize: 24,
+          textAlign: 'center',
+        }}>
+          {tileType === 'start' ? '🏠' : '🗳️'}
+        </Text>
+
+        {/* For start/home, render text last (below) */}
+        {tileType === 'start' && (
+          <Text style={{
+            fontSize: 14,
+            color: COLORS.info,
+            fontWeight: 'bold',
+            marginTop: 4,
+            textAlign: 'center',
+          }}>
+            Home
+          </Text>
+        )}
+      </View>
+    );
+  };
+
   // Render a single tile based on its properties
   const renderTile = (pathType, tile, index, isActive) => {
     // Get colors based on path type with safe fallback
@@ -49,15 +127,16 @@ const GameBoard = () => {
       else if (pathType === 'bus') glowColor = COLORS.info;
       else if (pathType === 'bicycle') glowColor = '#c0bc00';//COLORS.warning;
     }
-
     // Choose color based on index to create color variation
     const colorIndex = index % (pathColors.length || 1);
     const bgColor = pathColors[colorIndex] || '#cccccc';
 
     const isActivePath = pathType === transportMode;
     const isCurrentTile = isActivePath && index === boardPosition;
+    const isSpecialTile = tile.type === 'start' || tile.type === 'finish';
 
-    // MOVE THIS SECTION UP - Calculate tile size adjustments first!
+    // Calculate tile size adjustments
+    // Make current tile slightly larger (1.15x)
     const sizeMultiplier = isCurrentTile ? 1.15 : 1;
     const adjustedTileSize = (tileSize || 30) * sizeMultiplier;
 
@@ -95,20 +174,20 @@ const GameBoard = () => {
       (tile.type === 'start' && (pathType === transportMode || (transportMode === null && pathType === 'bus'))) ||
       (tile.type === 'finish' && (pathType === transportMode || (transportMode === null && pathType === 'bus')));
 
-    // Create glow effect parameters 
+    // POPPING UP EFFECT: Modify the shadow to create a raised appearance
     const glowParams = isActivePath ? {
       shadowColor: glowColor,
-      shadowOffset: { width: -1, height: -1 }, //Changed to negative for "pop up" effect
+      shadowOffset: { width: -1, height: -1 }, // Changed to negative for "pop up" effect
       shadowOpacity: isCurrentTile ? 0.95 : 0.85, // Stronger glow for current tile
       shadowRadius: isCurrentTile ? 10 : 7, // Larger radius for current tile
       elevation: isCurrentTile ? 15 : 10, // Higher elevation for current tile on Android
     } : {
-      // Default shadow for non-active paths
+      // Default shadow for non-active paths - also make them pop up
       shadowColor: COLORS.black,
-      shadowOffset: { width: -1, height: -1 },
-      shadowOpacity: 0.4,
-      shadowRadius: 3,
-      elevation: 4,
+      shadowOffset: { width: -1, height: -1 }, // Changed to negative
+      shadowOpacity: 0.4, // Increased opacity
+      shadowRadius: 3, // Slightly increased radius
+      elevation: 4, // Increased elevation
     };
 
     // Add highlight effect on opposite sides to enhance "pop up" appearance
@@ -123,8 +202,6 @@ const GameBoard = () => {
       borderBottomColor: 'rgba(0,0,0,0.1)', // Darker bottom border
     };
 
-    // Determine if this is a start/finish tile
-    const isSpecialTile = tile.type === 'start' || tile.type === 'finish';
     return (
       <View key={`tile-${pathType}-${tile.id}`}>
         {/* Tile square */}
@@ -134,16 +211,17 @@ const GameBoard = () => {
             {
               width: adjustedTileSize,
               height: adjustedTileSize,
-              backgroundColor: isSpecialTile ? COLORS.primary : bgColor,
+              backgroundColor: isSpecialTile ? COLORS.primary : bgColor, // Sage for start/finish
               left: tile.x - adjustedTileSize / 2,
               top: tile.y - adjustedTileSize / 2,
               opacity: isActivePath ? 1 : 0.6,
               ...borderRadius,
               ...glowParams, // Apply the glow effect
-              ...highlightEffect, // Add highlight effect for "pop up" appearance
+              ...highlightEffect, // Add highlight for "pop up" appearance
+
               // Add back the default border for ALL tiles
-              //borderWidth: 1,
-              //borderColor: 'rgba(255,255,255,0.5)', // Light border for all tiles
+              borderWidth: 1,
+              borderColor: 'rgba(255,255,255,0.5)', // Light border for all tiles
 
               // For current tile: thinner border in glow color
               ...(isCurrentTile && {
@@ -185,59 +263,9 @@ const GameBoard = () => {
             </Text>
           </View>
         )}
-        // In components/GameBoard.tsx - update the special emoji section
 
-        {/* REPOSITIONED: Special emojis aligned with grid */}
-        {showSpecialEmoji && (
-          <View
-            style={{
-              position: 'absolute',
-              // Position based on the tile position - locked to grid
-              left: tile.x - (adjustedTileSize * 0.5), // Center horizontally with the tile
-              // Position above or below the tile by a full tile height
-              top: tile.type === 'finish'
-                ? tile.y - (adjustedTileSize * 1.5) // Above for finish/poll
-                : tile.y + (adjustedTileSize * 1.2), // Below for start/home
-              zIndex: 20,
-              alignItems: 'center', // Center contents
-              width: adjustedTileSize * 2, // Make it wider than a tile for text
-            }}
-          >
-            {/* For finish/poll, render text first (above) */}
-            {tile.type === 'finish' && (
-              <Text style={{
-                fontSize: 14,
-                color: COLORS.info, // Use info color as requested
-                fontWeight: 'bold',
-                marginBottom: 4,
-                textAlign: 'center',
-              }}>
-                Poll
-              </Text>
-            )}
-
-            {/* Emoji */}
-            <Text style={{
-              fontSize: 24, // Larger emoji
-              textAlign: 'center',
-            }}>
-              {tile.type === 'start' ? '🏠' : '🗳️'}
-            </Text>
-
-            {/* For start/home, render text last (below) */}
-            {tile.type === 'start' && (
-              <Text style={{
-                fontSize: 14,
-                color: COLORS.info, // Use info color as requested
-                fontWeight: 'bold',
-                marginTop: 4,
-                textAlign: 'center',
-              }}>
-                Home
-              </Text>
-            )}
-          </View>
-        )}
+        {/* Special label using grid-based positioning */}
+        {showSpecialEmoji && renderSpecialTileLabel(tile.type)}
       </View>
     );
   };
