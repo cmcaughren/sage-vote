@@ -171,6 +171,7 @@ export const styles = StyleSheet.create({
     right: 0,
     alignItems: 'center',
     width: '100%',
+    justifyContent: 'center', // Help with centering
   },
   continueButton: {
     backgroundColor: COLORS.secondary,
@@ -179,6 +180,7 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     width: '90%',
+    alignSelf: 'center', // Additional centering
     maxWidth: 300,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
