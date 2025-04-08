@@ -60,8 +60,8 @@ const GameBoard = () => {
     let labelGridPos;
 
     if (tileType === 'start') {
-      // Home should be at grid position (6,13) - below the start tile at (6,12)
-      labelGridPos = calculateGridPosition(6, 13);
+      // Move Home icon further down and make it bigger
+      labelGridPos = calculateGridPosition(6, 14); // Changed from 13 to 14 to move it lower
     } else if (tileType === 'finish') {
       // Poll should be at grid position (5,0) - above the finish tile at (5,1)
       labelGridPos = calculateGridPosition(5, 0);
@@ -71,11 +71,13 @@ const GameBoard = () => {
       <View
         style={{
           position: 'absolute',
-          left: labelGridPos.x - (tileSize * 0.75), // Center it
-          top: labelGridPos.y - (tileSize * 0.75), // Center it
-          zIndex: 20,
+          left: labelGridPos.x - (tileSize * 0.75),
+          top: labelGridPos.y - (tileSize * 0.75),
+          zIndex: 30, // Increased from 20 to ensure it's on top
           alignItems: 'center',
           width: tileSize * 1.5,
+          // Add a visible background to debug
+          backgroundColor: tileType === 'start' ? 'rgba(255,255,255,0.3)' : 'transparent',
         }}
       >
         {/* For finish/poll, render text first (above) */}
@@ -169,10 +171,12 @@ const GameBoard = () => {
         borderRadius = { borderRadius: adjustedTileSize * 0.2 };
     }
 
-    // Only render visible special emoji on start and finish of active path
+    // Fixed condition to show special emoji
     const showSpecialEmoji =
-      (tile.type === 'start' && (pathType === transportMode || (transportMode === null && pathType === 'bus'))) ||
-      (tile.type === 'finish' && (pathType === transportMode || (transportMode === null && pathType === 'bus')));
+      // For the start tile (Home), only show for the active transport path
+      (tile.type === 'start' && pathType === transportMode) ||
+      // For the finish tile (Poll), only show for the active transport path
+      (tile.type === 'finish' && pathType === transportMode);
 
     // POPPING UP EFFECT: Modify the shadow to create a raised appearance
     const glowParams = isActivePath ? {
@@ -290,6 +294,31 @@ const GameBoard = () => {
               path.type === transportMode && index === boardPosition
             )
           )
+        )}
+
+        {/* Render Home icon explicitly here as a fallback */}
+        {transportMode && (
+          <View
+            style={{
+              position: 'absolute',
+              left: calculateGridPosition(6, 14).x - (tileSize * 0.75),
+              top: calculateGridPosition(6, 14).y - (tileSize * 0.75),
+              zIndex: 50,
+              alignItems: 'center',
+              width: tileSize * 1.5,
+            }}
+          >
+            <Text style={{ fontSize: 24, textAlign: 'center' }}>🏠</Text>
+            <Text style={{
+              fontSize: 14,
+              color: COLORS.info,
+              fontWeight: 'bold',
+              marginTop: 4,
+              textAlign: 'center',
+            }}>
+              Home
+            </Text>
+          </View>
         )}
       </View>
     </View>
