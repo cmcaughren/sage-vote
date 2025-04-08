@@ -37,6 +37,8 @@ export const styles = StyleSheet.create({
   boardContainer: {
     flex: 1,
     margin: 10,
+    marginTop: 70, // Increased from any previous value to move board down
+    marginBottom: 80, // Keep space for the button at bottom
     borderRadius: 10,
     overflow: 'hidden',
     backgroundColor: COLORS.white,

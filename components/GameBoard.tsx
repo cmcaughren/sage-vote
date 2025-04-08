@@ -99,16 +99,16 @@ const GameBoard = () => {
     const glowParams = isActivePath ? {
       shadowColor: glowColor,
       shadowOffset: { width: -1, height: -1 }, //Changed to negative for "pop up" effect
-      shadowOpacity: isCurrentTile ? 0.9 : 0.7, // Stronger glow for current tile
-      shadowRadius: isCurrentTile ? 8 : 5, // Larger radius for current tile
-      elevation: isCurrentTile ? 10 : 6, // Higher elevation for current tile on Android
+      shadowOpacity: isCurrentTile ? 0.95 : 0.85, // Stronger glow for current tile
+      shadowRadius: isCurrentTile ? 10 : 7, // Larger radius for current tile
+      elevation: isCurrentTile ? 15 : 10, // Higher elevation for current tile on Android
     } : {
       // Default shadow for non-active paths
       shadowColor: COLORS.black,
       shadowOffset: { width: -1, height: -1 },
-      shadowOpacity: 0.3,
-      shadowRadius: 2,
-      elevation: 3,
+      shadowOpacity: 0.4,
+      shadowRadius: 3,
+      elevation: 4,
     };
 
     // Add highlight effect on opposite sides to enhance "pop up" appearance
@@ -167,13 +167,6 @@ const GameBoard = () => {
           {!isSpecialTile && (
             <Text style={styles.tileNumber}>{tile.id}</Text>
           )}
-
-          {/* Special emoji below player icon */}
-          {showSpecialEmoji && (
-            <Text style={styles.specialEmoji}>
-              {tile.type === 'start' ? EMOJI.start : EMOJI.finish}
-            </Text>
-          )}
         </View>
 
         {/* Player token - keep this separate for proper layering */}
@@ -189,6 +182,29 @@ const GameBoard = () => {
             <Text style={styles.emojiText}>
               {transportMode === 'bus' ? EMOJI.bus :
                 transportMode === 'carpool' ? EMOJI.carpool : EMOJI.bicycle}
+            </Text>
+          </View>
+        )}
+        {/* REPOSITIONED: Special emojis outside tiles */}
+        {showSpecialEmoji && (
+          <View
+            style={{
+              position: 'absolute',
+              left: tile.type === 'start' ? tile.x - 30 : tile.x + 5, // Left of start, right of finish
+              top: tile.type === 'start' ? tile.y + 30 : tile.y - 30, // Below start, above finish
+              zIndex: 20,
+              backgroundColor: COLORS.primary + '40', // Semi-transparent sage background
+              padding: 5,
+              borderRadius: 10,
+              borderWidth: 1,
+              borderColor: COLORS.primary,
+            }}
+          >
+            <Text style={{
+              fontSize: 20,
+              textAlign: 'center',
+            }}>
+              {tile.type === 'start' ? '🏠 Home' : '🗳️ Poll'}
             </Text>
           </View>
         )}
