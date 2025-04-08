@@ -85,7 +85,7 @@ export const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 90 * vw,
     paddingHorizontal: SPACING.md,
-    marginTop: 2 * vh,
+    marginTop: -2 * vh,
     minHeight: 15 * vh, // Minimum height of 15% of screen height
     paddingBottom: 1 * vh, // Add some padding at bottom
   },
@@ -94,7 +94,7 @@ export const styles = StyleSheet.create({
     aspectRatio: 1, // Slightly taller than wide
     backgroundColor: COLORS.white,
     borderRadius: 10,
-    margin: SPACING.xs, // Space between cards
+    margin: SPACING.sm, // Space between cards
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
@@ -102,6 +102,7 @@ export const styles = StyleSheet.create({
     elevation: 2,
     overflow: 'visible', // Ensure content doesn't overflow
     padding: SPACING.sm, // Consistent padding
+    maxWidth: 28 * vw,
   },
   // Content container inside card
   optionContent: {
