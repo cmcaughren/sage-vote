@@ -21,16 +21,24 @@ export const styles = StyleSheet.create({
     alignItems: 'center', // Center content
   },
   title: {
-    fontSize: 22, // Increased from 20
+    fontSize: 24, // Slightly larger
     fontWeight: 'bold',
     color: COLORS.white,
     textAlign: 'center',
+    textShadowColor: COLORS.info, // Periwinkle shadow
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+    marginBottom: 4, // Add space between title and subtitle
   },
   subtitle: {
-    fontSize: 18, // Increased from 16
+    fontSize: 20, // Bigger than before
     color: COLORS.white,
-    marginTop: 5,
     textAlign: 'center',
+    fontWeight: '600',
+    // Add a subtle glow-like effect with periwinkle
+    textShadowColor: COLORS.info,
+    textShadowOffset: { width: 0.5, height: 0.5 },
+    textShadowRadius: 3,
   },
   cardInfo: {
     fontSize: 14,
@@ -40,7 +48,7 @@ export const styles = StyleSheet.create({
   boardContainer: {
     flex: 1,
     margin: 10,
-    marginTop: 50,
+    marginTop: 30, // Adjusted for better spacing
     marginBottom: 60,
     borderRadius: 10,
     overflow: 'visible',
