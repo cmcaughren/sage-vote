@@ -25,7 +25,6 @@ const NotebookIcon: React.FC<NotebookIconProps> = ({ onPress, count = 0 }) => {
           </View>
         )}
       </View>
-      <Text style={styles.label}>Notebook</Text>
     </TouchableOpacity>
   );
 };

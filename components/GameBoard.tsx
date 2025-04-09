@@ -80,7 +80,7 @@ const GameBoard = () => {
       >
         {/* Emoji */}
         <Text style={{
-          fontSize: 36,
+          fontSize: 32,
           textAlign: 'center',
         }}>
           {tileType === 'start' ? '🏠' : '🗳️'}
