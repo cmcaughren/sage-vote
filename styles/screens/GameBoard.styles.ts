@@ -8,37 +8,30 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
   },
   header: {
-    flexDirection: 'row', // Change to row to allow horizontal layout
-    justifyContent: 'space-between', // Push items to opposite ends
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingVertical: 15,
     paddingHorizontal: 15,
-    backgroundColor: COLORS.primary, // Sage green
+    backgroundColor: COLORS.primary, // Sage green header
     alignItems: 'center',
-    width: '100%', // Ensure full width
+    width: '100%',
   },
   headerContent: {
     flex: 1, // Take available space
     alignItems: 'center', // Center content
   },
   title: {
-    fontSize: 24, // Slightly larger
+    fontSize: 24,
     fontWeight: 'bold',
     color: COLORS.white,
     textAlign: 'center',
-    textShadowColor: COLORS.info, // Periwinkle shadow
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
-    marginBottom: 4, // Add space between title and subtitle
+    marginBottom: 4,
   },
   subtitle: {
-    fontSize: 20, // Bigger than before
+    fontSize: 20,
     color: COLORS.white,
     textAlign: 'center',
     fontWeight: '600',
-    // Add a subtle glow-like effect with periwinkle
-    textShadowColor: COLORS.info,
-    textShadowOffset: { width: 0.5, height: 0.5 },
-    textShadowRadius: 3,
   },
   cardInfo: {
     fontSize: 14,
