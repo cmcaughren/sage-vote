@@ -15,11 +15,11 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingTop: 30, // Increased padding to move content down
-    marginBottom: 20, // More space before the game board
+    marginBottom: 10, // More space before the game board
     position: 'relative', // For positioning the notebook icon
   },
   title: {
-    fontSize: 30, // Slightly larger
+    fontSize: 26, // Slightly larger
     fontWeight: 'bold',
     color: COLORS.dark, // Changed to dark color instead of periwinkle
     textAlign: 'center',
@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.dark,
     textAlign: 'center',
-    marginBottom: 12,
+    marginBottom: 10,
   },
 
   // Transport mode display
