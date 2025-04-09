@@ -31,6 +31,7 @@ interface GameContextType {
   pathData: any;
   pathLengths: any;
   tileSize: number;
+  verticalSpacingFactor: number;
 
   // Card tracking
   drawnCards: Record<string, string[]>;
@@ -61,6 +62,7 @@ const GameContext = createContext<GameContextType>({
   pathData: preCalculatedData.pathData,
   pathLengths: preCalculatedData.pathLengths,
   tileSize: preCalculatedData.tileSize,
+  verticalSpacingFactor: preCalculatedData.verticalSpacingFactor,
 
   drawnCards: { any: [], bus: [], carpool: [], bicycle: [] },
   resetDeck: () => { },
@@ -296,6 +298,7 @@ export const GameProvider = ({ children }) => {
         pathData: preCalculatedData.pathData,
         pathLengths: preCalculatedData.pathLengths,
         tileSize: preCalculatedData.tileSize,
+        verticalSpacingFactor: preCalculatedData.verticalSpacingFactor,
 
         drawnCards,
         resetDeck,

@@ -10,7 +10,8 @@ const GameBoard = () => {
     transportMode,
     boardPosition,
     pathData,
-    tileSize
+    tileSize,
+    verticalSpacingFactor,
   } = useGameContext();
 
   // Check if we have valid data before proceeding
@@ -45,7 +46,6 @@ const GameBoard = () => {
 
     // Calculate tile sizes consistent with pathCalculations.js
     const calculatedTileSize = Math.min(screenWidth / 12, screenHeight / 16);
-    const verticalSpacingFactor = 1.3; // Same factor used in path calculations
 
     // Return the exact X,Y coordinates for the given grid position
     return {
@@ -61,7 +61,7 @@ const GameBoard = () => {
 
     if (tileType === 'start') {
       // Move Home icon further down and make it bigger
-      labelGridPos = calculateGridPosition(6, 14); // Changed from 13 to 14 to move it lower
+      labelGridPos = calculateGridPosition(6, 13); // Changed from 13 to 14 to move it lower
     } else if (tileType === 'finish') {
       // Poll should be at grid position (5,0) - above the finish tile at (5,1)
       labelGridPos = calculateGridPosition(5, 0);
@@ -75,7 +75,7 @@ const GameBoard = () => {
           top: labelGridPos.y - (tileSize * 0.75),
           zIndex: 30, // Increased from 20 to ensure it's on top
           alignItems: 'center',
-          width: tileSize * 1.5,
+          width: tileSize * vertical,
           // Add a visible background to debug
           backgroundColor: tileType === 'start' ? 'rgba(255,255,255,0.3)' : 'transparent',
         }}
@@ -296,8 +296,8 @@ const GameBoard = () => {
           )
         )}
 
-        {/* Render Home icon explicitly here as a fallback */}
-        {transportMode && (
+        {/* Render Home icon explicitly here as a fallback 
+         {transportMode && (
           <View
             style={{
               position: 'absolute',
@@ -320,8 +320,9 @@ const GameBoard = () => {
             </Text>
           </View>
         )}
-      </View>
-    </View>
+        */}
+      </View >
+    </View >
   );
 };
 

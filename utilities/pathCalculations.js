@@ -45,7 +45,8 @@ export function generatePathData() {
       bicycle: bicyclePath.length - 1
     },
     // Tile size for consistent rendering
-    tileSize: tileSize
+    tileSize: tileSize,
+    verticalSpacingFactor: verticalSpacingFactor,
   };
 }
 
