@@ -71,8 +71,8 @@ const GameBoard = () => {
       <View
         style={{
           position: 'absolute',
-          left: labelGridPos.x,// - (tileSize * 0.75),
-          top: labelGridPos.y, // - (tileSize * 0.75),
+          left: labelGridPos.x - (tileSize), // * 0.75),
+          top: labelGridPos.y - (tileSize), //* 0.75),
           zIndex: 30, // Increased from 20 to ensure it's on top
           alignItems: 'center',
           width: tileSize, // * vertical,
