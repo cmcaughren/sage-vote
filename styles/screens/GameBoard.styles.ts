@@ -37,11 +37,11 @@ export const styles = StyleSheet.create({
   boardContainer: {
     flex: 1,
     margin: 10,
-    marginTop: 20, // Increased from any previous value to move board down
+    marginTop: 60, // Increased from any previous value to move board down
     marginBottom: 60, // Keep space for the button at bottom
     borderRadius: 10,
     overflow: 'visible',
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.background,
     elevation: 5,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
@@ -52,7 +52,6 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     padding: 15,
-    backgroundColor: COLORS.info,
     overflow: 'visible',
   },
   button: {
