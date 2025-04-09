@@ -42,7 +42,7 @@ const GameBoard = () => {
   const calculateGridPosition = (gridX, gridY) => {
     // This recreates the same grid calculation used in pathCalculations.js
     const screenWidth = Dimensions.get('window').width;
-    const screenHeight = Dimensions.get('window').height * 0.65;
+    const screenHeight = Dimensions.get('window').height * 0.75;
 
     // Calculate tile sizes consistent with pathCalculations.js
     const calculatedTileSize = Math.min(screenWidth / 12, screenHeight / 16);
@@ -75,7 +75,7 @@ const GameBoard = () => {
           top: labelGridPos.y - (tileSize * 0.75),
           zIndex: 30, // Increased from 20 to ensure it's on top
           alignItems: 'center',
-          width: tileSize * vertical,
+          width: tileSize, // * vertical,
           // Add a visible background to debug
           backgroundColor: tileType === 'start' ? 'rgba(255,255,255,0.3)' : 'transparent',
         }}
