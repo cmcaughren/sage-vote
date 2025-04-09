@@ -276,7 +276,7 @@ const GameBoardScreen = () => {
         </Text>
 
         <Text style={styles.subtitle}>
-          Draw a card, roll the dice, do your civic duty! 🍁
+          Draw a card, roll the dice,{'\n'}do your civic duty! 🍁
         </Text>
 
         {/* Transport mode directly without container */}
