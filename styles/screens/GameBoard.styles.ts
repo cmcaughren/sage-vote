@@ -13,16 +13,17 @@ export const styles = StyleSheet.create({
   headerSection: {
     width: '100%',
     alignItems: 'center',
-    paddingTop: 5,
     paddingHorizontal: 20,
-    marginBottom: 10,
+    paddingTop: 15, // Increased padding to move content down
+    marginBottom: 20, // More space before the game board
+    position: 'relative', // For positioning the notebook icon
   },
   title: {
-    fontSize: 28,
+    fontSize: 30, // Slightly larger
     fontWeight: 'bold',
-    color: COLORS.dark,
+    color: COLORS.dark, // Changed to dark color instead of periwinkle
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: 10, // More space after title
   },
   subtitle: {
     fontSize: 16,
@@ -32,26 +33,27 @@ export const styles = StyleSheet.create({
   },
 
   // Transport mode display
-  transportContainer: {
-    backgroundColor: COLORS.background,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: COLORS.primary + '30',
-  },
+  //transportContainer: {
+  //  backgroundColor: COLORS.background,
+  //  paddingVertical: 8,
+  //  paddingHorizontal: 16,
+  //  borderRadius: 12,
+  //  borderWidth: 1,
+  //  borderColor: COLORS.primary + '30',
+  //},
   transportText: {
     fontSize: 18,
     fontWeight: '500',
     color: COLORS.primary,
     textAlign: 'center',
+    marginTop: 3, // Small gap after subtitle
   },
 
   // Notebook positioning
   notebookIconContainer: {
     position: 'absolute',
-    top: 15,
-    right: 15,
+    top: 15, // Align with top of header
+    right: 20,
     zIndex: 10,
   },
 

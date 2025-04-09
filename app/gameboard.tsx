@@ -269,7 +269,7 @@ const GameBoardScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header section styled like Crossroads screen */}
+      {/* Header section with adjusted spacing */}
       <View style={styles.headerSection}>
         <Text style={styles.title}>
           Journey to the Polls
@@ -279,22 +279,21 @@ const GameBoardScreen = () => {
           Draw a card, roll the dice, do your civic duty! 🍁
         </Text>
 
-        <View style={styles.transportContainer}>
-          <Text style={styles.transportText}>
-            {transportMode === 'bus' ? 'Public Transit ' :
-              transportMode === 'carpool' ? 'Car Pool ' :
-                'Bicycle '}
-            <Text style={{ fontSize: 22 }}>
-              {transportMode === 'bus' ? '🚌' :
-                transportMode === 'carpool' ? '🚗' : '🚲'}
-            </Text>
+        {/* Transport mode directly without container */}
+        <Text style={styles.transportText}>
+          {transportMode === 'bus' ? 'Public Transit ' :
+            transportMode === 'carpool' ? 'Car Pool ' :
+              'Bicycle '}
+          <Text style={{ fontSize: 22 }}>
+            {transportMode === 'bus' ? '🚌' :
+              transportMode === 'carpool' ? '🚗' : '🚲'}
           </Text>
-        </View>
-      </View>
+        </Text>
 
-      {/* Notebook badge in top-right corner */}
-      <View style={styles.notebookIconContainer}>
-        <NotebookIcon onPress={handleOpenNotebook} count={notebookCount} />
+        {/* Notebook icon aligned with header */}
+        <View style={styles.notebookIconContainer}>
+          <NotebookIcon onPress={handleOpenNotebook} count={notebookCount} />
+        </View>
       </View>
 
       <View style={styles.boardContainer}>
