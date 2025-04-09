@@ -1,37 +1,36 @@
 // styles/screens/Notebook.styles.ts
 import { StyleSheet } from 'react-native';
 import { COLORS } from '../theme/colors';
-import { INTERNAL_CALLSITES_REGEX } from '@expo/metro-config';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  fixedHeader: {
+    width: '100%',
+    flexDirection: 'row', // Change to row to position elements horizontally
+    justifyContent: 'center', // Center the title
     alignItems: 'center',
-    padding: 16,
-    backgroundColor: COLORS.primary,
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    backgroundColor: COLORS.background,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.gray[200],
+    position: 'relative',
   },
   title: {
-    fontSize: 18,
+    fontSize: 28, // Match other screen title sizes
     fontWeight: 'bold',
-    color: COLORS.white,
-  },
-  backButton: {
-    padding: 8,
-  },
-  backButtonText: {
-    color: COLORS.white,
-    fontWeight: '500',
+    color: COLORS.info, // Periwinkle color to match other titles
+    textAlign: 'center',
   },
   listContainer: {
     padding: 16,
+    paddingBottom: 100, // Extra space at bottom for buttons
   },
   entryCard: {
-    backgroundColor: COLORS.white, //"#fff2f1",
+    backgroundColor: COLORS.white,
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
@@ -43,24 +42,26 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 2,
-    borderLeftWidth: 4,
-    borderLeftColor: COLORS.tertiaryLight, // salmon border
   },
-  entryHeader: {
+  entryFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    alignItems: 'center',
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.gray[200],
   },
   entryUrl: {
     fontSize: 14,
-    color: COLORS.error, // dark coral
+    color: COLORS.info, // Periwinkle color
     flex: 1,
     marginRight: 8,
     fontStyle: 'italic',
   },
   entryDate: {
     fontSize: 12,
-    color: COLORS.dark + '80', // Adding transparency
+    color: COLORS.gray[600],
   },
   entryDescription: {
     fontSize: 16,
@@ -69,29 +70,15 @@ export const styles = StyleSheet.create({
     lineHeight: 22,
   },
   linkContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: COLORS.lightGray,
-    paddingTop: 10,
-    marginTop: 5,
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    backgroundColor: COLORS.info + '20', // Light periwinkle
+    borderRadius: 12,
   },
   linkText: {
-    fontSize: 14,
-    color: COLORS.dark, // Deep Coral
-  },
-  arrowContainer: {
-    backgroundColor: COLORS.info, // Dark periwinkle
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  arrowIcon: {
-    color: COLORS.white,
-    fontWeight: 'bold',
+    fontSize: 12,
+    color: COLORS.info, // Periwinkle
+    fontWeight: '600',
   },
   loadingContainer: {
     flex: 1,
@@ -125,38 +112,115 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 22,
   },
-  clearButton: {
-    backgroundColor: COLORS.error,
-    padding: 12,
-    margin: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  clearButtonText: {
-    color: COLORS.white,
-    fontWeight: 'bold',
-  },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: COLORS.accent2,//COLORS.info + '15',
+    backgroundColor: COLORS.info + '15', // Very light periwinkle
     padding: 12,
     marginTop: 10,
     marginBottom: 4,
     borderRadius: 8,
-    borderLeftWidth: 4,
-    borderLeftColor: COLORS.info,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     color: COLORS.dark,
   },
   sectionToggle: {
-    fontSize: 18,
-    color: COLORS.info, // Deep periwinkle for toggle arrow
+    fontSize: 12,
+    color: COLORS.info,
     fontWeight: 'bold',
+  },
+  backButton: {
+    position: 'absolute',
+    right: 16,
+    top: 20,
+    padding: 5,
+  },
+  backButtonText: {
+    color: COLORS.info,
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  clearButton: {
+    position: 'absolute',
+    bottom: 20,
+    left: '5%',
+    right: '5%',
+    backgroundColor: COLORS.error,
+    paddingVertical: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+    width: '90%',
+  },
+  buttonText: {
+    color: COLORS.white,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  // Modal styles for confirmation dialog
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  confirmationModal: {
+    width: '80%',
+    backgroundColor: COLORS.white,
+    borderRadius: 12,
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  confirmationTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: COLORS.dark,
+  },
+  confirmationText: {
+    fontSize: 14,
+    textAlign: 'center',
+    color: COLORS.gray[700],
+    marginBottom: 20,
+    lineHeight: 20,
+  },
+  confirmationButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  confirmationButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginHorizontal: 5,
+  },
+  cancelButton: {
+    backgroundColor: COLORS.gray[200],
+  },
+  cancelButtonText: {
+    color: COLORS.dark,
+    fontWeight: '600',
+  },
+  confirmButton: {
+    backgroundColor: COLORS.error,
+  },
+  confirmButtonText: {
+    color: COLORS.white,
+    fontWeight: '600',
   },
 });
 

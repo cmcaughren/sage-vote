@@ -1,4 +1,6 @@
 // app/notebook.tsx
+// Updated with modern styling and fixed header
+
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -9,7 +11,8 @@ import {
   SafeAreaView,
   ActivityIndicator,
   Alert,
-  SectionList
+  SectionList,
+  Modal
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { getNotebookEntries, clearNotebook } from '../utilities/asyncStorage';
@@ -23,7 +26,7 @@ interface NotebookEntry {
   url: string;
   description: string;
   timestamp: string;
-  category: string; // Added category
+  category: string;
 }
 
 // Interface for section data
@@ -37,6 +40,7 @@ export default function NotebookScreen() {
   const [entries, setEntries] = useState<NotebookEntry[]>([]);
   const [sections, setSections] = useState<SectionData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const router = useRouter();
   const { devMode } = useGameContext();
 
@@ -108,24 +112,12 @@ export default function NotebookScreen() {
     );
   };
 
-  // Handle clearing the notebook (dev feature)
-  const handleClearNotebook = () => {
-    Alert.alert(
-      'Clear Notebook',
-      'Are you sure you want to clear all notebook entries?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Clear All',
-          style: 'destructive',
-          onPress: async () => {
-            await clearNotebook();
-            setEntries([]);
-            setSections([]);
-          }
-        }
-      ]
-    );
+  // Handle clearing the notebook
+  const handleClearNotebook = async () => {
+    setShowConfirmation(false);
+    await clearNotebook();
+    setEntries([]);
+    setSections([]);
   };
 
   // Render each notebook entry
@@ -135,19 +127,14 @@ export default function NotebookScreen() {
       onPress={() => handleOpenLink(item.url)}
       activeOpacity={0.7}
     >
-      <View style={styles.entryHeader}>
-        <Text style={styles.entryUrl} numberOfLines={1} ellipsizeMode="middle">
-          {item.url}
-        </Text>
-        <Text style={styles.entryDate}>{formatDate(item.timestamp)}</Text>
-      </View>
       <Text style={styles.entryDescription} numberOfLines={3}>
         {item.description}
       </Text>
-      <View style={styles.linkContainer}>
-        <Text style={styles.linkText}>Visit to learn more</Text>
-        <View style={styles.arrowContainer}>
-          <Text style={styles.arrowIcon}>→</Text>
+
+      <View style={styles.entryFooter}>
+        <Text style={styles.entryDate}>{formatDate(item.timestamp)}</Text>
+        <View style={styles.linkContainer}>
+          <Text style={styles.linkText}>Open link</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -168,7 +155,7 @@ export default function NotebookScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
+      <View style={styles.fixedHeader}>
         <Text style={styles.title}>Notebook</Text>
         <TouchableOpacity
           style={styles.backButton}
@@ -205,14 +192,47 @@ export default function NotebookScreen() {
         />
       )}
 
-      {devMode && (
+
+      {/* Clear notebook button - available to all users */}
+      {entries.length > 0 && (
         <TouchableOpacity
           style={styles.clearButton}
-          onPress={handleClearNotebook}
+          onPress={() => setShowConfirmation(true)}
         >
-          <Text style={styles.clearButtonText}>Clear Notebook</Text>
+          <Text style={styles.buttonText}>Clear Notebook</Text>
         </TouchableOpacity>
       )}
+
+      {/* Confirmation Modal */}
+      <Modal
+        visible={showConfirmation}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowConfirmation(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.confirmationModal}>
+            <Text style={styles.confirmationTitle}>Clear Notebook?</Text>
+            <Text style={styles.confirmationText}>
+              This will delete all saved links from your notebook. This action cannot be undone.
+            </Text>
+            <View style={styles.confirmationButtons}>
+              <TouchableOpacity
+                style={[styles.confirmationButton, styles.cancelButton]}
+                onPress={() => setShowConfirmation(false)}
+              >
+                <Text style={styles.cancelButtonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.confirmationButton, styles.confirmButton]}
+                onPress={handleClearNotebook}
+              >
+                <Text style={styles.confirmButtonText}>Clear All</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
