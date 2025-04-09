@@ -8,45 +8,43 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
   },
   header: {
-    padding: 15,
-    backgroundColor: COLORS.primary, // Updated to sage green
+    flexDirection: 'row', // Change to row to allow horizontal layout
+    justifyContent: 'space-between', // Push items to opposite ends
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    backgroundColor: COLORS.primary, // Sage green
     alignItems: 'center',
+    width: '100%', // Ensure full width
+  },
+  headerContent: {
+    flex: 1, // Take available space
+    alignItems: 'center', // Center content
   },
   title: {
-    fontSize: 20,
+    fontSize: 22, // Increased from 20
     fontWeight: 'bold',
     color: COLORS.white,
+    textAlign: 'center',
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 18, // Increased from 16
     color: COLORS.white,
     marginTop: 5,
+    textAlign: 'center',
   },
   cardInfo: {
     fontSize: 14,
     color: COLORS.secondary + 'D9', // Golden yellow with transparency
     marginTop: 3,
   },
-  notebookIconContainer: {
-    position: 'absolute',
-    top: 60,
-    right: 10,
-    zIndex: 10,
-    paddingTop: 10,
-  },
   boardContainer: {
     flex: 1,
     margin: 10,
-    marginTop: 50,  // Increased from any previous value to move board down
-    marginBottom: 60, // Keep space for the button at bottom
+    marginTop: 50,
+    marginBottom: 60,
     borderRadius: 10,
     overflow: 'visible',
     backgroundColor: COLORS.background,
-    //elevation: 5,
-    //shadowColor: COLORS.black,
-    //shadowOffset: { width: 0, height: 2 },
-    //shadowOpacity: 0.25,
-    //shadowRadius: 3.84,
   },
   controlsContainer: {
     flexDirection: 'row',
@@ -92,12 +90,11 @@ export const styles = StyleSheet.create({
     fontSize: 16,
   },
   primaryActionButton: {
-    backgroundColor: COLORS.secondary, // Using the secondary color like the Notebook button
+    backgroundColor: COLORS.secondary,
     paddingVertical: 15,
     paddingHorizontal: 40,
-    borderRadius: 10, // More rounded corners like homepage buttons
-    minWidth: 200, // Ensure button has good width
-    maxWidth: 300, // But not too wide
+    borderRadius: 10,
+    maxWidth: 300,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: COLORS.black,

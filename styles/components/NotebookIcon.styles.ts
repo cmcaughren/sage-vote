@@ -12,10 +12,10 @@ export const styles = StyleSheet.create({
     position: 'relative',
   },
   iconBackground: {
-    backgroundColor: COLORS.tertiaryLight, 
-    borderRadius: 18,
-    width: 36,
-    height: 36,
+    backgroundColor: COLORS.tertiaryLight,
+    borderRadius: 24, // Increased from 18
+    width: 48, // Increased from 36
+    height: 48, // Increased from 36
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: COLORS.black,
@@ -25,16 +25,16 @@ export const styles = StyleSheet.create({
     elevation: 2,
   },
   icon: {
-    fontSize: 22,
+    fontSize: 28,
   },
   badge: {
     position: 'absolute',
-    top: -5,
-    right: -10,
+    top: -8, // Adjusted position
+    right: -12, // Adjusted position
     backgroundColor: COLORS.secondary,
-    borderRadius: 12,
-    minWidth: 24,
-    height: 24,
+    borderRadius: 14, // Increased from 12
+    minWidth: 28, // Increased from 24
+    height: 28, // Increased from 24
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 6,
@@ -43,7 +43,7 @@ export const styles = StyleSheet.create({
   },
   badgeText: {
     color: COLORS.white,
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: 'bold',
   },
   label: {
