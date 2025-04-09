@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 25, // Increased padding to move content down
+    paddingTop: 30, // Increased padding to move content down
     marginBottom: 20, // More space before the game board
     position: 'relative', // For positioning the notebook icon
   },
@@ -42,7 +42,7 @@ export const styles = StyleSheet.create({
   //  borderColor: COLORS.primary + '30',
   //},
   transportText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '500',
     color: COLORS.dark,
     textAlign: 'center',
@@ -67,7 +67,7 @@ export const styles = StyleSheet.create({
   boardContainer: {
     flex: 1,
     marginHorizontal: 10,
-    marginTop: 10,
+    marginTop: 0,
     marginBottom: 60,
     borderRadius: 10,
     overflow: 'visible',
