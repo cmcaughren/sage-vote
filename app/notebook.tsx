@@ -1,11 +1,11 @@
 // app/notebook.tsx
-// Updated with modern styling and fixed header
+// app/notebook.tsx
+// Updates for the notebook component
 
 import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  FlatList,
   TouchableOpacity,
   Linking,
   SafeAreaView,
@@ -127,34 +127,43 @@ export default function NotebookScreen() {
       onPress={() => handleOpenLink(item.url)}
       activeOpacity={0.7}
     >
+      <View style={styles.entryHeader}>
+        <Text style={styles.entryUrl} numberOfLines={1} ellipsizeMode="middle">
+          {item.url}
+        </Text>
+        <Text style={styles.entryDate}>{formatDate(item.timestamp)}</Text>
+      </View>
+
       <Text style={styles.entryDescription} numberOfLines={3}>
         {item.description}
       </Text>
 
-      <View style={styles.entryFooter}>
-        <Text style={styles.entryDate}>{formatDate(item.timestamp)}</Text>
-        <View style={styles.linkContainer}>
-          <Text style={styles.linkText}>Open link</Text>
+      <View style={styles.linkContainer}>
+        <Text style={styles.linkText}>View resource</Text>
+        <View style={styles.arrowContainer}>
+          <Text style={styles.arrowIcon}>→</Text>
         </View>
       </View>
     </TouchableOpacity>
   );
 
-  // Render a section header
-  const renderSectionHeader = ({ section }: { section: SectionData }) => (
-    <TouchableOpacity
-      style={styles.sectionHeader}
-      onPress={() => toggleSection(section.title)}
-    >
-      <Text style={styles.sectionTitle}>{section.title}</Text>
-      <Text style={styles.sectionToggle}>
-        {section.expanded ? '▼' : '►'}
-      </Text>
-    </TouchableOpacity>
-  );
+  // Render the clear button only when entries exist
+  const renderClearButton = () => {
+    if (entries.length === 0) return null;
+
+    return (
+      <TouchableOpacity
+        style={styles.clearButton}
+        onPress={() => setShowConfirmation(true)}
+      >
+        <Text style={styles.buttonText}>Clear Notebook</Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Fixed Header with back button */}
       <View style={styles.fixedHeader}>
         <Text style={styles.title}>Notebook</Text>
         <TouchableOpacity
@@ -185,22 +194,12 @@ export default function NotebookScreen() {
             section.expanded ? renderItem({ item }) : null
           }
           renderSectionHeader={renderSectionHeader}
+          ListFooterComponent={renderClearButton}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContainer}
           showsVerticalScrollIndicator={false}
           stickySectionHeadersEnabled={true}
         />
-      )}
-
-
-      {/* Clear notebook button - available to all users */}
-      {entries.length > 0 && (
-        <TouchableOpacity
-          style={styles.clearButton}
-          onPress={() => setShowConfirmation(true)}
-        >
-          <Text style={styles.buttonText}>Clear Notebook</Text>
-        </TouchableOpacity>
       )}
 
       {/* Confirmation Modal */}
