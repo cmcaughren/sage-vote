@@ -1,6 +1,4 @@
-// app/notebook.tsx
-// app/notebook.tsx
-// Updates for the notebook component
+// app/notebook.tsx - Fixed version with crash prevention
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -16,7 +14,6 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { getNotebookEntries, clearNotebook } from '../utilities/asyncStorage';
-import { useGameContext } from '../context/GameContext';
 import { styles } from '../styles/screens/Notebook.styles';
 import { COLORS } from '../styles/theme/colors';
 
@@ -42,50 +39,81 @@ export default function NotebookScreen() {
   const [loading, setLoading] = useState(true);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const router = useRouter();
-  const { devMode } = useGameContext();
 
+  // Load entries when component mounts
   useEffect(() => {
-    loadEntries();
+    const loadData = async () => {
+      try {
+        await loadEntries();
+      } catch (error) {
+        console.error("Error loading notebook data:", error);
+        setLoading(false);
+      }
+    };
+
+    loadData();
   }, []);
 
   // Load entries from AsyncStorage and organize into sections
   const loadEntries = async () => {
     setLoading(true);
-    const notebookEntries = await getNotebookEntries();
 
-    // Sort by most recent first
-    const sortedEntries = notebookEntries.sort((a, b) =>
-      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-    );
+    try {
+      const notebookEntries = await getNotebookEntries();
 
-    setEntries(sortedEntries);
-
-    // Group entries by category
-    const entriesByCategory: { [key: string]: NotebookEntry[] } = {};
-
-    sortedEntries.forEach(entry => {
-      const category = entry.category || 'Uncategorized';
-      if (!entriesByCategory[category]) {
-        entriesByCategory[category] = [];
+      // Ensure we have an array
+      if (!Array.isArray(notebookEntries)) {
+        setEntries([]);
+        setSections([]);
+        setLoading(false);
+        return;
       }
-      entriesByCategory[category].push(entry);
-    });
 
-    // Create sections for each category
-    const sectionData: SectionData[] = Object.keys(entriesByCategory)
-      .sort()
-      .map(category => ({
-        title: category,
-        data: entriesByCategory[category],
-        expanded: true // Start expanded
-      }));
+      // Sort by most recent first
+      const sortedEntries = notebookEntries.sort((a, b) =>
+        new Date(b.timestamp || Date.now()).getTime() - new Date(a.timestamp || Date.now()).getTime()
+      );
 
-    setSections(sectionData);
-    setLoading(false);
+      setEntries(sortedEntries);
+
+      // Group entries by category
+      const entriesByCategory: { [key: string]: NotebookEntry[] } = {};
+
+      sortedEntries.forEach(entry => {
+        const category = entry.category || 'Uncategorized';
+        if (!entriesByCategory[category]) {
+          entriesByCategory[category] = [];
+        }
+        entriesByCategory[category].push(entry);
+      });
+
+      // Create sections for each category
+      const sectionData: SectionData[] = Object.keys(entriesByCategory)
+        .sort()
+        .map(category => ({
+          title: category,
+          data: entriesByCategory[category],
+          expanded: true // Start expanded
+        }));
+
+      setSections(sectionData);
+    } catch (error) {
+      console.error("Error in loadEntries:", error);
+      // Set empty data on error
+      setEntries([]);
+      setSections([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Handle opening a link
   const handleOpenLink = (url: string) => {
+    if (!url) {
+      Alert.alert('Error', 'Invalid URL');
+      return;
+    }
+
     Linking.openURL(url).catch(err => {
       Alert.alert('Error', `Could not open link: ${err.message}`);
     });
@@ -93,12 +121,19 @@ export default function NotebookScreen() {
 
   // Format the timestamp
   const formatDate = (timestamp: string) => {
-    const date = new Date(timestamp);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
+    if (!timestamp) return '';
+
+    try {
+      const date = new Date(timestamp);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return '';
+    }
   };
 
   // Toggle section expansion
@@ -114,38 +149,64 @@ export default function NotebookScreen() {
 
   // Handle clearing the notebook
   const handleClearNotebook = async () => {
-    setShowConfirmation(false);
-    await clearNotebook();
-    setEntries([]);
-    setSections([]);
+    try {
+      setShowConfirmation(false);
+      await clearNotebook();
+      setEntries([]);
+      setSections([]);
+    } catch (error) {
+      console.error("Error clearing notebook:", error);
+      Alert.alert("Error", "Failed to clear notebook");
+    }
   };
 
   // Render each notebook entry
-  const renderItem = ({ item }: { item: NotebookEntry }) => (
-    <TouchableOpacity
-      style={styles.entryCard}
-      onPress={() => handleOpenLink(item.url)}
-      activeOpacity={0.7}
-    >
-      <View style={styles.entryHeader}>
-        <Text style={styles.entryUrl} numberOfLines={1} ellipsizeMode="middle">
-          {item.url}
-        </Text>
-        <Text style={styles.entryDate}>{formatDate(item.timestamp)}</Text>
-      </View>
+  const renderItem = ({ item }: { item: NotebookEntry }) => {
+    if (!item) return null;
 
-      <Text style={styles.entryDescription} numberOfLines={3}>
-        {item.description}
-      </Text>
-
-      <View style={styles.linkContainer}>
-        <Text style={styles.linkText}>View resource</Text>
-        <View style={styles.arrowContainer}>
-          <Text style={styles.arrowIcon}>→</Text>
+    return (
+      <TouchableOpacity
+        style={styles.entryCard}
+        onPress={() => handleOpenLink(item.url)}
+        activeOpacity={0.7}
+      >
+        <View style={styles.entryHeader}>
+          <Text style={styles.entryUrl} numberOfLines={1} ellipsizeMode="middle">
+            {item.url || "No URL available"}
+          </Text>
+          <Text style={styles.entryDate}>{formatDate(item.timestamp)}</Text>
         </View>
-      </View>
-    </TouchableOpacity>
-  );
+
+        <Text style={styles.entryDescription} numberOfLines={3}>
+          {item.description || "No description available"}
+        </Text>
+
+        <View style={styles.linkContainer}>
+          <Text style={styles.linkText}>View resource</Text>
+          <View style={styles.arrowContainer}>
+            <Text style={styles.arrowIcon}>→</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  // Render a section header
+  const renderSectionHeader = ({ section }: { section: SectionData }) => {
+    if (!section) return null;
+
+    return (
+      <TouchableOpacity
+        style={styles.sectionHeader}
+        onPress={() => toggleSection(section.title)}
+      >
+        <Text style={styles.sectionTitle}>{section.title}</Text>
+        <Text style={styles.sectionToggle}>
+          {section.expanded ? '▼' : '►'}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
 
   // Render the clear button only when entries exist
   const renderClearButton = () => {
@@ -190,12 +251,10 @@ export default function NotebookScreen() {
       ) : (
         <SectionList
           sections={sections}
-          renderItem={({ item, section }) =>
-            section.expanded ? renderItem({ item }) : null
-          }
+          renderItem={renderItem}
           renderSectionHeader={renderSectionHeader}
           ListFooterComponent={renderClearButton}
-          keyExtractor={(item) => item.id}
+          keyExtractor={item => item?.id || Math.random().toString()}
           contentContainerStyle={styles.listContainer}
           showsVerticalScrollIndicator={false}
           stickySectionHeadersEnabled={true}
