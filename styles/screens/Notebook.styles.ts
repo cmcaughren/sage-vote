@@ -139,7 +139,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: COLORS.primary + '20', // Light sage background
+    backgroundColor: COLORS.primary + '40', // Darker sage background (40% opacity)
     padding: 12,
     marginTop: 10,
     marginBottom: 4,
@@ -153,7 +153,7 @@ export const styles = StyleSheet.create({
     color: COLORS.dark,
   },
   sectionToggle: {
-    fontSize: 12,
+    fontSize: 16, // Increased from 12 for better visibility
     color: COLORS.primary, // Sage toggle arrow
     fontWeight: 'bold',
   },
@@ -175,7 +175,7 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  // Modal styles remain the same
+  // Modal styles
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',

@@ -1,5 +1,4 @@
-// app/notebook.tsx - Fixed version with crash prevention
-
+// app/notebook.tsx
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -161,8 +160,12 @@ export default function NotebookScreen() {
   };
 
   // Render each notebook entry
-  const renderItem = ({ item }: { item: NotebookEntry }) => {
+  const renderItem = ({ item, section }: { item: NotebookEntry, section: SectionData }) => {
     if (!item) return null;
+
+    // Only render if the section is expanded - this condition is unnecessary as SectionList handles this
+    // but keeping it as an extra check
+    if (!section.expanded) return null;
 
     return (
       <TouchableOpacity
