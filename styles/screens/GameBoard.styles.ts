@@ -6,32 +6,55 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
+    paddingTop: 50, // Space for the floating header
   },
-  header: {
+  floatingHeaderCard: {
+    position: 'absolute',
+    top: 50,
+    left: 15,
+    right: 15,
+    backgroundColor: COLORS.background,
+    borderRadius: 15,
+    padding: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 15,
-    paddingHorizontal: 15,
-    backgroundColor: COLORS.primary, // Sage green header
     alignItems: 'center',
-    width: '100%',
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    zIndex: 10,
   },
   headerContent: {
-    flex: 1, // Take available space
-    alignItems: 'center', // Center content
+    flex: 1,
+    alignItems: 'flex-start',
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: COLORS.white,
-    textAlign: 'center',
-    marginBottom: 4,
-  },
-  subtitle: {
     fontSize: 20,
-    color: COLORS.white,
-    textAlign: 'center',
+    fontWeight: '700',
+    color: COLORS.info,
+    marginBottom: 8,
+  },
+  transportBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.primary + '20', // Light sage with opacity
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    borderRadius: 20,
+  },
+  transportText: {
+    fontSize: 16,
     fontWeight: '600',
+    color: COLORS.primary,
+    marginRight: 4,
+  },
+  transportEmoji: {
+    fontSize: 18,
+  },
+  notebookContainer: {
+    marginLeft: 12,
   },
   cardInfo: {
     fontSize: 14,
@@ -40,8 +63,8 @@ export const styles = StyleSheet.create({
   },
   boardContainer: {
     flex: 1,
-    margin: 10,
-    marginTop: 30, // Adjusted for better spacing
+    marginHorizontal: 10,
+    marginTop: 65, // Adjusted to account for floating header
     marginBottom: 60,
     borderRadius: 10,
     overflow: 'visible',
