@@ -10,14 +10,14 @@ interface NotebookIconProps {
 
 const NotebookIcon: React.FC<NotebookIconProps> = ({ onPress, count = 0 }) => {
   return (
-    <TouchableOpacity 
+    <TouchableOpacity
       style={styles.container}
       onPress={onPress}
       activeOpacity={0.7}
     >
       <View style={styles.iconContainer}>
         <View style={styles.iconBackground}>
-          <Text style={styles.icon}>📔</Text>
+          <Text style={styles.icon}>📓</Text>
         </View>
         {count > 0 && (
           <View style={styles.badge}>
