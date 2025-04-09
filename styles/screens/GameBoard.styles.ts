@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 15, // Increased padding to move content down
+    paddingTop: 25, // Increased padding to move content down
     marginBottom: 20, // More space before the game board
     position: 'relative', // For positioning the notebook icon
   },
@@ -44,9 +44,8 @@ export const styles = StyleSheet.create({
   transportText: {
     fontSize: 18,
     fontWeight: '500',
-    color: COLORS.primary,
+    color: COLORS.dark,
     textAlign: 'center',
-    marginTop: 3, // Small gap after subtitle
   },
 
   // Notebook positioning
