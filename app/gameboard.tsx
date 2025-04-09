@@ -268,17 +268,15 @@ const GameBoardScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="dark" />
-
+    <SafeAreaView style={styles.container}>
       {/* Header section styled like Crossroads screen */}
       <View style={styles.headerSection}>
         <Text style={styles.title}>
-          Journey to the Polling Station
+          Journey to the Polls
         </Text>
 
         <Text style={styles.subtitle}>
-          Draw a card, Roll the Dice, do your civic duty! 🍁
+          Draw a card, roll the dice, do your civic duty! 🍁
         </Text>
 
         <View style={styles.transportContainer}>
@@ -384,7 +382,7 @@ const GameBoardScreen = () => {
         visible={showWinningPopup}
         onRequestClose={() => setShowWinningPopup(false)}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

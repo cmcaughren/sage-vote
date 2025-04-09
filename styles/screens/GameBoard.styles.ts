@@ -13,14 +13,14 @@ export const styles = StyleSheet.create({
   headerSection: {
     width: '100%',
     alignItems: 'center',
-    paddingTop: 20,
+    paddingTop: 5,
     paddingHorizontal: 20,
     marginBottom: 10,
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: COLORS.info, // Periwinkle color
+    color: COLORS.dark,
     textAlign: 'center',
     marginBottom: 8,
   },
