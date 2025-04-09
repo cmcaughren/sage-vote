@@ -61,7 +61,7 @@ const GameBoard = () => {
 
     if (tileType === 'start') {
       // Move Home icon further down and make it bigger
-      labelGridPos = calculateGridPosition(6, 13); // Changed from 13 to 14 to move it lower
+      labelGridPos = calculateGridPosition(6, 13); // 
     } else if (tileType === 'finish') {
       // Poll should be at grid position (5,0) - above the finish tile at (5,1)
       labelGridPos = calculateGridPosition(5, 0);
@@ -71,8 +71,8 @@ const GameBoard = () => {
       <View
         style={{
           position: 'absolute',
-          left: labelGridPos.x - (tileSize * 0.75),
-          top: labelGridPos.y - (tileSize * 0.75),
+          left: labelGridPos.x,// - (tileSize * 0.75),
+          top: labelGridPos.y, // - (tileSize * 0.75),
           zIndex: 30, // Increased from 20 to ensure it's on top
           alignItems: 'center',
           width: tileSize, // * vertical,
