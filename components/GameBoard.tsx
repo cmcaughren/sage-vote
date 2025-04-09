@@ -71,8 +71,8 @@ const GameBoard = () => {
       <View
         style={{
           position: 'absolute',
-          left: labelGridPos.x - (tileSize), // * 0.75),
-          top: labelGridPos.y - (tileSize), //* 0.75),
+          left: labelGridPos.x, // - (tileSize * 0.75),
+          top: labelGridPos.y, //- (tileSize * 0.75),
           zIndex: 30, // Increased from 20 to ensure it's on top
           alignItems: 'center',
           width: tileSize, // * vertical,
@@ -80,7 +80,7 @@ const GameBoard = () => {
           backgroundColor: tileType === 'start' ? 'rgba(255,255,255,0.3)' : 'transparent',
         }}
       >
-        {/* For finish/poll, render text first (above) */}
+        {/* For finish/poll, render text first (above) 
         {tileType === 'finish' && (
           <Text style={{
             fontSize: 14,
@@ -92,7 +92,7 @@ const GameBoard = () => {
             Poll
           </Text>
         )}
-
+*/}
         {/* Emoji */}
         <Text style={{
           fontSize: 24,
@@ -101,7 +101,7 @@ const GameBoard = () => {
           {tileType === 'start' ? '🏠' : '🗳️'}
         </Text>
 
-        {/* For start/home, render text last (below) */}
+        {/* For start/home, render text last (below) 
         {tileType === 'start' && (
           <Text style={{
             fontSize: 14,
@@ -112,7 +112,7 @@ const GameBoard = () => {
           }}>
             Home
           </Text>
-        )}
+        )}*/}
       </View>
     );
   };
