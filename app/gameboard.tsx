@@ -382,8 +382,7 @@ const GameBoardScreen = () => {
         visible={showWinningPopup}
         onRequestClose={() => setShowWinningPopup(false)}
       />
-    </SafeAreaView>
-    </>
+    </View>
   );
 };
 
