@@ -3,79 +3,85 @@ import { StyleSheet } from 'react-native';
 import { COLORS } from '../theme/colors';
 
 export const styles = StyleSheet.create({
+  // Main container
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
-    paddingTop: 50, // Space for the floating header
   },
-  floatingHeaderCard: {
-    position: 'absolute',
-    top: 50,
-    left: 15,
-    right: 15,
-    backgroundColor: COLORS.background,
-    borderRadius: 15,
-    padding: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+
+  // Header section - updated to match Crossroads style
+  headerSection: {
+    width: '100%',
     alignItems: 'center',
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    zIndex: 10,
-  },
-  headerContent: {
-    flex: 1,
-    alignItems: 'flex-start',
+    paddingTop: 20,
+    paddingHorizontal: 20,
+    marginBottom: 10,
   },
   title: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: COLORS.info,
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: COLORS.info, // Periwinkle color
+    textAlign: 'center',
     marginBottom: 8,
   },
-  transportBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.primary + '20', // Light sage with opacity
-    paddingVertical: 4,
-    paddingHorizontal: 10,
-    borderRadius: 20,
+  subtitle: {
+    fontSize: 16,
+    color: COLORS.dark,
+    textAlign: 'center',
+    marginBottom: 12,
+  },
+
+  // Transport mode display
+  transportContainer: {
+    backgroundColor: COLORS.background,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: COLORS.primary + '30',
   },
   transportText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: COLORS.primary,
-    marginRight: 4,
-  },
-  transportEmoji: {
     fontSize: 18,
+    fontWeight: '500',
+    color: COLORS.primary,
+    textAlign: 'center',
   },
-  notebookContainer: {
-    marginLeft: 12,
+
+  // Notebook positioning
+  notebookIconContainer: {
+    position: 'absolute',
+    top: 15,
+    right: 15,
+    zIndex: 10,
   },
+
+  // Card info for dev mode
   cardInfo: {
     fontSize: 14,
-    color: COLORS.secondary + 'D9', // Golden yellow with transparency
+    color: COLORS.secondary + 'D9',
     marginTop: 3,
   },
+
+  // Game board container
   boardContainer: {
     flex: 1,
     marginHorizontal: 10,
-    marginTop: 65, // Adjusted to account for floating header
+    marginTop: 10,
     marginBottom: 60,
     borderRadius: 10,
     overflow: 'visible',
     backgroundColor: COLORS.background,
   },
+
+  // Controls for dev mode
   controlsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     padding: 15,
     overflow: 'visible',
   },
+
+  // Button styles
   button: {
     paddingVertical: 12,
     paddingHorizontal: 25,
@@ -113,11 +119,14 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
+
+  // Main action button
   primaryActionButton: {
     backgroundColor: COLORS.secondary,
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 10,
+    minWidth: 200,
     maxWidth: 300,
     alignItems: 'center',
     justifyContent: 'center',

@@ -271,36 +271,38 @@ const GameBoardScreen = () => {
     <View style={styles.container}>
       <StatusBar style="dark" />
 
-      {/* Floating header card */}
-      <View style={styles.floatingHeaderCard}>
-        <View style={styles.headerContent}>
-          <Text style={styles.title}>
-            <Text style={{ color: COLORS.info }}>Journey</Text> to the{' '}
-            <Text style={{ color: COLORS.info }}>Polling Station</Text>
-          </Text>
+      {/* Header section styled like Crossroads screen */}
+      <View style={styles.headerSection}>
+        <Text style={styles.title}>
+          Journey to the Polling Station
+        </Text>
 
-          {/* Transportation badge */}
-          <View style={styles.transportBadge}>
-            <Text style={styles.transportText}>
-              {transportMode === 'bus' ? 'Public Transit' :
-                transportMode === 'carpool' ? 'Car Pool' : 'Bicycle'}
-            </Text>
-            <Text style={styles.transportEmoji}>
+        <Text style={styles.subtitle}>
+          Draw a card, Roll the Dice, do your civic duty! 🍁
+        </Text>
+
+        <View style={styles.transportContainer}>
+          <Text style={styles.transportText}>
+            {transportMode === 'bus' ? 'Public Transit ' :
+              transportMode === 'carpool' ? 'Car Pool ' :
+                'Bicycle '}
+            <Text style={{ fontSize: 22 }}>
               {transportMode === 'bus' ? '🚌' :
                 transportMode === 'carpool' ? '🚗' : '🚲'}
             </Text>
-          </View>
+          </Text>
         </View>
+      </View>
 
-        {/* Notebook icon positioned within card */}
-        <View style={styles.notebookContainer}>
-          <NotebookIcon onPress={handleOpenNotebook} count={notebookCount} />
-        </View>
+      {/* Notebook badge in top-right corner */}
+      <View style={styles.notebookIconContainer}>
+        <NotebookIcon onPress={handleOpenNotebook} count={notebookCount} />
       </View>
 
       <View style={styles.boardContainer}>
         <GameBoard />
       </View>
+
 
       {/* Conditional rendering of controls based on dev mode */}
       {!devMode ? (
