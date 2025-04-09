@@ -82,14 +82,6 @@ const GameBoard = () => {
         <Text style={{
           fontSize: 32,
           textAlign: 'center',
-          borderWidth: 1,
-          borderColor: 'rgba(255,255,255,0.5)',
-          shadowColor: COLORS.black,
-          shadowOffset: { width: 0, height: 1 },
-          shadowOpacity: 0.2,
-          shadowRadius: 1,
-          elevation: 2,
-          zIndex: 2,
         }}>
           {tileType === 'start' ? '🏠' : '🗳️'}
         </Text>
