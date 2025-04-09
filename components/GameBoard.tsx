@@ -45,7 +45,7 @@ const GameBoard = () => {
     const screenHeight = Dimensions.get('window').height * 0.75;
 
     // Calculate tile sizes consistent with pathCalculations.js
-    const calculatedTileSize = Math.min(screenWidth / 12, screenHeight / 16);
+    const calculatedTileSize = Math.min(screenWidth / 12, screenHeight / 14);
 
     // Return the exact X,Y coordinates for the given grid position
     return {
