@@ -312,7 +312,6 @@ const GameBoardScreen = () => {
           justifyContent: 'center',
           paddingHorizontal: 20,
           paddingVertical: 15,
-          backgroundColor: COLORS.error,
         }}>
           <TouchableOpacity
             style={[
