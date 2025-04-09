@@ -279,7 +279,7 @@ const GameBoardScreen = () => {
           Draw a card, roll the dice,{'\n'}do your civic duty! 🍁
         </Text>
 
-        {/* Transport mode directly without container */}
+        {/* Transport mode directly without container 
         <Text style={styles.transportText}>
           {transportMode === 'bus' ? 'Public Transit ' :
             transportMode === 'carpool' ? 'Car Pool ' :
@@ -289,6 +289,7 @@ const GameBoardScreen = () => {
               transportMode === 'carpool' ? '🚗' : '🚲'}
           </Text>
         </Text>
+        */}
 
         {/* Notebook icon aligned with header */}
         <View style={styles.notebookIconContainer}>
