@@ -11,7 +11,7 @@ import { getNotebookEntries, saveGameProgress } from '../utilities/asyncStorage'
 import { styles } from '../styles/screens/GameBoard.styles';
 import { COLORS } from '../styles/theme/colors';
 import { StatusBar } from 'expo-status-bar'; // Use Expo's StatusBar for better iOS compatibility
-
+import DevControls from '../components/DevControls';
 
 const GameBoardScreen = () => {
   const {
@@ -269,29 +269,13 @@ const GameBoardScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header section with adjusted spacing */}
+      {/* Regular UI elements */}
       <View style={styles.headerSection}>
-        <Text style={styles.title}>
-          Journey to the Polls
-        </Text>
-
+        <Text style={styles.title}>Journey to the Polls</Text>
         <Text style={styles.subtitle}>
-          Draw a card, roll the dice,{'\n'}do your civic duty! 🍁
+          Draw a card, roll the dice, do your civic duty! 🍁
         </Text>
 
-        {/* Transport mode directly without container 
-        <Text style={styles.transportText}>
-          {transportMode === 'bus' ? 'Public Transit ' :
-            transportMode === 'carpool' ? 'Car Pool ' :
-              'Bicycle '}
-          <Text style={{ fontSize: 22 }}>
-            {transportMode === 'bus' ? '🚌' :
-              transportMode === 'carpool' ? '🚗' : '🚲'}
-          </Text>
-        </Text>
-        */}
-
-        {/* Notebook icon aligned with header */}
         <View style={styles.notebookIconContainer}>
           <NotebookIcon onPress={handleOpenNotebook} count={notebookCount} />
         </View>
@@ -301,87 +285,31 @@ const GameBoardScreen = () => {
         <GameBoard />
       </View>
 
-
-      {/* Conditional rendering of controls based on dev mode */}
-      {!devMode ? (
-        // Production mode: centered, consistent button
-        <View style={{
-          width: '100%',
-          alignItems: 'center',
-          justifyContent: 'center',
-          paddingHorizontal: 20,
-          paddingVertical: 15,
-        }}>
-          <TouchableOpacity
-            style={[
-              styles.primaryActionButton, // New style from GameBoard.styles.ts
-              (cardsLoading || isDrawing) && { opacity: 0.7 }
-            ]}
-            onPress={drawCard}
-            disabled={cardsLoading || isDrawing}
-          >
-            <Text style={styles.primaryActionButtonText}>
-              {isDrawing ? "Drawing..." : cardsLoading ? "Loading Cards..." : "Draw Card"}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      ) : (
-        // Dev mode: original controls layout
-        <View style={styles.controlsContainer}>
-          <TouchableOpacity
-            style={[styles.button, styles.backButton]}
-            onPress={movePlayerBackward}
-          >
-            <Text style={styles.buttonText}>Move Back</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.button,
-              styles.cardButton,
-              (cardsLoading || isDrawing) && { opacity: 0.7 }
-            ]}
-            onPress={drawCard}
-            disabled={cardsLoading || isDrawing}
-          >
-            <Text style={styles.buttonText}>
-              {isDrawing ? "Drawing..." : cardsLoading ? "Loading Cards..." : "Draw Card"}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.button, styles.forwardButton]}
-            onPress={movePlayerForward}
-          >
-            <Text style={styles.buttonText}>Move Forward</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-
-      {devMode && (
+      <View style={styles.buttonContainer}>
         <TouchableOpacity
-          style={styles.homeButton}
-          onPress={() => router.push('/')}
+          style={styles.drawCardButton}
+          onPress={drawCard}
+          disabled={cardsLoading || isDrawing}
         >
-          <Text style={styles.buttonText}>Home</Text>
+          <Text style={styles.buttonText}>
+            {isDrawing ? "Drawing..." : "Draw Card"}
+          </Text>
         </TouchableOpacity>
-      )}
+      </View>
 
-      {/* Card modal */}
-      {currentCard && (
-        <Card
-          card={currentCard}
-          onClose={() => setCurrentCard(null)}
-          onAction={handleCardAction}
-          devMode={devMode}
+      {/* Developer controls as a separate component */}
+      {devMode && (
+        <DevControls
+          movePlayerForward={movePlayerForward}
+          movePlayerBackward={movePlayerBackward}
+          boardPosition={boardPosition}
+          transportMode={transportMode}
+          availableCardCount={getAvailableCardCount()}
+          totalCardCount={getTotalCardCount()}
+          cardsLoading={cardsLoading}
+          goHome={() => router.push('/')}
         />
       )}
-
-      {/* Winning popup with integrated confetti */}
-      <WinningPopup
-        visible={showWinningPopup}
-        onRequestClose={() => setShowWinningPopup(false)}
-      />
     </SafeAreaView>
   );
 };

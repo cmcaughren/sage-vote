@@ -1,148 +1,75 @@
 // styles/screens/GameBoard.styles.ts
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { COLORS } from '../theme/colors';
 
+// Get screen dimensions for responsive calculations
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const vw = screenWidth / 100;
+const vh = screenHeight / 100;
+
 export const styles = StyleSheet.create({
-  // Main container
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
   },
-
-  // Header section - updated to match Crossroads style
   headerSection: {
+    height: '15%', // Proportional header height
     width: '100%',
+    paddingHorizontal: 4 * vw,
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 30, // Increased padding to move content down
-    marginBottom: 10, // More space before the game board
-    position: 'relative', // For positioning the notebook icon
+    justifyContent: 'center',
+    position: 'relative', // For notebook icon positioning
   },
   title: {
-    fontSize: 26, // Slightly larger
+    fontSize: Math.min(22, 5.5 * vw), // Responsive text size
     fontWeight: 'bold',
-    color: COLORS.dark, // Changed to dark color instead of periwinkle
+    color: COLORS.dark,
     textAlign: 'center',
-    marginBottom: 10, // More space after title
   },
   subtitle: {
-    fontSize: 16,
-    color: COLORS.dark,
+    fontSize: Math.min(16, 4 * vw), // Responsive text size
+    color: COLORS.dark + 'CC',
     textAlign: 'center',
-    marginBottom: 10,
+    marginTop: 0.5 * vh,
   },
-
-  // Transport mode display
-  //transportContainer: {
-  //  backgroundColor: COLORS.background,
-  //  paddingVertical: 8,
-  //  paddingHorizontal: 16,
-  //  borderRadius: 12,
-  //  borderWidth: 1,
-  //  borderColor: COLORS.primary + '30',
-  //},
-  transportText: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: COLORS.dark,
-    textAlign: 'center',
-  },
-
-  // Notebook positioning
   notebookIconContainer: {
     position: 'absolute',
-    top: 15, // Align with top of header
-    right: 20,
+    top: 2 * vh,
+    right: 4 * vw,
     zIndex: 10,
   },
-
-  // Card info for dev mode
-  cardInfo: {
-    fontSize: 14,
-    color: COLORS.secondary + 'D9',
-    marginTop: 3,
-  },
-
-  // Game board container
   boardContainer: {
-    flex: 1,
-    marginHorizontal: 10,
-    marginTop: 0,
-    marginBottom: 60,
-    borderRadius: 10,
-    overflow: 'visible',
-    backgroundColor: COLORS.background,
+    height: '75%', // Takes 75% of screen height
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 2 * vw,
   },
-
-  // Controls for dev mode
-  controlsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 15,
-    overflow: 'visible',
+  buttonContainer: {
+    height: '10%', // Fixed proportion for bottom button
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 5 * vw,
+    paddingBottom: 2 * vh,
   },
-
-  // Button styles
-  button: {
-    paddingVertical: 12,
-    paddingHorizontal: 25,
-    borderRadius: 25,
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
-  },
-  backButton: {
-    backgroundColor: COLORS.error,
-  },
-  cardButton: {
+  drawCardButton: {
     backgroundColor: COLORS.secondary,
-  },
-  forwardButton: {
-    backgroundColor: COLORS.primary,
-  },
-  homeButton: {
-    backgroundColor: COLORS.primary,
-    paddingVertical: 12,
-    paddingHorizontal: 25,
-    borderRadius: 25,
-    marginBottom: 20,
-    alignSelf: 'center',
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
-  },
-  buttonText: {
-    color: COLORS.white,
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-
-  // Main action button
-  primaryActionButton: {
-    backgroundColor: COLORS.secondary,
-    paddingVertical: 15,
-    paddingHorizontal: 40,
+    width: '90%',
+    maxWidth: 400,
+    paddingVertical: Math.min(15, 2 * vh),
     borderRadius: 10,
-    minWidth: 200,
-    maxWidth: 300,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.1,
     shadowRadius: 3,
-    elevation: 3,
+    elevation: 2,
   },
-  primaryActionButtonText: {
+  buttonText: {
     color: COLORS.white,
-    fontSize: 18,
+    fontSize: Math.min(18, 4.5 * vw),
     fontWeight: '600',
-    textAlign: 'center',
   },
 });
-
-export default styles;

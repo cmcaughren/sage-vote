@@ -6,13 +6,36 @@ import { styles, PATH_COLORS, EMOJI } from '../styles/components/GameBoard.style
 import { COLORS } from '../styles/theme/colors';
 
 const GameBoard = () => {
+  // Get screen dimensions for responsive sizing
+  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+
   const {
     transportMode,
     boardPosition,
     pathData,
-    tileSize,
+    tileSize: contextTileSize,
     verticalSpacingFactor,
   } = useGameContext();
+
+  // Calculate a responsive tile size based on screen dimensions
+  const calculateResponsiveTileSize = () => {
+    // The available space for the board (accounting for some padding)
+    const availableWidth = screenWidth * 0.95;
+    const availableHeight = screenHeight * 0.7; // Assuming board takes ~70% of screen height
+
+    // Calculate a size that would let all tiles fit
+    const horizontalTileCount = 12;
+    const verticalTileCount = 14;
+
+    // Return the smaller of the two calculations to ensure it fits
+    return Math.min(
+      availableWidth / horizontalTileCount,
+      availableHeight / verticalTileCount / verticalSpacingFactor
+    );
+  };
+
+  // Use the responsive tile size or fall back to the context one
+  const responsiveTileSize = calculateResponsiveTileSize() || contextTileSize;
 
   // Check if we have valid data before proceeding
   if (!pathData || !PATH_COLORS) {
@@ -38,19 +61,12 @@ const GameBoard = () => {
     }
   };
 
-  // Grid calculation function - recreates grid from pathCalculations.js
+  // Grid calculation function - recreates grid from pathCalculations.js with responsive sizing
   const calculateGridPosition = (gridX, gridY) => {
-    // This recreates the same grid calculation used in pathCalculations.js
-    const screenWidth = Dimensions.get('window').width;
-    const screenHeight = Dimensions.get('window').height * 0.75;
-
-    // Calculate tile sizes consistent with pathCalculations.js
-    const calculatedTileSize = Math.min(screenWidth / 12, screenHeight / 14);
-
-    // Return the exact X,Y coordinates for the given grid position
+    // Return the exact X,Y coordinates for the given grid position with responsive sizing
     return {
-      x: (gridX + 0.5) * calculatedTileSize,
-      y: (gridY + 0.5) * calculatedTileSize * verticalSpacingFactor
+      x: (gridX + 0.5) * responsiveTileSize,
+      y: (gridY + 0.5) * responsiveTileSize * verticalSpacingFactor
     };
   };
 
@@ -60,10 +76,8 @@ const GameBoard = () => {
     let labelGridPos;
 
     if (tileType === 'start') {
-      // Move Home icon further down and make it bigger
-      labelGridPos = calculateGridPosition(6, 13); // 
+      labelGridPos = calculateGridPosition(6, 13);
     } else if (tileType === 'finish') {
-      // Poll should be at grid position (5,0) - above the finish tile at (5,1)
       labelGridPos = calculateGridPosition(5, 0);
     }
 
@@ -71,16 +85,16 @@ const GameBoard = () => {
       <View
         style={{
           position: 'absolute',
-          left: labelGridPos.x - (tileSize * 0.5),
-          top: labelGridPos.y - (tileSize * 0.5),
+          left: labelGridPos.x - (responsiveTileSize * 0.5),
+          top: labelGridPos.y - (responsiveTileSize * 0.5),
           zIndex: 30,
           alignItems: 'center',
-          width: tileSize,
+          width: responsiveTileSize,
         }}
       >
         {/* Emoji */}
         <Text style={{
-          fontSize: 32,
+          fontSize: Math.min(32, responsiveTileSize * 0.8), // Responsive emoji size
           textAlign: 'center',
         }}>
           {tileType === 'start' ? '🏠' : '🗳️'}
@@ -89,7 +103,7 @@ const GameBoard = () => {
     );
   };
 
-  // Render a single tile based on its properties
+  // Render a single tile based on its properties - with responsive sizing
   const renderTile = (pathType, tile, index, isActive) => {
     // Get colors based on path type with safe fallback
     const pathColors = PATH_COLORS[pathType] || ['#cccccc'];
@@ -99,8 +113,9 @@ const GameBoard = () => {
     if (pathType === transportMode) {
       if (pathType === 'carpool') glowColor = COLORS.error;
       else if (pathType === 'bus') glowColor = COLORS.info;
-      else if (pathType === 'bicycle') glowColor = '#c0bc00';//COLORS.warning;
+      else if (pathType === 'bicycle') glowColor = '#c0bc00';
     }
+
     // Choose color based on index to create color variation
     const colorIndex = index % (pathColors.length || 1);
     const bgColor = pathColors[colorIndex] || '#cccccc';
@@ -109,10 +124,9 @@ const GameBoard = () => {
     const isCurrentTile = isActivePath && index === boardPosition;
     const isSpecialTile = tile.type === 'start' || tile.type === 'finish';
 
-    // Calculate tile size adjustments
-    // Make current tile slightly larger (1.15x)
+    // Calculate tile size adjustments - respecting screen size
     const sizeMultiplier = isCurrentTile ? 1.15 : 1;
-    const adjustedTileSize = (tileSize || 30) * sizeMultiplier;
+    const adjustedTileSize = responsiveTileSize * sizeMultiplier;
 
     // Apply different styling based on corner type
     let borderRadius = {};
@@ -145,37 +159,34 @@ const GameBoard = () => {
 
     // Fixed condition to show special emoji
     const showSpecialEmoji =
-      // For the start tile (Home), only show for the active transport path
       (tile.type === 'start' && pathType === transportMode) ||
-      // For the finish tile (Poll), only show for the active transport path
       (tile.type === 'finish' && pathType === transportMode);
 
     // POPPING UP EFFECT: Modify the shadow to create a raised appearance
     const glowParams = isActivePath ? {
       shadowColor: glowColor,
-      shadowOffset: { width: -1, height: -1 }, // Changed to negative for "pop up" effect
-      shadowOpacity: isCurrentTile ? 0.95 : 0.85, // Stronger glow for current tile
-      shadowRadius: isCurrentTile ? 10 : 7, // Larger radius for current tile
-      elevation: isCurrentTile ? 15 : 10, // Higher elevation for current tile on Android
+      shadowOffset: { width: -1, height: -1 },
+      shadowOpacity: isCurrentTile ? 0.95 : 0.85,
+      shadowRadius: isCurrentTile ? 10 : 7,
+      elevation: isCurrentTile ? 15 : 10,
     } : {
-      // Default shadow for non-active paths - also make them pop up
       shadowColor: COLORS.black,
-      shadowOffset: { width: -1, height: -1 }, // Changed to negative
-      shadowOpacity: 0.4, // Increased opacity
-      shadowRadius: 3, // Slightly increased radius
-      elevation: 4, // Increased elevation
+      shadowOffset: { width: -1, height: -1 },
+      shadowOpacity: 0.4,
+      shadowRadius: 3,
+      elevation: 4,
     };
 
     // Add highlight effect on opposite sides to enhance "pop up" appearance
     const highlightEffect = {
       borderTopWidth: 1,
       borderLeftWidth: 1,
-      borderTopColor: 'rgba(255,255,255,0.8)', // Lighter top border
-      borderLeftColor: 'rgba(255,255,255,0.8)', // Lighter left border
+      borderTopColor: 'rgba(255,255,255,0.8)',
+      borderLeftColor: 'rgba(255,255,255,0.8)',
       borderRightWidth: 1,
       borderBottomWidth: 1,
-      borderRightColor: 'rgba(0,0,0,0.1)', // Darker right border
-      borderBottomColor: 'rgba(0,0,0,0.1)', // Darker bottom border
+      borderRightColor: 'rgba(0,0,0,0.1)',
+      borderBottomColor: 'rgba(0,0,0,0.1)',
     };
 
     return (
@@ -187,31 +198,26 @@ const GameBoard = () => {
             {
               width: adjustedTileSize,
               height: adjustedTileSize,
-              backgroundColor: isSpecialTile ? COLORS.primary : bgColor, // Sage for start/finish
+              backgroundColor: isSpecialTile ? COLORS.primary : bgColor,
               left: tile.x - adjustedTileSize / 2,
               top: tile.y - adjustedTileSize / 2,
               opacity: isActivePath ? 1 : 0.6,
               ...borderRadius,
-              ...glowParams, // Apply the glow effect
-              ...highlightEffect, // Add highlight for "pop up" appearance
-
-              // Add back the default border for ALL tiles
+              ...glowParams,
+              ...highlightEffect,
               borderWidth: 1,
-              borderColor: 'rgba(255,255,255,0.5)', // Light border for all tiles
-
-              // For current tile: thinner border in glow color
+              borderColor: 'rgba(255,255,255,0.5)',
               ...(isCurrentTile && {
-                borderWidth: 1.5, // Thinner border (was 3)
+                borderWidth: 1.5,
                 borderColor: glowColor,
-                zIndex: 15, // Higher z-index to ensure it stays on top
+                zIndex: 15,
               }),
             },
-            // Special styling for start/finish tiles - now sage colored
             isSpecialTile && {
-              borderColor: COLORS.primary, // Sage border instead of gold
+              borderColor: COLORS.primary,
               borderWidth: 3,
               zIndex: 5,
-              shadowColor: COLORS.primary, // Sage glow
+              shadowColor: COLORS.primary,
               shadowOpacity: 0.8,
               shadowRadius: 6,
             }
@@ -219,7 +225,9 @@ const GameBoard = () => {
         >
           {/* Only show numbers on regular tiles, not on special tiles */}
           {!isSpecialTile && (
-            <Text style={styles.tileNumber}>{tile.id}</Text>
+            <Text style={[styles.tileNumber, { fontSize: Math.max(8, responsiveTileSize * 0.3) }]}>
+              {tile.id}
+            </Text>
           )}
         </View>
 
@@ -228,12 +236,16 @@ const GameBoard = () => {
           <View style={[
             styles.playerTokenContainer,
             {
-              left: tile.x - 15,
-              top: tile.y - 15,
-              zIndex: 25, // Higher than any other element
+              left: tile.x - responsiveTileSize * 0.45,
+              top: tile.y - responsiveTileSize * 0.45,
+              width: responsiveTileSize * 0.9,
+              height: responsiveTileSize * 0.9,
+              zIndex: 25,
             }
           ]}>
-            <Text style={styles.emojiText}>
+            <Text style={[styles.emojiText, {
+              fontSize: Math.max(20, responsiveTileSize * 0.7)
+            }]}>
               {transportMode === 'bus' ? EMOJI.bus :
                 transportMode === 'carpool' ? EMOJI.carpool : EMOJI.bicycle}
             </Text>
@@ -267,34 +279,8 @@ const GameBoard = () => {
             )
           )
         )}
-
-        {/* Render Home icon explicitly here as a fallback 
-         {transportMode && (
-          <View
-            style={{
-              position: 'absolute',
-              left: calculateGridPosition(6, 14).x - (tileSize * 0.75),
-              top: calculateGridPosition(6, 14).y - (tileSize * 0.75),
-              zIndex: 50,
-              alignItems: 'center',
-              width: tileSize * 1.5,
-            }}
-          >
-            <Text style={{ fontSize: 24, textAlign: 'center' }}>🏠</Text>
-            <Text style={{
-              fontSize: 14,
-              color: COLORS.info,
-              fontWeight: 'bold',
-              marginTop: 4,
-              textAlign: 'center',
-            }}>
-              Home
-            </Text>
-          </View>
-        )}
-        */}
-      </View >
-    </View >
+      </View>
+    </View>
   );
 };
 
