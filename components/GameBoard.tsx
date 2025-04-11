@@ -266,8 +266,8 @@ const GameBoard = () => {
   ].filter(path => Array.isArray(path.tiles) && path.tiles.length > 0);
 
   return (
-    <View style={[styles.container, { flex: 1, height: '90%' }]}>
-      <View style={[styles.board, { height: '100%' }]}>
+    <View style={styles.container}>
+      <View style={styles.board}>
         {/* Render all paths - bottom to top for proper layering */}
         {pathsToRender.map(path =>
           path.tiles.map((tile, index) =>

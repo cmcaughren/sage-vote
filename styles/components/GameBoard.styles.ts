@@ -28,7 +28,9 @@ export const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     position: 'relative',
-    backgroundColor: COLORS.background, // Light background matching the logo's style
+    backgroundColor: COLORS.background,
+    alignItems: 'center',     // Center horizontally
+    justifyContent: 'center', // Center vertically
   },
   tile: {
     position: 'absolute',
