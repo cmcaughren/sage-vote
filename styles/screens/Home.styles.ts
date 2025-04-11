@@ -21,26 +21,28 @@ export const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 0, // Remove general padding
-    paddingTop: 1 * vh, // Minimal top padding
+    paddingHorizontal: 8 * vw, // Add horizontal padding (about 8% of screen width)
+    paddingTop: 5 * vh, // Add some top padding
+    paddingBottom: 3 * vh,
   },
   logoSection: {
-    height: '60%', // Increased significantly to 60%
+    height: '45%', // About 45% of screen height - perfect middle ground
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 4 * vw, // Horizontal padding only
+    paddingHorizontal: 2 * vw, // Additional inner padding
   },
   logo: {
     width: '100%',
-    aspectRatio: 1, // Maintain logo's aspect ratio instead of fixed height
-    maxWidth: 550, // Larger maximum size
+    height: '100%',
+    resizeMode: 'contain', // This ensures the logo maintains its proportions
+    maxWidth: 500,
   },
   taglineSection: {
     width: '100%',
     alignItems: 'center',
-    paddingHorizontal: 5 * vw,
-    // No margins - use the layout's natural spacing
+    marginTop: 1 * vh,
+    marginBottom: 2 * vh,
   },
   taglinePrimary: {
     fontSize: Math.min(24, 6 * vw),
