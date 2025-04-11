@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 8 * vw, // Add horizontal padding (about 8% of screen width)
+    //paddingHorizontal: 8 * vw, // Add horizontal padding (about 8% of screen width)
     paddingTop: 5 * vh, // Add some top padding
     paddingBottom: 3 * vh,
   },
