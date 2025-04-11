@@ -2,7 +2,15 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import { COLORS } from '../theme/colors';
 
-const { width } = Dimensions.get('window');
+// Get screen dimensions
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+
+// Calculate responsive units
+const vw = screenWidth / 100;
+const vh = screenHeight / 100;
+
+// Check if it's a small device
+const isSmallDevice = screenHeight < 700;
 
 export const styles = StyleSheet.create({
   container: {
@@ -12,36 +20,37 @@ export const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-    width: '100%',
+    justifyContent: 'space-between',
+    padding: 5 * vw,
+    paddingTop: 5 * vh,
+    paddingBottom: 8 * vh, // Extra padding at bottom to avoid overlap
   },
-  logoContainer: {
+  logoSection: {
+    height: '40%', // Takes 40% of the available height
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20, // Spacing between logo and tagline
   },
   logo: {
-    width: width, // full width of screen
-    height: undefined,
-    aspectRatio: 1,
+    width: '90%',
+    height: '90%',
+    maxWidth: 400,
+    maxHeight: 300,
   },
-  taglineContainer: {
-    marginBottom: 50, // Space between tagline and buttons
+  taglineSection: {
+    width: '100%',
     alignItems: 'center',
+    marginVertical: 3 * vh, // Responsive vertical margin
   },
   taglinePrimary: {
-    fontSize: 22,
+    fontSize: Math.min(24, 6 * vw),
     fontWeight: '600',
     color: COLORS.info,
     textAlign: 'center',
-    maxWidth: 320,
-    marginBottom: 8,
+    marginBottom: 1 * vh,
   },
   taglineSecondary: {
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: Math.min(16, 4 * vw),
     color: COLORS.info,
     textAlign: 'center',
     maxWidth: 300,
@@ -49,13 +58,13 @@ export const styles = StyleSheet.create({
   buttonContainer: {
     width: '100%',
     maxWidth: 300,
-    marginBottom: 40,
+    marginTop: isSmallDevice ? 2 * vh : 4 * vh,
   },
   button: {
-    paddingVertical: 15,
+    paddingVertical: isSmallDevice ? 12 : 15,
     borderRadius: 10,
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 2 * vh,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -67,34 +76,22 @@ export const styles = StyleSheet.create({
   },
   notebookButton: {
     backgroundColor: COLORS.secondary,
-    marginBottom: 15,
-  },
-  secondaryButton: {
-    backgroundColor: COLORS.white,
-    borderWidth: 1,
-    borderColor: COLORS.primary,
   },
   buttonText: {
     color: COLORS.white,
-    fontSize: 18,
+    fontSize: Math.min(18, 4.5 * vw),
     fontWeight: '600',
   },
   notebookButtonText: {
     color: COLORS.white,
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  secondaryButtonText: {
-    color: COLORS.primary,
-    fontSize: 18,
+    fontSize: Math.min(18, 4.5 * vw),
     fontWeight: '600',
   },
   versionText: {
     color: COLORS.dark + '80',
     fontSize: 12,
     position: 'absolute',
-    bottom: 20,
+    bottom: 2 * vh, // Responsive positioning
+    alignSelf: 'center',
   }
 });
-
-export default styles;

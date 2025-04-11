@@ -1,4 +1,6 @@
 // app/index.tsx
+// Responsive home screen layout
+
 import React from "react";
 import {
   View,
@@ -6,15 +8,17 @@ import {
   TouchableOpacity,
   Image,
   SafeAreaView,
-  StatusBar
+  StatusBar,
+  Dimensions
 } from "react-native";
 import { useRouter } from "expo-router";
-import { useGameContext } from "../context/GameContext";
 import { styles } from "../styles/screens/Home.styles";
 import { COLORS } from "../styles/theme/colors";
 
+// Get screen dimensions for responsive calculations
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+
 export default function HomeScreen() {
-  const { devMode } = useGameContext();
   const router = useRouter();
 
   return (
@@ -22,8 +26,8 @@ export default function HomeScreen() {
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.background} />
 
       <View style={styles.contentContainer}>
-        {/* Logo */}
-        <View style={styles.logoContainer}>
+        {/* Logo Section - Flexible sizing */}
+        <View style={styles.logoSection}>
           <Image
             source={require('../assets/images/logo.png')}
             style={styles.logo}
@@ -31,13 +35,15 @@ export default function HomeScreen() {
           />
         </View>
 
-        {/* Tagline */}
-        <View style={styles.taglineContainer}>
+        {/* Tagline Section - With responsive spacing */}
+        <View style={styles.taglineSection}>
           <Text style={styles.taglinePrimary}>Learn Canadian Politics.</Text>
-          <Text style={styles.taglineSecondary}>Roll the dice, learn the system, cast your vote with confidence.</Text>
+          <Text style={styles.taglineSecondary}>
+            Roll the dice, learn the system, cast your vote with confidence.
+          </Text>
         </View>
 
-        {/* Buttons */}
+        {/* Buttons with responsive spacing */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[styles.button, styles.primaryButton]}
@@ -52,20 +58,10 @@ export default function HomeScreen() {
           >
             <Text style={styles.notebookButtonText}>Notebook</Text>
           </TouchableOpacity>
-
-          {/* Dev mode button if needed */}
-          {devMode && (
-            <TouchableOpacity
-              style={[styles.button, styles.secondaryButton]}
-              onPress={() => router.push('/create-card')}
-            >
-              <Text style={styles.secondaryButtonText}>Create Cards</Text>
-            </TouchableOpacity>
-          )}
         </View>
 
-        {/* Version text */}
-        <Text style={styles.versionText}>Version 1.0.0</Text>
+        {/* Version text with absolute positioning */}
+        <Text style={styles.versionText}>Version 1.0.1</Text>
       </View>
     </SafeAreaView>
   );
