@@ -4,9 +4,7 @@ import {
   View,
   Text,
   SafeAreaView,
-  Dimensions,
-  ScrollView,
-  Platform
+  Dimensions
 } from "react-native";
 import { useRouter } from "expo-router";
 import DiceRoller from "../components/DiceRoller";
@@ -18,12 +16,8 @@ export default function CrossroadsScreen() {
   const { setTransportMode, setBoardPosition, pathLengths } = useGameContext();
   const router = useRouter();
 
-  // Get screen dimensions for responsive calculations
-  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-
   // Reset player position whenever they're at the crossroads
   useEffect(() => {
-    console.log('Crossroads: Resetting player position to 0');
     setBoardPosition(0);
   }, []);
 
@@ -38,23 +32,15 @@ export default function CrossroadsScreen() {
       mode = "bicycle";
     }
 
-    console.log(`Crossroads: Rolled ${result}, setting transport mode to ${mode}`);
-
-    // Update context - set transport mode and ensure position is 0
+    // Update context and navigate
     setTransportMode(mode);
-    setBoardPosition(0); // Explicitly ensure position is reset to 0
-
-    // Navigate to game board
+    setBoardPosition(0);
     router.push("/gameboard");
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        bounces={false}
-        showsVerticalScrollIndicator={false}
-      >
+      <View style={styles.content}>
         {/* Top Section - Title & Subtitle */}
         <View style={styles.headerSection}>
           <Text style={styles.title}>
@@ -73,21 +59,15 @@ export default function CrossroadsScreen() {
           </View>
         </View>
 
-        // Dice roller in the middle - with flexible height
-        <View style={[
-          styles.diceContainer,
-          { height: Math.min(screenHeight * 0.45, 400) }
-        ]}>
-          <DiceRoller
-            onRollComplete={handleRollComplete}
-          // Remove the compact parameter entirely
-          />
+        {/* Dice roller in the middle */}
+        <View style={styles.diceContainer}>
+          <DiceRoller onRollComplete={handleRollComplete} />
         </View>
 
-        {/* Transport options with improved responsive layout */}
+        {/* Transport options */}
         <View style={styles.optionsContainer}>
           {/* Bus Option */}
-          <View style={[styles.optionCard, styles.optionCardResponsive]}>
+          <View style={styles.optionCard}>
             <View style={styles.optionContent}>
               <View style={[styles.optionIcon, { backgroundColor: COLORS.busPath.base }]}>
                 <Text style={styles.optionEmoji}>🚌</Text>
@@ -99,7 +79,7 @@ export default function CrossroadsScreen() {
           </View>
 
           {/* Carpool Option */}
-          <View style={[styles.optionCard, styles.optionCardResponsive]}>
+          <View style={styles.optionCard}>
             <View style={styles.optionContent}>
               <View style={[styles.optionIcon, { backgroundColor: COLORS.carpoolPath.base }]}>
                 <Text style={styles.optionEmoji}>🚗</Text>
@@ -111,7 +91,7 @@ export default function CrossroadsScreen() {
           </View>
 
           {/* Bicycle Option */}
-          <View style={[styles.optionCard, styles.optionCardResponsive]}>
+          <View style={styles.optionCard}>
             <View style={styles.optionContent}>
               <View style={[styles.optionIcon, { backgroundColor: COLORS.bicyclePath.base }]}>
                 <Text style={styles.optionEmoji}>🚲</Text>
@@ -122,7 +102,7 @@ export default function CrossroadsScreen() {
             </View>
           </View>
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
