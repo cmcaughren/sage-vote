@@ -10,7 +10,7 @@ const vw = screenWidth / 100;
 const vh = screenHeight / 100;
 
 // Check if it's a small device
-const isSmallDevice = screenHeight < 700;
+//const isSmallDevice = screenHeight < 700;
 
 export const styles = StyleSheet.create({
   container: {
@@ -21,52 +21,51 @@ export const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 5 * vw,
-    paddingTop: 2 * vh, // Reduced top padding
-    paddingBottom: 6 * vh,
+    padding: 0, // Remove general padding
+    paddingTop: 1 * vh, // Minimal top padding
   },
   logoSection: {
-    height: '50%', // Increased from 40% to 50%
+    height: '60%', // Increased significantly to 60%
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 2 * vh,
+    paddingHorizontal: 4 * vw, // Horizontal padding only
   },
   logo: {
     width: '100%',
-    height: '100%',
-    maxWidth: 500,
-    maxHeight: 400,
+    aspectRatio: 1, // Maintain logo's aspect ratio instead of fixed height
+    maxWidth: 550, // Larger maximum size
   },
   taglineSection: {
     width: '100%',
     alignItems: 'center',
-    marginTop: 1 * vh,
-    marginBottom: 2 * vh,
+    paddingHorizontal: 5 * vw,
+    // No margins - use the layout's natural spacing
   },
   taglinePrimary: {
     fontSize: Math.min(24, 6 * vw),
     fontWeight: '600',
     color: COLORS.info,
     textAlign: 'center',
-    marginBottom: 1 * vh,
+    marginBottom: 0.5 * vh, // Reduced margin
   },
   taglineSecondary: {
     fontSize: Math.min(16, 4 * vw),
     color: COLORS.info,
     textAlign: 'center',
-    maxWidth: 300,
+    maxWidth: 320,
   },
   buttonContainer: {
-    width: '100%',
-    maxWidth: 300,
-    marginTop: isSmallDevice ? 2 * vh : 4 * vh,
+    width: '90%', // Slightly wider
+    maxWidth: 320,
+    marginTop: 2 * vh, // Reduced margin
+    paddingHorizontal: 5 * vw,
   },
   button: {
-    paddingVertical: isSmallDevice ? 12 : 15,
+    paddingVertical: 12, // Slightly reduced height
     borderRadius: 10,
     alignItems: 'center',
-    marginBottom: 2 * vh,
+    marginBottom: 1.5 * vh, // Reduced margin
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -92,8 +91,7 @@ export const styles = StyleSheet.create({
   versionText: {
     color: COLORS.dark + '80',
     fontSize: 12,
-    position: 'absolute',
-    bottom: 2 * vh, // Responsive positioning
-    alignSelf: 'center',
+    marginBottom: 2 * vh,
+    marginTop: 1 * vh,
   }
 });
