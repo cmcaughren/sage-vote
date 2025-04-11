@@ -22,25 +22,27 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 5 * vw,
-    paddingTop: 5 * vh,
-    paddingBottom: 8 * vh, // Extra padding at bottom to avoid overlap
+    paddingTop: 2 * vh, // Reduced top padding
+    paddingBottom: 6 * vh,
   },
   logoSection: {
-    height: '40%', // Takes 40% of the available height
+    height: '50%', // Increased from 40% to 50%
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingVertical: 2 * vh,
   },
   logo: {
-    width: '90%',
-    height: '90%',
-    maxWidth: 400,
-    maxHeight: 300,
+    width: '100%',
+    height: '100%',
+    maxWidth: 500,
+    maxHeight: 400,
   },
   taglineSection: {
     width: '100%',
     alignItems: 'center',
-    marginVertical: 3 * vh, // Responsive vertical margin
+    marginTop: 1 * vh,
+    marginBottom: 2 * vh,
   },
   taglinePrimary: {
     fontSize: Math.min(24, 6 * vw),
