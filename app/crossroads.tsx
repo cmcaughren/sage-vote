@@ -64,42 +64,36 @@ export default function CrossroadsScreen() {
           <DiceRoller onRollComplete={handleRollComplete} />
         </View>
 
-        {/* Transport options */}
+        {/* Simplified options at bottom */}
         <View style={styles.optionsContainer}>
           {/* Bus Option */}
           <View style={styles.optionCard}>
-            <View style={styles.optionContent}>
-              <View style={[styles.optionIcon, { backgroundColor: COLORS.busPath.base }]}>
-                <Text style={styles.optionEmoji}>🚌</Text>
-              </View>
-              <Text style={styles.optionTitle}>Public Transit</Text>
-              <Text style={styles.optionDescription}>Roll 1-3</Text>
-              <Text style={styles.optionSubtext}>{pathLengths.bus} spaces</Text>
+            <View style={[styles.optionIcon, { backgroundColor: COLORS.busPath.base }]}>
+              <Text style={styles.optionEmoji}>🚌</Text>
             </View>
+            <Text style={styles.optionTitle}>Public Transit</Text>
+            <Text style={styles.optionDescription}>Roll 1-3</Text>
+            <Text style={styles.optionSubtext}>{pathLengths.bus} spaces</Text>
           </View>
 
           {/* Carpool Option */}
           <View style={styles.optionCard}>
-            <View style={styles.optionContent}>
-              <View style={[styles.optionIcon, { backgroundColor: COLORS.carpoolPath.base }]}>
-                <Text style={styles.optionEmoji}>🚗</Text>
-              </View>
-              <Text style={styles.optionTitle}>Carpool</Text>
-              <Text style={styles.optionDescription}>Roll 4-5</Text>
-              <Text style={styles.optionSubtext}>{pathLengths.carpool} spaces</Text>
+            <View style={[styles.optionIcon, { backgroundColor: COLORS.carpoolPath.base }]}>
+              <Text style={styles.optionEmoji}>🚗</Text>
             </View>
+            <Text style={styles.optionTitle}>Carpool</Text>
+            <Text style={styles.optionDescription}>Roll 4-5</Text>
+            <Text style={styles.optionSubtext}>{pathLengths.carpool} spaces</Text>
           </View>
 
           {/* Bicycle Option */}
           <View style={styles.optionCard}>
-            <View style={styles.optionContent}>
-              <View style={[styles.optionIcon, { backgroundColor: COLORS.bicyclePath.base }]}>
-                <Text style={styles.optionEmoji}>🚲</Text>
-              </View>
-              <Text style={styles.optionTitle}>Bicycle</Text>
-              <Text style={styles.optionDescription}>Roll 6</Text>
-              <Text style={styles.optionSubtext}>{pathLengths.bicycle} spaces</Text>
+            <View style={[styles.optionIcon, { backgroundColor: COLORS.bicyclePath.base }]}>
+              <Text style={styles.optionEmoji}>🚲</Text>
             </View>
+            <Text style={styles.optionTitle}>Bicycle</Text>
+            <Text style={styles.optionDescription}>Roll 6</Text>
+            <Text style={styles.optionSubtext}>{pathLengths.bicycle} spaces</Text>
           </View>
         </View>
       </View>
