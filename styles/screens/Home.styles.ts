@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
     paddingBottom: 3 * vh,
   },
   logoSection: {
-    height: '45%', // About 45% of screen height - perfect middle ground
+    height: '60%', // About 45% of screen height - perfect middle ground
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
