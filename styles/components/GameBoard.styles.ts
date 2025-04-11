@@ -1,6 +1,14 @@
+// styles/components/GameBoard.styles.ts
 import { StyleSheet, Dimensions } from 'react-native';
 import { COLORS } from '../theme/colors';
-import { SPACING } from '../theme/spacing';
+
+// Get screen dimensions for responsive sizing
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const vw = screenWidth / 100; // 1% of viewport width
+const vh = screenHeight / 100; // 1% of viewport height
+
+// Calculate responsive base size
+const baseTileSize = Math.min(screenWidth / 14, screenHeight / 18);
 
 // Path colors - using colors from the theme
 export const PATH_COLORS = {
@@ -23,14 +31,17 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
   },
   board: {
     width: '100%',
     height: '100%',
     position: 'relative',
     backgroundColor: COLORS.background,
-    alignItems: 'center',     // Center horizontally
-    justifyContent: 'center', // Center vertically
+    alignItems: 'center',
+    justifyContent: 'center',
+    // Add this transform to center the board
+    //transform: [{ translateX: -screenWidth * 0.12 }], // Adjust as needed
   },
   tile: {
     position: 'absolute',
@@ -44,41 +55,33 @@ export const styles = StyleSheet.create({
     shadowRadius: 1,
     elevation: 2,
     zIndex: 2,
-    // Make sure overflow is visible to show the glow effect
     overflow: 'visible',
   },
   activeTile: {
-    //borderWidth: SPACING.borderWidth.thick,
-    //borderColor: '#FFD700',
-    //shadowColor: COLORS.black,
-    //shadowOffset: { width: 0, height: 3 },
-    //shadowOpacity: 0.4,
-    //shadowRadius: 5,
-    //elevation: 8,
     zIndex: 10,
   },
   tileNumber: {
-    fontSize: 10,
+    fontSize: Math.max(8, baseTileSize * 0.25), // Responsive font size
     color: 'rgba(0,0,0,0.5)',
     position: 'absolute',
     top: 2,
     left: 2,
   },
   specialEmoji: {
-    fontSize: 20,
+    fontSize: Math.max(16, baseTileSize * 0.6), // Responsive font size
     opacity: 0.8,
     zIndex: 6,
   },
-  // Separate container for player token
+  // Responsive player token container
   playerTokenContainer: {
     position: 'absolute',
-    width: 32,
-    height: 32,
+    width: Math.max(24, baseTileSize * 0.9), // Responsive size
+    height: Math.max(24, baseTileSize * 0.9), // Responsive size
     alignItems: 'center',
     justifyContent: 'center',
   },
   emojiText: {
-    fontSize: 28,
+    fontSize: Math.max(20, baseTileSize * 0.8), // Responsive font size
     textShadowColor: 'rgba(0,0,0,0.5)',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,

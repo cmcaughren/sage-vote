@@ -6,10 +6,8 @@ import { useGameContext } from '../context/GameContext';
 import GameBoard from '../components/GameBoard';
 import Card from '../components/Card';
 import NotebookIcon from '../components/NotebookIcon';
-import WinningPopup from '../components/WinningPopup';
 import { getNotebookEntries, saveGameProgress } from '../utilities/asyncStorage';
 import { styles } from '../styles/screens/GameBoard.styles';
-import { COLORS } from '../styles/theme/colors';
 import { StatusBar } from 'expo-status-bar'; // Use Expo's StatusBar for better iOS compatibility
 import DevControls from '../components/DevControls';
 
@@ -297,7 +295,7 @@ const GameBoardScreen = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Developer controls as a separate component */}
+      {/* Developer controls as a separate component 
       {devMode && (
         <DevControls
           movePlayerForward={movePlayerForward}
@@ -309,7 +307,7 @@ const GameBoardScreen = () => {
           cardsLoading={cardsLoading}
           goHome={() => router.push('/')}
         />
-      )}
+      )}*/}
     </SafeAreaView>
   );
 };
