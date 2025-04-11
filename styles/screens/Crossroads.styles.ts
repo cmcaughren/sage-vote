@@ -19,9 +19,9 @@ export const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
   },
-  // Top Quarter (25%)
+  // Top section
   headerSection: {
-    height: '25%', // Takes up top quarter
+    height: '30%',
     width: '100%',
     paddingHorizontal: 5 * vw,
     paddingVertical: 2 * vh,
@@ -65,9 +65,9 @@ export const styles = StyleSheet.create({
     overflow: 'visible', // Important for dice animations
   },
 
-  // Bottom Quarter (25%)
+  // Bottom  (20%)
   optionsContainer: {
-    height: '25%', // Takes up bottom quarter
+    height: '20%', // Takes up bottom quarter
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -76,8 +76,8 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   optionCard: {
-    aspectRatio: 1, // Forces square shape
-    width: '28%', // Slightly narrower than 1/3 to allow spacing
+    aspectRatio: 1, // Keeps square shape
+    width: '28%', // Slightly less than 1/3 for spacing
     backgroundColor: COLORS.white,
     borderRadius: 10,
     alignItems: 'center',
@@ -90,9 +90,9 @@ export const styles = StyleSheet.create({
     padding: 1 * vw,
   },
   optionIcon: {
-    width: '50%', // Takes 50% of the card width
-    aspectRatio: 1, // Circle
-    borderRadius: 999, // Circle
+    width: '40%',
+    aspectRatio: 1, // Keeps it circular
+    borderRadius: 999, // Ensure circle shape
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 0.5 * vh,
@@ -101,21 +101,21 @@ export const styles = StyleSheet.create({
     fontSize: Math.min(18, 4.5 * vw),
   },
   optionTitle: {
-    fontSize: Math.min(12, 3 * vw),
+    fontSize: Math.min(13, 3.2 * vw),
     fontWeight: '600',
     color: COLORS.dark,
     marginBottom: 0.2 * vh,
     textAlign: 'center',
   },
   optionDescription: {
-    fontSize: Math.min(10, 2.6 * vw),
+    fontSize: Math.min(11, 2.8 * vw),
     color: COLORS.dark + 'CC',
     fontWeight: '500',
     textAlign: 'center',
     marginBottom: 0.2 * vh,
   },
   optionSubtext: {
-    fontSize: Math.min(9, 2.4 * vw),
+    fontSize: Math.min(10, 2.5 * vw),
     color: COLORS.dark + '80',
     textAlign: 'center',
   },
