@@ -1,26 +1,34 @@
-// styles/components/ui/DiceRoller.styles.ts
-import { StyleSheet } from 'react-native';
+// styles/components/DiceRoller.styles.ts
+import { StyleSheet, Dimensions } from 'react-native';
 import { COLORS } from '../theme/colors';
+
+// Get screen dimensions for responsive calculations
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+
+// Calculate responsive values
+const responsiveDiceSize = Math.min(150, screenWidth * 0.35);
+const buttonPadding = Math.min(12, screenHeight * 0.018);
+const fontSize = Math.min(18, screenWidth * 0.045);
 
 export const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 20,
-    height: 400,
-    paddingTop: 15, // Reduced from default padding
+    height: Math.min(400, screenHeight * 0.45), // Responsive height
+    paddingTop: 15,
     paddingBottom: 15,
   },
   compactContainer: {
-    height: 200, // Reduced from 300
+    height: 200,
     padding: 10,
-    marginBottom: 0, // No extra margin at the bottom
+    marginBottom: 0,
   },
   diceContainer: {
-    width: 150,
-    height: 150,
+    width: responsiveDiceSize,
+    height: responsiveDiceSize,
     backgroundColor: COLORS.white,
-    borderRadius: 24,
+    borderRadius: Math.min(24, responsiveDiceSize * 0.15),
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: COLORS.black,
@@ -28,8 +36,7 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 5,
-    marginBottom: 20,
-    marginTop: 20,
+    marginBottom: Math.min(20, screenHeight * 0.03),
   },
   compactDiceContainer: {
     width: 120,

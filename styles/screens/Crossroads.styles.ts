@@ -81,30 +81,54 @@ export const styles = StyleSheet.create({
   // Responsive option container
   optionsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     width: '100%',
-    maxWidth: 100 * vw,
+    maxWidth: 600, // Maximum width on larger devices
+    flexWrap: 'wrap', // Allow wrapping on very small screens
+    marginTop: 0, // Reduced to save space
     paddingHorizontal: SPACING.xs,
-    marginTop: -2 * vh,
-    minHeight: 15 * vh, // Minimum height of 15% of screen height
-    marginHorizontal: '2%', // Center the container
-    paddingBottom: 1 * vh, // Add some padding at bottom
   },
   optionCard: {
-    flex: 1, // Take equal space
-    aspectRatio: 1, // Slightly taller than wide
+    flex: 1,
     backgroundColor: COLORS.white,
     borderRadius: 10,
-    margin: SPACING.sm, // Space between cards
+    margin: SPACING.xs, // Smaller margins
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
-    overflow: 'visible', // Ensure content doesn't overflow
-    padding: SPACING.xs, // Consistent padding
-    //maxWidth: 28 * vw,
+    overflow: 'hidden', // Changed from 'visible'
+    padding: SPACING.xs,
+    minHeight: 80, // Ensure minimum height
   },
+  // Responsive option container
+  //optionsContainer: {
+  //  flexDirection: 'row',
+  //  justifyContent: 'space-between',
+  //  width: '100%',
+  //  maxWidth: 100 * vw,
+  //  paddingHorizontal: SPACING.xs,
+  //  marginTop: -2 * vh,
+  //  minHeight: 15 * vh, // Minimum height of 15% of screen height
+  //  marginHorizontal: '2%', // Center the container
+  //  paddingBottom: 1 * vh, // Add some padding at bottom
+  //},
+  //optionCard: {
+  //  flex: 1, // Take equal space
+  //  aspectRatio: 1, // Slightly taller than wide
+  //  backgroundColor: COLORS.white,
+  //  borderRadius: 10,
+  //  margin: SPACING.sm, // Space between cards
+  //  shadowColor: COLORS.black,
+  //  shadowOffset: { width: 0, height: 1 },
+  //  shadowOpacity: 0.1,
+  //  shadowRadius: 2,
+  //  elevation: 2,
+  //  overflow: 'visible', // Ensure content doesn't overflow
+  //  padding: SPACING.xs, // Consistent padding
+  //  //maxWidth: 28 * vw,
+  //},
   // Content container inside card
   optionContent: {
     flex: 1,

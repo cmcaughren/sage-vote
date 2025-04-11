@@ -4,6 +4,9 @@ import {
   View,
   Text,
   SafeAreaView,
+  Dimensions,
+  ScrollView,
+  Platform
 } from "react-native";
 import { useRouter } from "expo-router";
 import DiceRoller from "../components/DiceRoller";
@@ -14,6 +17,9 @@ import { COLORS } from "../styles/theme/colors";
 export default function CrossroadsScreen() {
   const { setTransportMode, setBoardPosition, pathLengths } = useGameContext();
   const router = useRouter();
+
+  // Get screen dimensions for responsive calculations
+  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
   // Reset player position whenever they're at the crossroads
   useEffect(() => {
@@ -44,7 +50,11 @@ export default function CrossroadsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        bounces={false}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Top Section - Title & Subtitle */}
         <View style={styles.headerSection}>
           <Text style={styles.title}>
@@ -63,15 +73,21 @@ export default function CrossroadsScreen() {
           </View>
         </View>
 
-        {/* Dice roller in the middle */}
-        <View style={styles.diceContainer}>
-          <DiceRoller onRollComplete={handleRollComplete} />
+        // Dice roller in the middle - with flexible height
+        <View style={[
+          styles.diceContainer,
+          { height: Math.min(screenHeight * 0.45, 400) }
+        ]}>
+          <DiceRoller
+            onRollComplete={handleRollComplete}
+          // Remove the compact parameter entirely
+          />
         </View>
 
         {/* Transport options with improved responsive layout */}
         <View style={styles.optionsContainer}>
           {/* Bus Option */}
-          <View style={styles.optionCard}>
+          <View style={[styles.optionCard, styles.optionCardResponsive]}>
             <View style={styles.optionContent}>
               <View style={[styles.optionIcon, { backgroundColor: COLORS.busPath.base }]}>
                 <Text style={styles.optionEmoji}>🚌</Text>
@@ -83,7 +99,7 @@ export default function CrossroadsScreen() {
           </View>
 
           {/* Carpool Option */}
-          <View style={styles.optionCard}>
+          <View style={[styles.optionCard, styles.optionCardResponsive]}>
             <View style={styles.optionContent}>
               <View style={[styles.optionIcon, { backgroundColor: COLORS.carpoolPath.base }]}>
                 <Text style={styles.optionEmoji}>🚗</Text>
@@ -95,7 +111,7 @@ export default function CrossroadsScreen() {
           </View>
 
           {/* Bicycle Option */}
-          <View style={styles.optionCard}>
+          <View style={[styles.optionCard, styles.optionCardResponsive]}>
             <View style={styles.optionContent}>
               <View style={[styles.optionIcon, { backgroundColor: COLORS.bicyclePath.base }]}>
                 <Text style={styles.optionEmoji}>🚲</Text>
@@ -106,7 +122,7 @@ export default function CrossroadsScreen() {
             </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

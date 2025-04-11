@@ -1,12 +1,13 @@
 /// components/ui/DiceRoller.tsx
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  View, 
-  Text, 
-  TouchableOpacity, 
-  Animated, 
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Animated,
   Easing,
-  ActivityIndicator
+  ActivityIndicator,
+  Dimensions
 } from 'react-native';
 import { styles } from '../styles/components/DiceRoller.styles';
 import { COLORS } from '../styles/theme/colors';
@@ -18,11 +19,11 @@ interface DiceRollerProps {
   shouldRoll?: boolean;
 }
 
-const DiceRoller: React.FC<DiceRollerProps> = ({ 
-  onRollComplete, 
-  compact = false, 
-  hideTransportInfo = false, 
-  shouldRoll = false 
+const DiceRoller: React.FC<DiceRollerProps> = ({
+  onRollComplete,
+  compact = false,
+  hideTransportInfo = false,
+  shouldRoll = false
 }) => {
   // Change to a combined state object for atomic updates
   const [diceState, setDiceState] = useState({
@@ -30,11 +31,11 @@ const DiceRoller: React.FC<DiceRollerProps> = ({
     finalValue: 1,
     phase: 'ready', // 'ready', 'rolling', 'transitioning', 'result'
   });
-  
+
   // Animation values
   const animation = useRef(new Animated.Value(0)).current;
   const diceChangeInterval = useRef<NodeJS.Timeout | null>(null);
-  
+
   // Clean up animation when component unmounts
   useEffect(() => {
     return () => {
@@ -54,24 +55,24 @@ const DiceRoller: React.FC<DiceRollerProps> = ({
 
   const rollDice = () => {
     if (diceState.phase !== 'ready') return;
-    
+
     // Update state atomically
     setDiceState(prev => ({
       ...prev,
       phase: 'rolling'
     }));
-    
+
     // Reset animation value
     animation.setValue(0);
-    
+
     // Generate the final dice value, but don't show it yet
     const newValue = Math.floor(Math.random() * 6) + 1;
-    
+
     // Start rapidly changing the visible dice face
     if (diceChangeInterval.current) {
       clearInterval(diceChangeInterval.current);
     }
-    
+
     diceChangeInterval.current = setInterval(() => {
       // Show random faces during the roll
       setDiceState(prev => ({
@@ -79,7 +80,7 @@ const DiceRoller: React.FC<DiceRollerProps> = ({
         currentValue: Math.floor(Math.random() * 6) + 1
       }));
     }, 100); // Change face every 100ms
-    
+
     // Create animation sequence
     Animated.timing(animation, {
       toValue: 1,
@@ -91,21 +92,21 @@ const DiceRoller: React.FC<DiceRollerProps> = ({
       if (diceChangeInterval.current) {
         clearInterval(diceChangeInterval.current);
       }
-      
+
       // Important: Update all related state in one atomic operation
       setDiceState({
         currentValue: newValue,
         finalValue: newValue,
         phase: 'transitioning'
       });
-      
+
       // Delay showing the result - again, atomic update
       setTimeout(() => {
         setDiceState(prev => ({
           ...prev,
           phase: 'result'
         }));
-        
+
         // Automatically call onRollComplete directly when in compact mode
         // This will pass the dice result to the parent without requiring a button click
         if (compact) {
@@ -113,7 +114,7 @@ const DiceRoller: React.FC<DiceRollerProps> = ({
             // Store the final value to ensure it doesn't change
             const finalValue = newValue;
             console.log('DiceRoller: Auto-continuing in compact mode with result:', finalValue);
-            
+
             // Call onRollComplete directly with the final value
             onRollComplete(finalValue);
           }, 500); // Short delay to let the result show before auto-continuing
@@ -121,33 +122,33 @@ const DiceRoller: React.FC<DiceRollerProps> = ({
       }, 300);
     });
   };
-  
+
   // Handle continue button press
   const handleContinue = () => {
     console.log('DiceRoller: calling onRollComplete with value:', diceState.finalValue);
     onRollComplete(diceState.finalValue);
   };
-  
+
   // Enhanced animations with more bounce and movement - same for both modes
   const rotate = animation.interpolate({
     inputRange: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
     outputRange: [
-      '0deg', '120deg', '240deg', '360deg', '480deg', 
+      '0deg', '120deg', '240deg', '360deg', '480deg',
       '600deg', '720deg', '840deg', '960deg', '1020deg', '1080deg'
     ]
   });
-  
+
   // More complex movement pattern to simulate bouncing - same for both modes
   const translateX = animation.interpolate({
     inputRange: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 1],
     outputRange: [0, 80, -60, 100, -80, 60, -40, 30, -20, 10, -5, 0]
   });
-  
+
   const translateY = animation.interpolate({
     inputRange: [0, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 1],
     outputRange: [0, -100, -30, -120, -20, 80, -60, 40, -30, 20, -15, 10, -5, 0]
   });
-  
+
   const scale = animation.interpolate({
     inputRange: [0, 0.2, 0.4, 0.6, 0.8, 1],
     outputRange: [1, 1.3, 0.9, 1.2, 0.95, 1]
@@ -168,7 +169,7 @@ const DiceRoller: React.FC<DiceRollerProps> = ({
           <View style={[styles.dotContainer, styles.topRight]}>
             {(value === 2 || value === 3 || value === 4 || value === 5 || value === 6) && <View style={styles.dot} />}
           </View>
-          
+
           {/* Middle row */}
           <View style={[styles.dotContainer, styles.middleLeft]}>
             {(value === 6) && <View style={styles.dot} />}
@@ -179,7 +180,7 @@ const DiceRoller: React.FC<DiceRollerProps> = ({
           <View style={[styles.dotContainer, styles.middleRight]}>
             {(value === 6) && <View style={styles.dot} />}
           </View>
-          
+
           {/* Bottom row */}
           <View style={[styles.dotContainer, styles.bottomLeft]}>
             {(value === 2 || value === 3 || value === 4 || value === 5 || value === 6) && <View style={styles.dot} />}
@@ -202,6 +203,7 @@ const DiceRoller: React.FC<DiceRollerProps> = ({
     }
   };
 
+  // Return statement with responsive considerations
   return (
     <View style={[styles.container, compact && styles.compactContainer]}>
       {/* Animated dice */}
@@ -221,42 +223,41 @@ const DiceRoller: React.FC<DiceRollerProps> = ({
       >
         {renderDiceFace(diceState.currentValue)}
       </Animated.View>
-      
-      {/* Always show bottom section, but with contents conditionally rendered */}
+
+      {/* Bottom section with responsive height */}
       <View style={[
-        styles.bottomSection, 
-        compact && styles.compactBottomSection,
-        { height: getBottomSectionHeight() }
+        styles.bottomSection,
+        compact && styles.compactBottomSection
       ]}>
         {/* Roll button always shows in ready phase */}
         {diceState.phase === 'ready' && (
-          <TouchableOpacity 
-            style={[styles.rollButton, compact && styles.compactButton]} 
+          <TouchableOpacity
+            style={[styles.rollButton, compact && styles.compactButton]}
             onPress={rollDice}
           >
             <Text style={styles.rollButtonText}>Roll the dice!</Text>
           </TouchableOpacity>
         )}
-        
+
         {/* Only show activity indicator in non-compact mode */}
         {diceState.phase === 'transitioning' && !compact && (
           <ActivityIndicator size="large" color={COLORS.primary} />
         )}
-        
-        {/* Only show result container in non-compact mode */}
+
+        {/* Result container */}
         {diceState.phase === 'result' && !compact && (
           <View style={styles.resultContainer}>
-            <Text style={styles.resultText}>
+            <Text style={[styles.resultText, compact && styles.compactResultText]}>
               You rolled a {diceState.finalValue}!
             </Text>
-            
+
             {!hideTransportInfo && (
               <Text style={styles.transportText}>
                 Transport Mode: {getTransportMethod()}
               </Text>
             )}
-            
-            <TouchableOpacity 
+
+            <TouchableOpacity
               style={styles.continueButton}
               onPress={handleContinue}
             >
@@ -267,7 +268,7 @@ const DiceRoller: React.FC<DiceRollerProps> = ({
       </View>
     </View>
   );
-  
+
   // Determine transport method - only used in non-compact mode
   function getTransportMethod() {
     if (diceState.finalValue <= 3) {
