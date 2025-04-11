@@ -41,7 +41,7 @@ export default function CrossroadsScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        {/* Top Section - Title & Subtitle */}
+        {/* Top quarter - Header Section */}
         <View style={styles.headerSection}>
           <Text style={styles.title}>
             You've reached a crossroads!
@@ -51,7 +51,6 @@ export default function CrossroadsScreen() {
             Roll the dice to determine which transportation method you'll use.
           </Text>
 
-          {/* Information blurb */}
           <View style={styles.infoContainer}>
             <Text style={styles.infoText}>
               Each transportation method has its own path to the polling station with unique challenges and opportunities to learn about Canadian politics!
@@ -59,12 +58,12 @@ export default function CrossroadsScreen() {
           </View>
         </View>
 
-        {/* Dice roller in the middle */}
-        <View style={styles.diceContainer}>
+        {/* Middle half - Dice Roller */}
+        <View style={styles.diceSection}>
           <DiceRoller onRollComplete={handleRollComplete} />
         </View>
 
-        {/* Simplified options at bottom */}
+        {/* Bottom quarter - Transport Options */}
         <View style={styles.optionsContainer}>
           {/* Bus Option */}
           <View style={styles.optionCard}>

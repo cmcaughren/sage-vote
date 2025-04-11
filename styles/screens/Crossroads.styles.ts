@@ -6,11 +6,8 @@ import { COLORS } from '../theme/colors';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 // Calculate responsive units
-const vw = screenWidth / 100; // 1% of viewport width
-const vh = screenHeight / 100; // 1% of viewport height
-
-// Determine if it's a small device
-const isSmallDevice = screenHeight < 700;
+const vw = screenWidth / 100;
+const vh = screenHeight / 100;
 
 export const styles = StyleSheet.create({
   container: {
@@ -19,31 +16,29 @@ export const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 4 * vw,
-    paddingTop: 2 * vh,
-    paddingBottom: 2 * vh,
-    overflow: 'visible',
+    display: 'flex',
+    flexDirection: 'column',
   },
+  // Top Quarter (25%)
   headerSection: {
+    height: '25%', // Takes up top quarter
     width: '100%',
+    paddingHorizontal: 5 * vw,
+    paddingVertical: 2 * vh,
     alignItems: 'center',
-    // Use percentage of available height instead of fixed margin
-    maxHeight: isSmallDevice ? 25 * vh : 30 * vh,
+    justifyContent: 'center',
   },
   title: {
-    fontSize: Math.min(28, 6 * vw), // Responsive font size
+    fontSize: Math.min(24, 6 * vw),
     fontWeight: 'bold',
     color: COLORS.dark,
     textAlign: 'center',
     marginBottom: 1 * vh,
   },
   subtitle: {
-    fontSize: Math.min(16, 4 * vw), // Responsive font size
+    fontSize: Math.min(16, 4 * vw),
     color: COLORS.dark + 'CC',
     textAlign: 'center',
-    maxWidth: 90 * vw,
     marginBottom: 1 * vh,
   },
   infoContainer: {
@@ -60,48 +55,44 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: Math.min(20, 5 * vw),
   },
-  diceContainer: {
+
+  // Middle Half (50%)
+  diceSection: {
+    height: '50%', // Takes up middle half
     width: '100%',
-    // Adjust height based on screen size to maintain proportions
-    height: isSmallDevice ? 30 * vh : 35 * vh,
     alignItems: 'center',
     justifyContent: 'center',
-    overflow: 'visible',
+    overflow: 'visible', // Important for dice animations
   },
+
+  // Bottom Quarter (25%)
   optionsContainer: {
-    position: 'absolute',
-    bottom: 4 * vh,
-    left: 4 * vw,
-    right: 4 * vw,
+    height: '25%', // Takes up bottom quarter
+    width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: 'transparent',
-    zIndex: 5,
+    justifyContent: 'space-around',
+    paddingHorizontal: 4 * vw,
+    paddingBottom: 2 * vh,
+    alignItems: 'center',
   },
   optionCard: {
-    flex: 1,
+    aspectRatio: 1, // Forces square shape
+    width: '28%', // Slightly narrower than 1/3 to allow spacing
     backgroundColor: COLORS.white,
     borderRadius: 10,
-    margin: 1 * vw,
-    padding: 2 * vw,
     alignItems: 'center',
+    justifyContent: 'center',
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
-    minHeight: 10 * vh,
-    justifyContent: 'center',
-  },
-  optionContent: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 1 * vw,
   },
   optionIcon: {
-    width: Math.min(30, 8 * vw),
-    height: Math.min(30, 8 * vw),
-    borderRadius: Math.min(15, 4 * vw),
+    width: '50%', // Takes 50% of the card width
+    aspectRatio: 1, // Circle
+    borderRadius: 999, // Circle
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 0.5 * vh,
@@ -113,7 +104,7 @@ export const styles = StyleSheet.create({
     fontSize: Math.min(12, 3 * vw),
     fontWeight: '600',
     color: COLORS.dark,
-    marginBottom: 0.3 * vh,
+    marginBottom: 0.2 * vh,
     textAlign: 'center',
   },
   optionDescription: {
