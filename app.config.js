@@ -2,7 +2,7 @@ module.exports = {
   expo: {
     name: "Sage-Vote",
     slug: "sage-vote",
-    version: "1.0.0",
+    version: "1.0.1",
     orientation: "portrait",
     icon: "./assets/images/icon_alt2.png",
     scheme: "sage-vote",
