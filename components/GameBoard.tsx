@@ -5,13 +5,19 @@ import { useGameContext } from '../context/GameContext';
 import { styles, PATH_COLORS, EMOJI } from '../styles/components/GameBoard.styles';
 import { COLORS } from '../styles/theme/colors';
 
-const GameBoard = () => {
+interface GameBoardProps {
+  headerHeight: number;
+  footerHeight: number;
+}
+
+const GameBoard = ({ headerHeight, footerHeight }: GameBoardProps) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
   const {
     transportMode,
     boardPosition,
     pathData,
+    tileSize: contextTileSize,
     verticalSpacingFactor,
   } = useGameContext();
 
@@ -58,9 +64,9 @@ const GameBoard = () => {
     const horizontalTiles = 12; // From your original grid
     const verticalTiles = 14;   // From your original grid
 
-    // Calculate available space (accounting for header and button)
+    // Calculate available space (accounting for header and footer)
     const availableWidth = screenWidth * 0.95;
-    const availableHeight = screenHeight * 0.7; // 70% of screen height
+    const availableHeight = (screenHeight - headerHeight - footerHeight) * 0.9; // 90% of available space
 
     // Calculate optimal size to fit everything
     const widthBased = availableWidth / horizontalTiles;
@@ -71,9 +77,26 @@ const GameBoard = () => {
 
   const tileSize = calculateTileSize();
 
-  // Calculate centering offsets
+  // Calculate horizontal centering offset
   const offsetX = screenWidth / 2 - (bounds.minX + bounds.maxX) / 2;
-  const offsetY = screenHeight * 0.35 - (bounds.minY + bounds.maxY) / 2;
+
+  // Calculate dynamic vertical offset based on actual layout measurements
+  const calculateDynamicOffset = () => {
+    // Total available height between header and footer
+    const availableHeight = screenHeight - headerHeight - footerHeight;
+
+    // Calculate board height based on bounds
+    const boardHeight = bounds.maxY - bounds.minY + (tileSize * 3); // Add some padding for special icons
+
+    // Calculate padding to center the board in available space
+    const verticalPadding = (availableHeight - boardHeight) / 2;
+
+    // Adjust offset to position at top of available space + padding
+    return headerHeight + verticalPadding;
+  };
+
+  // Calculate dynamic offset based on actual layout measurements
+  const offsetY = calculateDynamicOffset();
 
   // Render tile with proper positioning
   const renderTile = (pathType, tile, index, isActive) => {
@@ -100,8 +123,10 @@ const GameBoard = () => {
     }
 
     // Add styling for active tiles
-    const glowColor = pathType === 'carpool' ? COLORS.error :
-      (pathType === 'bus' ? COLORS.info : '#c0bc00');
+    let glowColor = '#FFD700'; // Default yellow
+    if (pathType === 'carpool') glowColor = COLORS.error;
+    else if (pathType === 'bus') glowColor = COLORS.info;
+    else if (pathType === 'bicycle') glowColor = '#c0bc00';
 
     const glowParams = isActivePath ? {
       shadowColor: glowColor,
@@ -109,11 +134,29 @@ const GameBoard = () => {
       shadowOpacity: isCurrentTile ? 0.95 : 0.85,
       shadowRadius: isCurrentTile ? 10 : 7,
       elevation: isCurrentTile ? 15 : 10,
-    } : {};
+    } : {
+      shadowColor: COLORS.black,
+      shadowOffset: { width: -1, height: -1 },
+      shadowOpacity: 0.4,
+      shadowRadius: 3,
+      elevation: 4,
+    };
+
+    // Add highlight effect on opposite sides to enhance "pop up" appearance
+    const highlightEffect = {
+      borderTopWidth: 1,
+      borderLeftWidth: 1,
+      borderTopColor: 'rgba(255,255,255,0.8)',
+      borderLeftColor: 'rgba(255,255,255,0.8)',
+      borderRightWidth: 1,
+      borderBottomWidth: 1,
+      borderRightColor: 'rgba(0,0,0,0.1)',
+      borderBottomColor: 'rgba(0,0,0,0.1)',
+    };
 
     return (
       <View key={`tile-${pathType}-${tile.id}`}>
-        {/* Tile */}
+        {/* Tile square */}
         <View
           style={[
             styles.tile,
@@ -122,22 +165,33 @@ const GameBoard = () => {
               height: adjustedTileSize,
               backgroundColor: isSpecialTile ? COLORS.primary : bgColor,
 
-              // Position with centering offset
-              left: tile.x - (adjustedTileSize / 2) + offsetX,
-              top: tile.y - (adjustedTileSize / 2) + offsetY,
+              // Position with dynamic offset
+              left: tile.x - adjustedTileSize / 2 + offsetX,
+              top: tile.y - adjustedTileSize / 2 + offsetY,
 
               opacity: isActivePath ? 1 : 0.6,
               ...borderRadius,
               ...glowParams,
+              ...highlightEffect,
+              borderWidth: 1,
+              borderColor: 'rgba(255,255,255,0.5)',
+              ...(isCurrentTile && {
+                borderWidth: 1.5,
+                borderColor: glowColor,
+                zIndex: 15,
+              }),
             },
-            isCurrentTile && styles.activeTile,
             isSpecialTile && {
               borderColor: COLORS.primary,
               borderWidth: 3,
               zIndex: 5,
+              shadowColor: COLORS.primary,
+              shadowOpacity: 0.8,
+              shadowRadius: 6,
             }
           ]}
         >
+          {/* Only show numbers on regular tiles, not on special tiles */}
           {!isSpecialTile && (
             <Text style={[styles.tileNumber, { fontSize: Math.max(8, tileSize * 0.3) }]}>
               {tile.id}
@@ -154,9 +208,12 @@ const GameBoard = () => {
               top: tile.y - (tileSize * 0.45) + offsetY,
               width: tileSize * 0.9,
               height: tileSize * 0.9,
+              zIndex: 25,
             }
           ]}>
-            <Text style={[styles.emojiText, { fontSize: Math.max(20, tileSize * 0.7) }]}>
+            <Text style={[styles.emojiText, {
+              fontSize: Math.max(20, tileSize * 0.7)
+            }]}>
               {pathType === 'bus' ? EMOJI.bus :
                 pathType === 'carpool' ? EMOJI.carpool : EMOJI.bicycle}
             </Text>
@@ -168,7 +225,7 @@ const GameBoard = () => {
           <View style={{
             position: 'absolute',
             left: tile.x - (tileSize * 0.5) + offsetX,
-            // Account for spacing factor in icon positions
+            // Position special icons above/below tiles
             top: tile.type === 'start'
               ? tile.y + (tileSize * 1.5 * verticalSpacingFactor) + offsetY
               : tile.y - (tileSize * 1.5 * verticalSpacingFactor) + offsetY,
@@ -177,7 +234,7 @@ const GameBoard = () => {
             width: tileSize,
           }}>
             <Text style={{
-              fontSize: Math.min(32, tileSize),
+              fontSize: Math.min(32, tileSize * 0.8),
               textAlign: 'center',
             }}>
               {tile.type === 'start' ? '🏠' : '🗳️'}

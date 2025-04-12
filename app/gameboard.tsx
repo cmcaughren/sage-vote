@@ -1,5 +1,5 @@
 // app/gameboard.tsx
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useGameContext } from '../context/GameContext';
@@ -28,6 +28,8 @@ const GameBoardScreen = () => {
   const [notebookCount, setNotebookCount] = useState(0);
   const [showWinningPopup, setShowWinningPopup] = useState(false);
   const [isNavigatingToCrossroads, setIsNavigatingToCrossroads] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState(0);
+  const [footerHeight, setFooterHeight] = useState(0);
 
   const isFirstRender = useRef(true);
   const prevPosition = useRef(0);
@@ -85,6 +87,18 @@ const GameBoardScreen = () => {
 
     prevPosition.current = boardPosition;
   }, [boardPosition, transportMode, isNavigatingToCrossroads]);
+
+  // Measure header height
+  const onHeaderLayout = useCallback((event) => {
+    const { height } = event.nativeEvent.layout;
+    setHeaderHeight(height);
+  }, []);
+
+  // Measure footer height
+  const onFooterLayout = useCallback((event) => {
+    const { height } = event.nativeEvent.layout;
+    setFooterHeight(height);
+  }, []);
 
   const loadNotebookCount = async () => {
     const entries = await getNotebookEntries();
@@ -168,10 +182,12 @@ const GameBoardScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+      {/* <StatusBar barStyle="dark-content" /> /}
 
       {/* Header */}
-      <View style={styles.headerSection}>
+      <View style={styles.headerSection}
+        onLayout={onHeaderLayout}
+      >
         <Text style={styles.title}>Journey to the Polls</Text>
         <Text style={styles.subtitle}>
           Draw a card, roll the dice,{'\n'}do your civic duty! 🍁
@@ -186,17 +202,20 @@ const GameBoardScreen = () => {
       <View style={{
         flex: 1,
         width: '100%',
-        paddingTop: '2%', // Add some top padding to move everything up a bit
-        paddingBottom: '4%', // Add bottom padding for balance
         alignItems: 'center',
         justifyContent: 'center',
         overflow: 'hidden'
       }}>
-        <GameBoard />
+        <GameBoard
+          headerHeight={headerHeight}
+          footerHeight={footerHeight}
+        />
       </View>
 
       {/* Button Container */}
-      <View style={styles.buttonContainer}>
+      <View style={styles.buttonContainer}
+        onLayout={onFooterLayout}
+      >
         <TouchableOpacity
           style={styles.drawCardButton}
           onPress={drawCard}
