@@ -95,7 +95,7 @@ const GameBoard = ({ headerHeight, footerHeight }: GameBoardProps) => {
     const verticalPadding = (availableHeight - boardHeight) / 2;
 
     // Adjust offset to position at top of available space + padding
-    return (headerHeight + verticalPadding - (screenHeight * 0.15)) / vFactor;
+    return (headerHeight + verticalPadding - (screenHeight * 0.22)) / vFactor;
   };
 
   // Calculate dynamic offset based on actual layout measurements
@@ -169,8 +169,8 @@ const GameBoard = ({ headerHeight, footerHeight }: GameBoardProps) => {
               backgroundColor: isSpecialTile ? COLORS.primary : bgColor,
 
               // Position with dynamic offset
-              left: tile.x - adjustedTileSize / 2 + offsetX,
-              top: (tile.y * verticalSpacingFactor) - (adjustedTileSize / 2) + offsetY,
+              left: tile.x - (adjustedTileSize / 2) + offsetX,
+              top: tile.y - (adjustedTileSize / 2) + offsetY,
 
               opacity: isActivePath ? 1 : 0.6,
               ...borderRadius,
@@ -230,8 +230,8 @@ const GameBoard = ({ headerHeight, footerHeight }: GameBoardProps) => {
             left: tile.x - (tileSize * 0.5) + offsetX,
             // Position special icons above/below tiles
             top: tile.type === 'start'
-              ? (tile.y * verticalSpacingFactor) + (tileSize * 1.5 * verticalSpacingFactor) + offsetY
-              : (tile.y * verticalSpacingFactor) - (tileSize * 1.5 * verticalSpacingFactor) + offsetY,
+              ? (tile.y * verticalSpacingFactor) + (tileSize * 1.5) + offsetY
+              : (tile.y * verticalSpacingFactor) - (tileSize * 1.5) + offsetY,
             zIndex: 30,
             alignItems: 'center',
             width: tileSize,
