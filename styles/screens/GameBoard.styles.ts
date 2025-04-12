@@ -12,11 +12,12 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
   },
   headerSection: {
-    height: '12%',
+    height: '10%',
     width: '100%',
     paddingHorizontal: 4 * vw,
+    paddingTop: 2 * vh,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     position: 'relative',
   },
   title: {
@@ -49,7 +50,7 @@ export const styles = StyleSheet.create({
     width: '90%',
     maxWidth: 400,
     paddingVertical: Math.min(15, 2 * vh),
-    borderRadius: 10,
+    borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: COLORS.black,

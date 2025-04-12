@@ -177,7 +177,7 @@ const GameBoard = () => {
             width: tileSize,
           }}>
             <Text style={{
-              fontSize: Math.min(32, tileSize * 0.8),
+              fontSize: Math.min(32, tileSize),
               textAlign: 'center',
             }}>
               {tile.type === 'start' ? '🏠' : '🗳️'}

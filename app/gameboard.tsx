@@ -186,8 +186,8 @@ const GameBoardScreen = () => {
       <View style={{
         flex: 1,
         width: '100%',
-        paddingTop: '5%', // Add some top padding to move everything up a bit
-        paddingBottom: '5%', // Add bottom padding for balance
+        paddingTop: '2%', // Add some top padding to move everything up a bit
+        paddingBottom: '4%', // Add bottom padding for balance
         alignItems: 'center',
         justifyContent: 'center',
         overflow: 'hidden'
