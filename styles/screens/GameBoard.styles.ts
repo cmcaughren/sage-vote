@@ -42,10 +42,10 @@ export const styles = StyleSheet.create({
   },
   buttonContainer: {
     height: '10%',
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingBottom: 2 * vh,
+    width: '90%',
+    maxWidth: 320,
+    marginTop: 2 * vh,
+    paddingHorizontal: 5 * vw,
   },
   drawCardButton: {
     ...BUTTONS.secondary,
