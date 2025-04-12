@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
   },
   headerSection: {
-    height: '30%',
+    height: '20%',
     width: '100%',
     paddingHorizontal: 5 * vw,
     paddingVertical: 2 * vh,
