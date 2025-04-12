@@ -95,7 +95,7 @@ const GameBoard = ({ headerHeight, footerHeight }: GameBoardProps) => {
     const verticalPadding = (availableHeight - boardHeight) / 2;
 
     // Adjust offset to position at top of available space + padding
-    return (headerHeight + verticalPadding - (screenHeight * 0.22)) / vFactor;
+    return (headerHeight + verticalPadding - (screenHeight * 0.2)) / vFactor;
   };
 
   // Calculate dynamic offset based on actual layout measurements

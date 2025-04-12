@@ -22,16 +22,17 @@ export const styles = StyleSheet.create({
     position: 'relative',
   },
   title: {
-    fontSize: Math.min(22, 5.5 * vw),
+    fontSize: Math.min(24, 6 * vw),
     fontWeight: 'bold',
     color: COLORS.dark,
     textAlign: 'center',
+    marginBottom: 1 * vh,
   },
   subtitle: {
     fontSize: Math.min(16, 4 * vw),
     color: COLORS.dark + 'CC',
     textAlign: 'center',
-    marginTop: 0.5 * vh,
+    marginBottom: 1 * vh,
   },
   notebookIconContainer: {
     position: 'absolute',
