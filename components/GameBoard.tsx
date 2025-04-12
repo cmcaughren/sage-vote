@@ -73,7 +73,7 @@ const GameBoard = () => {
 
   // Calculate centering offsets
   const offsetX = screenWidth / 2 - (bounds.minX + bounds.maxX) / 2;
-  const offsetY = screenHeight * 0.42 - (bounds.minY + bounds.maxY) / 2;
+  const offsetY = screenHeight * 0.5 - (bounds.minY + bounds.maxY) / 2;
 
   // Render tile with proper positioning
   const renderTile = (pathType, tile, index, isActive) => {

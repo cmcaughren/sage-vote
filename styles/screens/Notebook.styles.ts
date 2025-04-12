@@ -139,13 +139,14 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: COLORS.primary + '40', // Darker sage background (40% opacity)
+    backgroundColor: COLORS.primary + 'FF', // Darker sage background (40% opacity)
     padding: 12,
     marginTop: 10,
     marginBottom: 4,
     borderRadius: 8,
     borderLeftWidth: 4,
     borderLeftColor: COLORS.primary, // Sage accent
+    opacity: 1,
   },
   sectionTitle: {
     fontSize: 16,
