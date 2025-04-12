@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 2 * vh,
     alignItems: 'center',
     justifyContent: 'center',
-    position: 'relative',
+    //position: 'relative',
   },
   title: {
     fontSize: Math.min(24, 6 * vw),

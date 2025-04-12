@@ -187,7 +187,7 @@ const GameBoardScreen = () => {
 
       {/* Header */}
       <View
-        style={[styles.headerSection, { paddingTop: 0 }]}
+        style={styles.headerSection}
         onLayout={onHeaderLayout}
       >
         <Text style={styles.title}>Journey to the Polls</Text>
