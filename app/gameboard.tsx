@@ -174,7 +174,7 @@ const GameBoardScreen = () => {
       <View style={styles.headerSection}>
         <Text style={styles.title}>Journey to the Polls</Text>
         <Text style={styles.subtitle}>
-          Draw a card, roll the dice, do your civic duty! 🍁
+          Draw a card, roll the dice,{'\n'}do your civic duty! 🍁
         </Text>
 
         <View style={styles.notebookIconContainer}>
@@ -186,6 +186,8 @@ const GameBoardScreen = () => {
       <View style={{
         flex: 1,
         width: '100%',
+        paddingTop: '5%', // Add some top padding to move everything up a bit
+        paddingBottom: '5%', // Add bottom padding for balance
         alignItems: 'center',
         justifyContent: 'center',
         overflow: 'hidden'

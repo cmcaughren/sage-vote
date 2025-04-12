@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
   },
   headerSection: {
-    height: '15%',
+    height: '12%',
     width: '100%',
     paddingHorizontal: 4 * vw,
     alignItems: 'center',

@@ -73,7 +73,7 @@ const GameBoard = () => {
 
   // Calculate centering offsets
   const offsetX = screenWidth / 2 - (bounds.minX + bounds.maxX) / 2;
-  const offsetY = screenHeight * 0.4 - (bounds.minY + bounds.maxY) / 2; // Center in middle of screen
+  const offsetY = screenHeight * 0.35 - (bounds.minY + bounds.maxY) / 2;
 
   // Render tile with proper positioning
   const renderTile = (pathType, tile, index, isActive) => {
@@ -168,7 +168,10 @@ const GameBoard = () => {
           <View style={{
             position: 'absolute',
             left: tile.x - (tileSize * 0.5) + offsetX,
-            top: tile.y - (tileSize * 0.5) + offsetY,
+            // Adjust Y position for start/finish icons
+            top: tile.type === 'start'
+              ? tile.y + tileSize + offsetY // Move home icon down one square
+              : tile.y - tileSize + offsetY, // Move ballot box icon up one square
             zIndex: 30,
             alignItems: 'center',
             width: tileSize,
