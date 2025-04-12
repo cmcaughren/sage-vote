@@ -13,12 +13,12 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
   },
   headerSection: {
-    height: '10%',
+    height: '30%',
     width: '100%',
-    paddingHorizontal: 4 * vw,
-    paddingTop: 2 * vh,
+    paddingHorizontal: 5 * vw,
+    paddingVertical: 2 * vh,
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     position: 'relative',
   },
   title: {
