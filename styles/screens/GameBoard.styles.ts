@@ -40,10 +40,10 @@ export const styles = StyleSheet.create({
   },
   boardContainer: {
     height: '75%', // Takes 75% of screen height
-    width: '90%',
+    width: '100%',
     alignItems: 'center',
-    //justifyContent: 'center',
-    paddingHorizontal: 2 * vw,
+    justifyContent: 'center',
+    //paddingHorizontal: 2 * vw,
   },
   buttonContainer: {
     height: '10%', // Fixed proportion for bottom button

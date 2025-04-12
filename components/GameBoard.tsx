@@ -127,6 +127,8 @@ const GameBoard = () => {
     // Calculate tile size adjustments - respecting screen size
     const sizeMultiplier = isCurrentTile ? 1.15 : 1;
     const adjustedTileSize = responsiveTileSize * sizeMultiplier;
+    // Calculate scaling factor between original tile size and responsive size
+    const scalingFactor = responsiveTileSize / contextTileSize;
 
     // Apply different styling based on corner type
     let borderRadius = {};
@@ -199,8 +201,10 @@ const GameBoard = () => {
               width: adjustedTileSize,
               height: adjustedTileSize,
               backgroundColor: isSpecialTile ? COLORS.primary : bgColor,
-              left: tile.x - adjustedTileSize / 2,
-              top: tile.y - adjustedTileSize / 2,
+              left: (tile.x * scalingFactor) - (adjustedTileSize / 2),
+              top: (tile.y * scalingFactor) - (adjustedTileSize / 2),
+              //left: tile.x - adjustedTileSize / 2,
+              //top: tile.y - adjustedTileSize / 2,
               opacity: isActivePath ? 1 : 0.6,
               ...borderRadius,
               ...glowParams,
@@ -267,7 +271,17 @@ const GameBoard = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.board}>
+      <View
+        style={[
+          styles.board,
+          // Create a wrapping container that adjusts to the content size
+          {
+            alignSelf: 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }
+        ]}
+      >
         {/* Render all paths - bottom to top for proper layering */}
         {pathsToRender.map(path =>
           path.tiles.map((tile, index) =>
@@ -282,6 +296,5 @@ const GameBoard = () => {
       </View>
     </View>
   );
-};
-
+}
 export default GameBoard;
