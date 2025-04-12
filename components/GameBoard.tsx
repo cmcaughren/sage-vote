@@ -82,17 +82,20 @@ const GameBoard = ({ headerHeight, footerHeight }: GameBoardProps) => {
 
   // Calculate dynamic vertical offset based on actual layout measurements
   const calculateDynamicOffset = () => {
+
+    // Get the vertical spacing factor from context
+    const vFactor = verticalSpacingFactor || 1.2;
     // Total available height between header and footer
     const availableHeight = screenHeight - headerHeight - footerHeight;
 
     // Calculate board height based on bounds
-    const boardHeight = bounds.maxY - bounds.minY + (tileSize * 3); // Add some padding for special icons
+    const boardHeight = (bounds.maxY - bounds.minY) * vFactor; // Add some padding for special icons
 
     // Calculate padding to center the board in available space
     const verticalPadding = (availableHeight - boardHeight) / 2;
 
     // Adjust offset to position at top of available space + padding
-    return headerHeight + verticalPadding;
+    return (headerHeight + verticalPadding - (screenHeight * 0.15)) / vFactor;
   };
 
   // Calculate dynamic offset based on actual layout measurements
@@ -167,7 +170,7 @@ const GameBoard = ({ headerHeight, footerHeight }: GameBoardProps) => {
 
               // Position with dynamic offset
               left: tile.x - adjustedTileSize / 2 + offsetX,
-              top: tile.y - adjustedTileSize / 2 + offsetY,
+              top: (tile.y * verticalSpacingFactor) - (adjustedTileSize / 2) + offsetY,
 
               opacity: isActivePath ? 1 : 0.6,
               ...borderRadius,
@@ -227,8 +230,8 @@ const GameBoard = ({ headerHeight, footerHeight }: GameBoardProps) => {
             left: tile.x - (tileSize * 0.5) + offsetX,
             // Position special icons above/below tiles
             top: tile.type === 'start'
-              ? tile.y + (tileSize * 1.5 * verticalSpacingFactor) + offsetY
-              : tile.y - (tileSize * 1.5 * verticalSpacingFactor) + offsetY,
+              ? (tile.y * verticalSpacingFactor) + (tileSize * 1.5 * verticalSpacingFactor) + offsetY
+              : (tile.y * verticalSpacingFactor) - (tileSize * 1.5 * verticalSpacingFactor) + offsetY,
             zIndex: 30,
             alignItems: 'center',
             width: tileSize,
