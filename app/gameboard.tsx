@@ -1,6 +1,13 @@
 // app/gameboard.tsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+  Alert,
+  ActivityIndicator
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { useGameContext } from '../context/GameContext';
 import GameBoard from '../components/GameBoard';
@@ -10,6 +17,7 @@ import WinningPopup from '../components/WinningPopup';
 import { getNotebookEntries, saveGameProgress } from '../utilities/asyncStorage';
 import { styles } from '../styles/screens/GameBoard.styles';
 import { StatusBar } from 'expo-status-bar';
+import { BUTTONS } from '../styles/theme/buttons'; // Make sure to create this file
 
 const GameBoardScreen = () => {
   const {
@@ -34,6 +42,20 @@ const GameBoardScreen = () => {
   const isFirstRender = useRef(true);
   const prevPosition = useRef(0);
   const router = useRouter();
+
+  // Measure header height
+  const onHeaderLayout = useCallback((event) => {
+    const { height } = event.nativeEvent.layout;
+    setHeaderHeight(height);
+    console.log('Header height measured:', height);
+  }, []);
+
+  // Measure footer height
+  const onFooterLayout = useCallback((event) => {
+    const { height } = event.nativeEvent.layout;
+    setFooterHeight(height);
+    console.log('Footer height measured:', height);
+  }, []);
 
   // Load notebook count on mount
   useEffect(() => {
@@ -87,18 +109,6 @@ const GameBoardScreen = () => {
 
     prevPosition.current = boardPosition;
   }, [boardPosition, transportMode, isNavigatingToCrossroads]);
-
-  // Measure header height
-  const onHeaderLayout = useCallback((event) => {
-    const { height } = event.nativeEvent.layout;
-    setHeaderHeight(height);
-  }, []);
-
-  // Measure footer height
-  const onFooterLayout = useCallback((event) => {
-    const { height } = event.nativeEvent.layout;
-    setFooterHeight(height);
-  }, []);
 
   const loadNotebookCount = async () => {
     const entries = await getNotebookEntries();
@@ -171,26 +181,19 @@ const GameBoardScreen = () => {
     loadNotebookCount();
   };
 
-  const getTransportLabel = () => {
-    switch (transportMode) {
-      case 'bus': return 'Public Transit 🚌';
-      case 'carpool': return 'Car Pool 🚗';
-      case 'bicycle': return 'Bicycle 🚲';
-      default: return 'None selected';
-    }
-  };
-
   return (
     <SafeAreaView style={styles.container}>
-      {/* <StatusBar barStyle="dark-content" /> /}
+      <StatusBar barStyle="dark-content" />
 
       {/* Header */}
-      <View style={styles.headerSection}
+      <View
+        style={[styles.headerSection, { paddingTop: 0 }]}
         onLayout={onHeaderLayout}
       >
         <Text style={styles.title}>Journey to the Polls</Text>
         <Text style={styles.subtitle}>
-          Draw a card, roll the dice,{'\n'}do your civic duty! 🍁
+          Draw a card, roll the dice,{'\n'}
+          do your civic duty! 🍁
         </Text>
 
         <View style={styles.notebookIconContainer}>
@@ -198,12 +201,13 @@ const GameBoardScreen = () => {
         </View>
       </View>
 
-      {/* Game Board Container - Full width to allow proper centering */}
+      {/* Game Board Container */}
       <View style={{
         flex: 1,
         width: '100%',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start', // Changed to flex-start to move board up
+        paddingTop: 10, // Add small padding to move board up
         overflow: 'hidden'
       }}>
         <GameBoard
@@ -213,15 +217,16 @@ const GameBoardScreen = () => {
       </View>
 
       {/* Button Container */}
-      <View style={styles.buttonContainer}
+      <View
+        style={[styles.buttonContainer, { height: 80 }]} // Fixed height for more consistent measurement
         onLayout={onFooterLayout}
       >
         <TouchableOpacity
-          style={styles.drawCardButton}
+          style={[BUTTONS ? { ...BUTTONS.secondary, width: '90%' } : styles.drawCardButton]}
           onPress={drawCard}
           disabled={cardsLoading || isDrawing}
         >
-          <Text style={styles.buttonText}>
+          <Text style={BUTTONS ? BUTTONS.buttonText : styles.buttonText}>
             {isDrawing ? "Drawing..." : "Draw Card"}
           </Text>
         </TouchableOpacity>
