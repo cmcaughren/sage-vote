@@ -1,44 +1,22 @@
 // components/GameBoard.tsx
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, Dimensions } from 'react-native';
 import { useGameContext } from '../context/GameContext';
 import { styles, PATH_COLORS, EMOJI } from '../styles/components/GameBoard.styles';
 import { COLORS } from '../styles/theme/colors';
 
 const GameBoard = () => {
-  // Get screen dimensions for responsive sizing
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
   const {
     transportMode,
     boardPosition,
     pathData,
-    tileSize: contextTileSize,
     verticalSpacingFactor,
   } = useGameContext();
 
-  // Calculate a responsive tile size based on screen dimensions
-  const calculateResponsiveTileSize = () => {
-    // Available space
-    const availableWidth = screenWidth * 0.95;
-    const availableHeight = (screenHeight * 0.75) * 0.95;  // 75% of screen minus some padding
-
-    // Use the same grid dimensions from path calculations
-    const horizontalTileCount = 12;
-    const verticalTileCount = 14;
-
-    const widthBasedSize = availableWidth / horizontalTileCount;
-    const heightBasedSize = availableHeight / (verticalTileCount * verticalSpacingFactor);
-
-    // Return the smaller dimension to ensure it fits
-    return Math.min(widthBasedSize, heightBasedSize);
-  };
-
-  // Use the responsive tile size or fall back to the context one
-  const responsiveTileSize = calculateResponsiveTileSize() || contextTileSize;
-
-  // Check if we have valid data before proceeding
-  if (!pathData || !PATH_COLORS) {
+  // Validate data
+  if (!pathData || !transportMode) {
     return (
       <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
         <Text>Loading game board...</Text>
@@ -46,154 +24,96 @@ const GameBoard = () => {
     );
   }
 
-  // Get the right paths from context with safe fallbacks
+  // Get all paths
   const busPath = pathData.bus || [];
   const carpoolPath = pathData.carpool || [];
   const bicyclePath = pathData.bicycle || [];
 
-  // Function to get the active path based on transport mode
-  const getActivePath = () => {
-    switch (transportMode) {
-      case 'bus': return busPath;
-      case 'carpool': return carpoolPath;
-      case 'bicycle': return bicyclePath;
-      default: return busPath;
-    }
+  // Calculate bounds of all paths to find centering offset
+  const calculateBoardBounds = () => {
+    // Combine all path tiles
+    const allTiles = [...busPath, ...carpoolPath, ...bicyclePath];
+
+    if (allTiles.length === 0) return { minX: 0, maxX: 0, minY: 0, maxY: 0, width: 0, height: 0 };
+
+    // Find boundaries
+    const minX = Math.min(...allTiles.map(tile => tile.x));
+    const maxX = Math.max(...allTiles.map(tile => tile.x));
+    const minY = Math.min(...allTiles.map(tile => tile.y));
+    const maxY = Math.max(...allTiles.map(tile => tile.y));
+
+    // Calculate size
+    const width = maxX - minX;
+    const height = maxY - minY;
+
+    return { minX, maxX, minY, maxY, width, height };
   };
 
-  // Grid calculation function - recreates grid from pathCalculations.js with responsive sizing
-  const calculateGridPosition = (gridX, gridY) => {
-    // Return the exact X,Y coordinates for the given grid position with responsive sizing
-    return {
-      x: (gridX + 0.5) * responsiveTileSize,
-      y: (gridY + 0.5) * responsiveTileSize * verticalSpacingFactor
-    };
+  // Calculate once and memoize
+  const bounds = useMemo(calculateBoardBounds, [busPath, carpoolPath, bicyclePath]);
+
+  // Calculate tile size to fit within screen bounds
+  const calculateTileSize = () => {
+    // Calculate how many tiles we need to fit horizontally and vertically
+    const horizontalTiles = 12; // From your original grid
+    const verticalTiles = 14;   // From your original grid
+
+    // Calculate available space (accounting for header and button)
+    const availableWidth = screenWidth * 0.95;
+    const availableHeight = screenHeight * 0.7; // 70% of screen height
+
+    // Calculate optimal size to fit everything
+    const widthBased = availableWidth / horizontalTiles;
+    const heightBased = availableHeight / (verticalTiles * verticalSpacingFactor);
+
+    return Math.min(widthBased, heightBased);
   };
 
-  // Function to render special labels for start/finish tiles
-  const renderSpecialTileLabel = (tileType) => {
-    // Get the grid coordinates for the labels based on known start/finish positions
-    let labelGridPos;
+  const tileSize = calculateTileSize();
 
-    if (tileType === 'start') {
-      labelGridPos = calculateGridPosition(6, 13);
-    } else if (tileType === 'finish') {
-      labelGridPos = calculateGridPosition(5, 0);
-    }
+  // Calculate centering offsets
+  const offsetX = screenWidth / 2 - (bounds.minX + bounds.maxX) / 2;
+  const offsetY = screenHeight * 0.4 - (bounds.minY + bounds.maxY) / 2; // Center in middle of screen
 
-    return (
-      <View
-        style={{
-          position: 'absolute',
-          left: labelGridPos.x - (responsiveTileSize * 0.5),
-          top: labelGridPos.y - (responsiveTileSize * 0.5),
-          zIndex: 30,
-          alignItems: 'center',
-          width: responsiveTileSize,
-        }}
-      >
-        {/* Emoji */}
-        <Text style={{
-          fontSize: Math.min(32, responsiveTileSize * 0.8), // Responsive emoji size
-          textAlign: 'center',
-        }}>
-          {tileType === 'start' ? '🏠' : '🗳️'}
-        </Text>
-      </View>
-    );
-  };
-
-  // Render a single tile based on its properties - with responsive sizing
+  // Render tile with proper positioning
   const renderTile = (pathType, tile, index, isActive) => {
-    // Get colors based on path type with safe fallback
     const pathColors = PATH_COLORS[pathType] || ['#cccccc'];
-
-    // Get highlight color based on path type
-    let glowColor = '#FFD700'; // Default yellow
-    if (pathType === transportMode) {
-      if (pathType === 'carpool') glowColor = COLORS.error;
-      else if (pathType === 'bus') glowColor = COLORS.info;
-      else if (pathType === 'bicycle') glowColor = '#c0bc00';
-    }
-
-    // Choose color based on index to create color variation
-    const colorIndex = index % (pathColors.length || 1);
+    const colorIndex = index % pathColors.length;
     const bgColor = pathColors[colorIndex] || '#cccccc';
 
     const isActivePath = pathType === transportMode;
     const isCurrentTile = isActivePath && index === boardPosition;
     const isSpecialTile = tile.type === 'start' || tile.type === 'finish';
 
-    // Calculate tile size adjustments - respecting screen size
+    // Calculate tile size adjustments
     const sizeMultiplier = isCurrentTile ? 1.15 : 1;
-    const adjustedTileSize = responsiveTileSize * sizeMultiplier;
-    // Calculate scaling factor between original tile size and responsive size
-    const scalingFactor = responsiveTileSize / contextTileSize;
+    const adjustedTileSize = tileSize * sizeMultiplier;
 
-    // Apply different styling based on corner type
+    // Get appropriate corner styling
     let borderRadius = {};
-
-    // Get border radius based on corner type
     switch (tile.corner) {
-      case 'top-right':
-        borderRadius = {
-          borderTopRightRadius: adjustedTileSize * 0.8,
-        };
-        break;
-      case 'top-left':
-        borderRadius = {
-          borderTopLeftRadius: adjustedTileSize * 0.8,
-        };
-        break;
-      case 'bottom-right':
-        borderRadius = {
-          borderBottomRightRadius: adjustedTileSize * 0.8,
-        };
-        break;
-      case 'bottom-left':
-        borderRadius = {
-          borderBottomLeftRadius: adjustedTileSize * 0.8,
-        };
-        break;
-      default:
-        borderRadius = { borderRadius: adjustedTileSize * 0.2 };
+      case 'top-right': borderRadius = { borderTopRightRadius: adjustedTileSize * 0.8 }; break;
+      case 'top-left': borderRadius = { borderTopLeftRadius: adjustedTileSize * 0.8 }; break;
+      case 'bottom-right': borderRadius = { borderBottomRightRadius: adjustedTileSize * 0.8 }; break;
+      case 'bottom-left': borderRadius = { borderBottomLeftRadius: adjustedTileSize * 0.8 }; break;
+      default: borderRadius = { borderRadius: adjustedTileSize * 0.2 };
     }
 
-    // Fixed condition to show special emoji
-    const showSpecialEmoji =
-      (tile.type === 'start' && pathType === transportMode) ||
-      (tile.type === 'finish' && pathType === transportMode);
+    // Add styling for active tiles
+    const glowColor = pathType === 'carpool' ? COLORS.error :
+      (pathType === 'bus' ? COLORS.info : '#c0bc00');
 
-    // POPPING UP EFFECT: Modify the shadow to create a raised appearance
     const glowParams = isActivePath ? {
       shadowColor: glowColor,
       shadowOffset: { width: -1, height: -1 },
       shadowOpacity: isCurrentTile ? 0.95 : 0.85,
       shadowRadius: isCurrentTile ? 10 : 7,
       elevation: isCurrentTile ? 15 : 10,
-    } : {
-      shadowColor: COLORS.black,
-      shadowOffset: { width: -1, height: -1 },
-      shadowOpacity: 0.4,
-      shadowRadius: 3,
-      elevation: 4,
-    };
-
-    // Add highlight effect on opposite sides to enhance "pop up" appearance
-    const highlightEffect = {
-      borderTopWidth: 1,
-      borderLeftWidth: 1,
-      borderTopColor: 'rgba(255,255,255,0.8)',
-      borderLeftColor: 'rgba(255,255,255,0.8)',
-      borderRightWidth: 1,
-      borderBottomWidth: 1,
-      borderRightColor: 'rgba(0,0,0,0.1)',
-      borderBottomColor: 'rgba(0,0,0,0.1)',
-    };
+    } : {};
 
     return (
       <View key={`tile-${pathType}-${tile.id}`}>
-        {/* Tile square */}
+        {/* Tile */}
         <View
           style={[
             styles.tile,
@@ -201,68 +121,71 @@ const GameBoard = () => {
               width: adjustedTileSize,
               height: adjustedTileSize,
               backgroundColor: isSpecialTile ? COLORS.primary : bgColor,
-              left: (tile.x * scalingFactor) - (adjustedTileSize / 2),
-              top: (tile.y * scalingFactor) - (adjustedTileSize / 2),
-              //left: tile.x - adjustedTileSize / 2,
-              //top: tile.y - adjustedTileSize / 2,
+
+              // Position with centering offset
+              left: tile.x - (adjustedTileSize / 2) + offsetX,
+              top: tile.y - (adjustedTileSize / 2) + offsetY,
+
               opacity: isActivePath ? 1 : 0.6,
               ...borderRadius,
               ...glowParams,
-              ...highlightEffect,
-              borderWidth: 1,
-              borderColor: 'rgba(255,255,255,0.5)',
-              ...(isCurrentTile && {
-                borderWidth: 1.5,
-                borderColor: glowColor,
-                zIndex: 15,
-              }),
             },
+            isCurrentTile && styles.activeTile,
             isSpecialTile && {
               borderColor: COLORS.primary,
               borderWidth: 3,
               zIndex: 5,
-              shadowColor: COLORS.primary,
-              shadowOpacity: 0.8,
-              shadowRadius: 6,
             }
           ]}
         >
-          {/* Only show numbers on regular tiles, not on special tiles */}
           {!isSpecialTile && (
-            <Text style={[styles.tileNumber, { fontSize: Math.max(8, responsiveTileSize * 0.3) }]}>
+            <Text style={[styles.tileNumber, { fontSize: Math.max(8, tileSize * 0.3) }]}>
               {tile.id}
             </Text>
           )}
         </View>
 
-        {/* Player token - keep this separate for proper layering */}
+        {/* Player token */}
         {isCurrentTile && (
           <View style={[
             styles.playerTokenContainer,
             {
-              left: tile.x - responsiveTileSize * 0.45,
-              top: tile.y - responsiveTileSize * 0.45,
-              width: responsiveTileSize * 0.9,
-              height: responsiveTileSize * 0.9,
-              zIndex: 25,
+              left: tile.x - (tileSize * 0.45) + offsetX,
+              top: tile.y - (tileSize * 0.45) + offsetY,
+              width: tileSize * 0.9,
+              height: tileSize * 0.9,
             }
           ]}>
-            <Text style={[styles.emojiText, {
-              fontSize: Math.max(20, responsiveTileSize * 0.7)
-            }]}>
-              {transportMode === 'bus' ? EMOJI.bus :
-                transportMode === 'carpool' ? EMOJI.carpool : EMOJI.bicycle}
+            <Text style={[styles.emojiText, { fontSize: Math.max(20, tileSize * 0.7) }]}>
+              {pathType === 'bus' ? EMOJI.bus :
+                pathType === 'carpool' ? EMOJI.carpool : EMOJI.bicycle}
             </Text>
           </View>
         )}
 
-        {/* Special label using grid-based positioning */}
-        {showSpecialEmoji && renderSpecialTileLabel(tile.type)}
+        {/* Special tile label */}
+        {isSpecialTile && isActivePath && (
+          <View style={{
+            position: 'absolute',
+            left: tile.x - (tileSize * 0.5) + offsetX,
+            top: tile.y - (tileSize * 0.5) + offsetY,
+            zIndex: 30,
+            alignItems: 'center',
+            width: tileSize,
+          }}>
+            <Text style={{
+              fontSize: Math.min(32, tileSize * 0.8),
+              textAlign: 'center',
+            }}>
+              {tile.type === 'start' ? '🏠' : '🗳️'}
+            </Text>
+          </View>
+        )}
       </View>
     );
   };
 
-  // Add safety checks before rendering
+  // Render paths from bottom to top for layering
   const pathsToRender = [
     { type: 'bicycle', tiles: bicyclePath },
     { type: 'carpool', tiles: carpoolPath },
@@ -271,18 +194,7 @@ const GameBoard = () => {
 
   return (
     <View style={styles.container}>
-      <View
-        style={[
-          styles.board,
-          // Create a wrapping container that adjusts to the content size
-          {
-            alignSelf: 'center',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }
-        ]}
-      >
-        {/* Render all paths - bottom to top for proper layering */}
+      <View style={styles.board}>
         {pathsToRender.map(path =>
           path.tiles.map((tile, index) =>
             renderTile(
@@ -296,5 +208,6 @@ const GameBoard = () => {
       </View>
     </View>
   );
-}
+};
+
 export default GameBoard;
