@@ -2,7 +2,6 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import { COLORS } from '../theme/colors';
 
-// Get screen dimensions for responsive calculations
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const vw = screenWidth / 100;
 const vh = screenHeight / 100;
@@ -13,21 +12,21 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
   },
   headerSection: {
-    height: '15%', // Proportional header height
+    height: '15%',
     width: '100%',
     paddingHorizontal: 4 * vw,
     alignItems: 'center',
     justifyContent: 'center',
-    position: 'relative', // For notebook icon positioning
+    position: 'relative',
   },
   title: {
-    fontSize: Math.min(22, 5.5 * vw), // Responsive text size
+    fontSize: Math.min(22, 5.5 * vw),
     fontWeight: 'bold',
     color: COLORS.dark,
     textAlign: 'center',
   },
   subtitle: {
-    fontSize: Math.min(16, 4 * vw), // Responsive text size
+    fontSize: Math.min(16, 4 * vw),
     color: COLORS.dark + 'CC',
     textAlign: 'center',
     marginTop: 0.5 * vh,
@@ -38,19 +37,11 @@ export const styles = StyleSheet.create({
     right: 4 * vw,
     zIndex: 10,
   },
-  boardContainer: {
-    height: '75%', // Takes 75% of screen height
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    //paddingHorizontal: 2 * vw,
-  },
   buttonContainer: {
-    height: '10%', // Fixed proportion for bottom button
+    height: '10%',
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 5 * vw,
     paddingBottom: 2 * vh,
   },
   drawCardButton: {

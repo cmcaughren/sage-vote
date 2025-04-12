@@ -19,19 +19,19 @@ const GameBoard = () => {
 
   // Calculate a responsive tile size based on screen dimensions
   const calculateResponsiveTileSize = () => {
-    // The available space for the board (accounting for some padding)
+    // Available space
     const availableWidth = screenWidth * 0.95;
-    const availableHeight = screenHeight * 0.7; // Assuming board takes ~70% of screen height
+    const availableHeight = (screenHeight * 0.75) * 0.95;  // 75% of screen minus some padding
 
-    // Calculate a size that would let all tiles fit
+    // Use the same grid dimensions from path calculations
     const horizontalTileCount = 12;
     const verticalTileCount = 14;
 
-    // Return the smaller of the two calculations to ensure it fits
-    return Math.min(
-      availableWidth / horizontalTileCount,
-      availableHeight / verticalTileCount / verticalSpacingFactor
-    );
+    const widthBasedSize = availableWidth / horizontalTileCount;
+    const heightBasedSize = availableHeight / (verticalTileCount * verticalSpacingFactor);
+
+    // Return the smaller dimension to ensure it fits
+    return Math.min(widthBasedSize, heightBasedSize);
   };
 
   // Use the responsive tile size or fall back to the context one
