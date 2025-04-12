@@ -139,7 +139,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: COLORS.primary + 'FF', // Darker sage background (40% opacity)
+    backgroundColor: COLORS.primary + '', // Darker sage background (40% opacity)
     padding: 12,
     marginTop: 10,
     marginBottom: 4,
@@ -155,7 +155,7 @@ export const styles = StyleSheet.create({
   },
   sectionToggle: {
     fontSize: 16, // Increased from 12 for better visibility
-    color: COLORS.primary, // Sage toggle arrow
+    color: COLORS.warning,
     fontWeight: 'bold',
   },
   clearButton: {
