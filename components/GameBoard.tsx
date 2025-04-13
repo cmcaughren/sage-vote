@@ -89,7 +89,7 @@ const GameBoard = ({ headerHeight, footerHeight }: GameBoardProps) => {
     const availableHeight = screenHeight - headerHeight - footerHeight;
 
     // Calculate board height based on bounds
-    const boardHeight = (bounds.maxY - bounds.minY) * vFactor; // Add some padding for special icons
+    const boardHeight = (bounds.maxY - bounds.minY) * vFactor;
 
     // Calculate padding to center the board in available space
     const verticalPadding = (availableHeight - boardHeight) / 2;

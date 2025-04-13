@@ -44,7 +44,9 @@ export const styles = StyleSheet.create({
     height: '10%',
     width: '90%',
     maxWidth: 320,
-    marginTop: 2 * vh,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 2 * vh, // Reduced margin
     paddingHorizontal: 5 * vw,
   },
   drawCardButton: {
