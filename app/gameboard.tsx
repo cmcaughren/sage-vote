@@ -218,15 +218,15 @@ const GameBoardScreen = () => {
 
       {/* Button Container */}
       <View
-        style={[styles.buttonContainer, { height: 80 }]} // Fixed height for more consistent measurement
+        style={styles.buttonContainer}
         onLayout={onFooterLayout}
       >
         <TouchableOpacity
-          style={[BUTTONS ? { ...BUTTONS.secondary, width: '90%' } : styles.drawCardButton]}
+          style={styles.drawCardButton}
           onPress={drawCard}
           disabled={cardsLoading || isDrawing}
         >
-          <Text style={BUTTONS ? BUTTONS.buttonText : styles.buttonText}>
+          <Text style={styles.buttonText}>
             {isDrawing ? "Drawing..." : "Draw Card"}
           </Text>
         </TouchableOpacity>
