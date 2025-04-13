@@ -10,7 +10,7 @@ interface GameBoardProps {
   footerHeight: number;
 }
 
-const GameBoard = ({ headerHeight, footerHeight }: GameBoardProps) => {
+const GameBoard = () => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
   const {
@@ -66,7 +66,7 @@ const GameBoard = ({ headerHeight, footerHeight }: GameBoardProps) => {
 
     // Calculate available space (accounting for header and footer)
     const availableWidth = screenWidth * 0.95;
-    const availableHeight = (screenHeight - headerHeight - footerHeight) * 0.9; // 90% of available space
+    const availableHeight = screenHeight * 0.6 * 0.95; // 95% of the 60% screen container
 
     // Calculate optimal size to fit everything
     const widthBased = availableWidth / horizontalTiles;
@@ -77,29 +77,8 @@ const GameBoard = ({ headerHeight, footerHeight }: GameBoardProps) => {
 
   const tileSize = calculateTileSize();
 
-  // Calculate horizontal centering offset
   const offsetX = screenWidth / 2 - (bounds.minX + bounds.maxX) / 2;
-
-  // Calculate dynamic vertical offset based on actual layout measurements
-  const calculateDynamicOffset = () => {
-
-    // Get the vertical spacing factor from context
-    const vFactor = verticalSpacingFactor || 1.2;
-    // Total available height between header and footer
-    const availableHeight = screenHeight - headerHeight - footerHeight;
-
-    // Calculate board height based on bounds
-    const boardHeight = (bounds.maxY - bounds.minY) * vFactor;
-
-    // Calculate padding to center the board in available space
-    const verticalPadding = (availableHeight - boardHeight) / 2;
-
-    // Adjust offset to position at top of available space + padding
-    return (headerHeight + verticalPadding - (screenHeight * 0.2)) / vFactor;
-  };
-
-  // Calculate dynamic offset based on actual layout measurements
-  const offsetY = calculateDynamicOffset();
+  const offsetY = (screenHeight * 0.6) / 2 - (bounds.minY + bounds.maxY) / 2;
 
   // Render tile with proper positioning
   const renderTile = (pathType, tile, index, isActive) => {

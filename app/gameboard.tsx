@@ -188,7 +188,7 @@ const GameBoardScreen = () => {
       {/* Header */}
       <View
         style={styles.headerSection}
-        onLayout={onHeaderLayout}
+      //onLayout={onHeaderLayout}
       >
         <Text style={styles.title}>Journey to the Polls</Text>
         <Text style={styles.subtitle}>
@@ -202,24 +202,14 @@ const GameBoardScreen = () => {
       </View>
 
       {/* Game Board Container */}
-      <View style={{
-        flex: 1,
-        width: '100%',
-        alignItems: 'center',
-        justifyContent: 'flex-start', // Changed to flex-start to move board up
-        paddingTop: 10, // Add small padding to move board up
-        overflow: 'hidden'
-      }}>
-        <GameBoard
-          headerHeight={headerHeight}
-          footerHeight={footerHeight}
-        />
+      <View style={styles.boardContainer}>
+        <GameBoard />
       </View>
 
       {/* Button Container */}
       <View
         style={styles.buttonContainer}
-        onLayout={onFooterLayout}
+      //onLayout={onFooterLayout}
       >
         <TouchableOpacity
           style={styles.drawCardButton}

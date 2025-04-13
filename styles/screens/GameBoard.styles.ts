@@ -15,11 +15,11 @@ export const styles = StyleSheet.create({
   headerSection: {
     height: '20%',
     width: '100%',
-    paddingHorizontal: 5 * vw,
-    paddingVertical: 2 * vh,
+    paddingHorizontal: 4 * vw,
+    //paddingVertical: 2 * vh,
     alignItems: 'center',
     justifyContent: 'center',
-    //position: 'relative',
+    position: 'relative',
   },
   title: {
     fontSize: Math.min(24, 6 * vw),
@@ -40,19 +40,38 @@ export const styles = StyleSheet.create({
     right: 4 * vw,
     zIndex: 10,
   },
-  buttonContainer: {
-    height: '10%',
-    width: '90%',
-    maxWidth: 320,
+  // Board container takes 60% of screen
+  boardContainer: {
+    height: '60%',
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 2 * vh, // Reduced margin
-    paddingHorizontal: 5 * vw,
+    overflow: 'hidden',
+  },
+  buttonContainer: {
+    height: '20%',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 2 * vh,
   },
   drawCardButton: {
-    ...BUTTONS.secondary,
+    backgroundColor: COLORS.secondary,
+    width: '90%',
+    maxWidth: 320,
+    paddingVertical: Math.min(15, 2 * vh),
+    borderRadius: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
   },
   buttonText: {
-    ...BUTTONS.buttonText
+    color: COLORS.white,
+    fontSize: Math.min(18, 4.5 * vw),
+    fontWeight: '600',
   },
 });
