@@ -45,7 +45,7 @@ export const styles = StyleSheet.create({
     height: '60%',
     width: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     overflow: 'hidden',
   },
   buttonContainer: {
@@ -53,7 +53,6 @@ export const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: 2 * vh,
   },
   drawCardButton: {
     backgroundColor: COLORS.secondary,

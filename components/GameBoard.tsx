@@ -5,10 +5,6 @@ import { useGameContext } from '../context/GameContext';
 import { styles, PATH_COLORS, EMOJI } from '../styles/components/GameBoard.styles';
 import { COLORS } from '../styles/theme/colors';
 
-interface GameBoardProps {
-  headerHeight: number;
-  footerHeight: number;
-}
 
 const GameBoard = () => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -78,7 +74,8 @@ const GameBoard = () => {
   const tileSize = calculateTileSize();
 
   const offsetX = screenWidth / 2 - (bounds.minX + bounds.maxX) / 2;
-  const offsetY = (screenHeight * 0.6) / 2 - (bounds.minY + bounds.maxY) / 2;
+  const offsetY = (screenHeight * 0.6) - bounds.minY;
+  //(screenHeight * 0.6) / 2 - (bounds.minY + bounds.maxY) / 2;
 
   // Render tile with proper positioning
   const renderTile = (pathType, tile, index, isActive) => {
