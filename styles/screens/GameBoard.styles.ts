@@ -11,6 +11,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
+    position: 'relative',
   },
   headerSection: {
     height: '20%',
@@ -42,23 +43,28 @@ export const styles = StyleSheet.create({
   },
   // Board container takes 60% of screen
   boardContainer: {
-    height: '60%',
+    height: '65%',
     width: '100%',
     alignItems: 'center',
     justifyContent: 'flex-start',
     overflow: 'hidden',
   },
   buttonContainer: {
-    height: '15%',
-    width: '100%',
+    position: 'absolute', // Position absolutely
+    bottom: 0, // Anchor to bottom of screen
+    left: 0, // Stretch across full width
+    right: 0,
+    height: '15%', // Still 15% of screen height
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: COLORS.background, // Ensure it has same background as screen
+    paddingBottom: 20, // Add padding to account for home indicator on newer iPhones
   },
   drawCardButton: {
     backgroundColor: COLORS.secondary,
     width: '90%',
     maxWidth: 320,
-    //paddingVertical: Math.min(15, 2 * vh),
+    paddingVertical: Math.min(15, 2 * vh),
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
