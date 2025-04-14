@@ -49,7 +49,7 @@ export const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   buttonContainer: {
-    height: '20%',
+    height: '15%',
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
