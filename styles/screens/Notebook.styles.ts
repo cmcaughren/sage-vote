@@ -151,11 +151,11 @@ export const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: COLORS.dark,
+    color: COLORS.white,
   },
   sectionToggle: {
     fontSize: 16, // Increased from 12 for better visibility
-    color: COLORS.warning,
+    color: COLORS.white,
     fontWeight: 'bold',
   },
   clearButton: {
