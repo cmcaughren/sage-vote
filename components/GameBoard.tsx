@@ -205,7 +205,7 @@ const GameBoard = () => {
             left: tile.x - (tileSize * 0.5) + offsetX,
             // Position special icons above/below tiles
             top: tile.type === 'start'
-              ? (tile.y * verticalSpacingFactor) + (tileSize * 0.5) + offsetY
+              ? (tile.y * verticalSpacingFactor) + (tileSize * 0.75) + offsetY
               : (tile.y * verticalSpacingFactor) - (tileSize * 1.5) + offsetY,
             zIndex: 30,
             alignItems: 'center',
