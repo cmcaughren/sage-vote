@@ -62,7 +62,7 @@ const GameBoard = () => {
 
     // Calculate available space (accounting for header and footer)
     const availableWidth = screenWidth * 0.95;
-    const availableHeight = screenHeight * 0.6 * 0.95; // 95% of the 60% screen container
+    const availableHeight = screenHeight * 0.6; // 60% screen container
 
     // Calculate optimal size to fit everything
     const widthBased = availableWidth / horizontalTiles;
@@ -74,8 +74,7 @@ const GameBoard = () => {
   const tileSize = calculateTileSize();
 
   const offsetX = screenWidth / 2 - (bounds.minX + bounds.maxX) / 2;
-  const offsetY = (screenHeight * 0.6) / 2
-  //(screenHeight * 0.6) / 2 - (bounds.minY + bounds.maxY) / 2;
+  const offsetY = 0; //(screenHeight * 0.6) / 2 - (bounds.minY + bounds.maxY) / 2;
 
   // Render tile with proper positioning
   const renderTile = (pathType, tile, index, isActive) => {
