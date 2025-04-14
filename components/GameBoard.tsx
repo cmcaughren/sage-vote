@@ -31,6 +31,19 @@ const GameBoard = () => {
   const carpoolPath = pathData.carpool || [];
   const bicyclePath = pathData.bicycle || [];
 
+  const getSpecialTiles = () => {
+    if (!transportMode || !pathData[transportMode]) return { startTile: null, finishTile: null };
+
+    const currentPath = pathData[transportMode];
+    const startTile = currentPath.find(tile => tile.type === 'start');
+    const finishTile = currentPath.find(tile => tile.type === 'finish');
+
+    return { startTile, finishTile };
+  };
+
+  // Get the special tiles
+  const { startTile, finishTile } = getSpecialTiles();
+
   // Calculate bounds of all paths to find centering offset
   const calculateBoardBounds = () => {
     // Combine all path tiles
@@ -198,7 +211,7 @@ const GameBoard = () => {
           </View>
         )}
 
-        {/* Special tile label */}
+        {/* Special tile label 
         {isSpecialTile && isActivePath && (
           <View style={{
             position: 'absolute',
@@ -218,7 +231,7 @@ const GameBoard = () => {
               {tile.type === 'start' ? '🏠' : '🗳️'}
             </Text>
           </View>
-        )}
+        )}*/}
       </View>
     );
   };
@@ -230,6 +243,7 @@ const GameBoard = () => {
     { type: 'bus', tiles: busPath }
   ].filter(path => Array.isArray(path.tiles) && path.tiles.length > 0);
 
+  // In the GameBoard component's return statement, after the pathsToRender.map:
   return (
     <View style={styles.container}>
       <View style={styles.board}>
@@ -243,9 +257,36 @@ const GameBoard = () => {
             )
           )
         )}
+
+        {/* Home icon at start tile */}
+        {startTile && (
+          <View style={{
+            position: 'absolute',
+            left: startTile.x - (tileSize * 0.5) + offsetX,
+            top: startTile.y + (tileSize * 0.75) + offsetY,
+            zIndex: 30,
+            alignItems: 'center',
+            width: tileSize,
+          }}>
+            <Text style={{ fontSize: Math.min(30, tileSize * 0.8) }}>🏠</Text>
+          </View>
+        )}
+
+        {/* Ballot box icon at finish tile */}
+        {finishTile && (
+          <View style={{
+            position: 'absolute',
+            left: finishTile.x - (tileSize * 0.5) + offsetX,
+            top: finishTile.y - (tileSize * 1.5) + offsetY,
+            zIndex: 30,
+            alignItems: 'center',
+            width: tileSize,
+          }}>
+            <Text style={{ fontSize: Math.min(30, tileSize * 0.8) }}>🗳️</Text>
+          </View>
+        )}
       </View>
     </View>
   );
-};
-
+}
 export default GameBoard;
