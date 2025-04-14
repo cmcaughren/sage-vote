@@ -74,7 +74,7 @@ const GameBoard = () => {
   const tileSize = calculateTileSize();
 
   const offsetX = screenWidth / 2 - (bounds.minX + bounds.maxX) / 2;
-  const offsetY = (screenHeight * 0.6); // - bounds.minY;
+  const offsetY = (screenHeight * 0.6) / 2
   //(screenHeight * 0.6) / 2 - (bounds.minY + bounds.maxY) / 2;
 
   // Render tile with proper positioning

@@ -59,7 +59,7 @@ export const styles = StyleSheet.create({
     width: '90%',
     maxWidth: 320,
     paddingVertical: Math.min(15, 2 * vh),
-    borderRadius: 25,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: COLORS.black,
