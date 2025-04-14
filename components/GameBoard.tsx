@@ -71,7 +71,7 @@ const GameBoard = () => {
   const calculateTileSize = () => {
     // Calculate how many tiles we need to fit horizontally and vertically
     const horizontalTiles = 12; // From your original grid
-    const verticalTiles = 14 + 1.5;   // Account for icons extra spacing
+    const verticalTiles = 14 + 2;   // Account for icons extra spacing
 
     // Calculate available space (accounting for header and footer)
     const availableWidth = screenWidth * 0.95;
