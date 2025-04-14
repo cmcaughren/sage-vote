@@ -8,7 +8,7 @@ export function generatePathData() {
   const screenHeight = Dimensions.get('window').height * 0.6;
 
   // Calculate tile size for a good fit
-  const tileSize = Math.min(screenWidth / 12, screenHeight / 16; //14 and 2 extra rows for the home and finish icons
+  const tileSize = Math.min(screenWidth / 12, screenHeight / 16); //14 and 2 extra rows for the home and finish icons
 
   // Calculate vertical spacing factor (how much extra space between rows)
   const verticalSpacingFactor = 1.1; // Adjust this value as needed (1.0 = no extra space, 2.0 = double space)
