@@ -59,6 +59,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: COLORS.background, // Ensure it has same background as screen
     paddingBottom: 20, // Add padding to account for home indicator on newer iPhones
+    overflow: 'visible',
   },
   drawCardButton: {
     backgroundColor: COLORS.secondary,
