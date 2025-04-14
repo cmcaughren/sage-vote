@@ -58,7 +58,7 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.secondary,
     width: '90%',
     maxWidth: 320,
-    paddingVertical: Math.min(15, 2 * vh),
+    //paddingVertical: Math.min(15, 2 * vh),
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
