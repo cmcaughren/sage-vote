@@ -209,10 +209,8 @@ export default function RegisterToVoteScreen() {
         //  showsVerticalScrollIndicator={false}
         //  scrollEnabled={false}
         //>
-        contentContainerStyle={{
-          flexGrow: 1,
-          paddingBottom: 100 // Extra padding for the button
-        }}
+        contentContainerStyle={styles.scrollContent}
+        bounces={false}
         showsVerticalScrollIndicator={true}
       >
 

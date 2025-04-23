@@ -166,13 +166,11 @@ export const styles = StyleSheet.create({
   },
   buttonContainer: {
     //position: 'absolute',
-    //bottom: 20,
-    //left: '5%', // 5% from left
-    //right: '5%', // 5% from right
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingVertical: 15,
+    bottom: 20,
+    left: '5%', // 5% from left
+    right: '5%', // 5% from right
+
+    //paddingVertical: 15,
     backgroundColor: COLORS.background, // Ensure it has background
     // No width setting - let it be determined by left/right
     display: 'flex',
