@@ -166,16 +166,20 @@ export const styles = StyleSheet.create({
   },
   buttonContainer: {
     //position: 'absolute',
-    bottom: 20,
-    left: '5%', // 5% from left
-    right: '5%', // 5% from right
+    //bottom: 20,
+    //left: '5%', // 5% from left
+    //right: '5%', // 5% from right
 
     //paddingVertical: 15,
     backgroundColor: COLORS.background, // Ensure it has background
     // No width setting - let it be determined by left/right
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center', // Center the child horizontally
+    width: '90%',
+    alignSelf: 'center',
+    marginTop: 20,
+    marginBottom: 20,
+    //display: 'flex',
+    //flexDirection: 'row',
+    //justifyContent: 'center', // Center the child horizontally
   },
   continueButton: {
     backgroundColor: COLORS.secondary,
