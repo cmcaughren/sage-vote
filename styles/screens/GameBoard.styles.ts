@@ -50,16 +50,20 @@ export const styles = StyleSheet.create({
     overflow: 'visible',
   },
   buttonContainer: {
-    position: 'absolute', // Position absolutely
-    bottom: 0, // Anchor to bottom of screen
-    left: 0, // Stretch across full width
-    right: 0,
-    height: '15%', // Still 15% of screen height
+    width: '100%',
+    paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: COLORS.background, // Ensure it has same background as screen
-    paddingBottom: 20, // Add padding to account for home indicator on newer iPhones
-    overflow: 'visible',
+    // position: 'absolute', // Position absolutely
+    // bottom: 0, // Anchor to bottom of screen
+    // left: 0, // Stretch across full width
+    // right: 0,
+    // height: '15%', // Still 15% of screen height
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    // backgroundColor: COLORS.background, // Ensure it has same background as screen
+    // paddingBottom: 20, // Add padding to account for home indicator on newer iPhones
+    // overflow: 'visible',
   },
   drawCardButton: {
     backgroundColor: COLORS.secondary,

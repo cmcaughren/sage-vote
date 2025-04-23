@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Alert,
+  ScrollView,
+  Dimensions,
   ActivityIndicator
 } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -185,58 +187,69 @@ const GameBoardScreen = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
 
-      {/* Header */}
-      <View
-        style={styles.headerSection}
-      //onLayout={onHeaderLayout}
+      <ScrollView
+        style={{ flex: 1, width: '100%' }}
+        contentContainerStyle={{
+          flexGrow: 1,  // Important for proper scrolling
+          paddingBottom: 20 // Add some bottom padding
+        }}
+        showsVerticalScrollIndicator={true}
       >
-        <Text style={styles.title}>Journey to the Polls</Text>
-        <Text style={styles.subtitle}>
-          Draw a card, roll the dice,{'\n'}
-          do your civic duty! 🍁
-        </Text>
 
-        <View style={styles.notebookIconContainer}>
-          <NotebookIcon onPress={handleOpenNotebook} count={notebookCount} />
-        </View>
-      </View>
-
-      {/* Game Board Container */}
-      <View style={styles.boardContainer}>
-        <GameBoard />
-      </View>
-
-      {/* Button Container */}
-      <View
-        style={styles.buttonContainer}
-      //onLayout={onFooterLayout}
-      >
-        <TouchableOpacity
-          style={styles.drawCardButton}
-          onPress={drawCard}
-          disabled={cardsLoading || isDrawing}
+        {/* Header */}
+        <View
+          style={styles.headerSection}
+        //onLayout={onHeaderLayout}
         >
-          <Text style={styles.buttonText}>
-            {isDrawing ? "Drawing..." : "Draw Card"}
+          <Text style={styles.title}>Journey to the Polls</Text>
+          <Text style={styles.subtitle}>
+            Draw a card, roll the dice,{'\n'}
+            do your civic duty! 🍁
           </Text>
-        </TouchableOpacity>
-      </View>
 
-      {/* Card Modal */}
-      {currentCard && (
-        <Card
-          card={currentCard}
-          onClose={() => setCurrentCard(null)}
-          onAction={handleCardAction}
-          devMode={devMode}
+          <View style={styles.notebookIconContainer}>
+            <NotebookIcon onPress={handleOpenNotebook} count={notebookCount} />
+          </View>
+        </View>
+
+        {/* Game Board Container */}
+        <View style={styles.boardContainer}>
+          <GameBoard />
+        </View>
+
+        {/* Button Container */}
+        <View
+          style={styles.buttonContainer}
+        //onLayout={onFooterLayout}
+        >
+          <TouchableOpacity
+            style={styles.drawCardButton}
+            onPress={drawCard}
+            disabled={cardsLoading || isDrawing}
+          >
+            <Text style={styles.buttonText}>
+              {isDrawing ? "Drawing..." : "Draw Card"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Card Modal */}
+        {currentCard && (
+          <Card
+            card={currentCard}
+            onClose={() => setCurrentCard(null)}
+            onAction={handleCardAction}
+            devMode={devMode}
+          />
+        )}
+
+        {/* Winning Popup */}
+        <WinningPopup
+          visible={showWinningPopup}
+          onRequestClose={() => setShowWinningPopup(false)}
         />
-      )}
 
-      {/* Winning Popup */}
-      <WinningPopup
-        visible={showWinningPopup}
-        onRequestClose={() => setShowWinningPopup(false)}
-      />
+      </ScrollView>
     </SafeAreaView>
   );
 };
