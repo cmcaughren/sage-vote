@@ -203,12 +203,19 @@ export default function RegisterToVoteScreen() {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.background} />
 
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        bounces={false}
-        showsVerticalScrollIndicator={false}
-        scrollEnabled={false}
+      // <ScrollView
+        //  contentContainerStyle={styles.scrollContent}
+        //  bounces={false}
+        //  showsVerticalScrollIndicator={false}
+        //  scrollEnabled={false}
+        //>
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingBottom: 100 // Extra padding for the button
+        }}
+        showsVerticalScrollIndicator={true}
       >
+
         {/* Title Section */}
         <View style={styles.headerSection}>
           <Text style={styles.title}>

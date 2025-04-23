@@ -165,10 +165,15 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
   },
   buttonContainer: {
-    position: 'absolute',
-    bottom: 20,
-    left: '5%', // 5% from left
-    right: '5%', // 5% from right
+    //position: 'absolute',
+    //bottom: 20,
+    //left: '5%', // 5% from left
+    //right: '5%', // 5% from right
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingVertical: 15,
+    backgroundColor: COLORS.background, // Ensure it has background
     // No width setting - let it be determined by left/right
     display: 'flex',
     flexDirection: 'row',

@@ -4,6 +4,7 @@ import {
   View,
   Text,
   SafeAreaView,
+  ScrollView,
   Dimensions
 } from "react-native";
 import { useRouter } from "expo-router";
@@ -40,62 +41,70 @@ export default function CrossroadsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        {/* Top quarter - Header Section */}
-        <View style={styles.headerSection}>
-          <Text style={styles.title}>
-            You've reached a crossroads!
-          </Text>
-
-          <Text style={styles.subtitle}>
-            Roll the dice to determine which transportation method you'll use.
-          </Text>
-
-          <View style={styles.infoContainer}>
-            <Text style={styles.infoText}>
-              Each transportation method has its own path to the polling station with unique challenges and opportunities to learn about Canadian politics!
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingBottom: 20
+        }}
+        showsVerticalScrollIndicator={true}
+      >
+        <View style={styles.content}>
+          {/* Top quarter - Header Section */}
+          <View style={styles.headerSection}>
+            <Text style={styles.title}>
+              You've reached a crossroads!
             </Text>
+
+            <Text style={styles.subtitle}>
+              Roll the dice to determine which transportation method you'll use.
+            </Text>
+
+            <View style={styles.infoContainer}>
+              <Text style={styles.infoText}>
+                Each transportation method has its own path to the polling station with unique challenges and opportunities to learn about Canadian politics!
+              </Text>
+            </View>
+          </View>
+
+          {/* Middle half - Dice Roller */}
+          <View style={styles.diceSection}>
+            <DiceRoller onRollComplete={handleRollComplete} />
+          </View>
+
+          {/* Bottom quarter - Transport Options */}
+          <View style={styles.optionsContainer}>
+            {/* Bus Option */}
+            <View style={styles.optionCard}>
+              <View style={[styles.optionIcon, { backgroundColor: COLORS.busPath.base }]}>
+                <Text style={styles.optionEmoji}>🚌</Text>
+              </View>
+              <Text style={styles.optionTitle}>Public Transit</Text>
+              <Text style={styles.optionDescription}>Roll 1-3</Text>
+              <Text style={styles.optionSubtext}>{pathLengths.bus} spaces</Text>
+            </View>
+
+            {/* Carpool Option */}
+            <View style={styles.optionCard}>
+              <View style={[styles.optionIcon, { backgroundColor: COLORS.carpoolPath.base }]}>
+                <Text style={styles.optionEmoji}>🚗</Text>
+              </View>
+              <Text style={styles.optionTitle}>Carpool</Text>
+              <Text style={styles.optionDescription}>Roll 4-5</Text>
+              <Text style={styles.optionSubtext}>{pathLengths.carpool} spaces</Text>
+            </View>
+
+            {/* Bicycle Option */}
+            <View style={styles.optionCard}>
+              <View style={[styles.optionIcon, { backgroundColor: COLORS.bicyclePath.base }]}>
+                <Text style={styles.optionEmoji}>🚲</Text>
+              </View>
+              <Text style={styles.optionTitle}>Bicycle</Text>
+              <Text style={styles.optionDescription}>Roll 6</Text>
+              <Text style={styles.optionSubtext}>{pathLengths.bicycle} spaces</Text>
+            </View>
           </View>
         </View>
-
-        {/* Middle half - Dice Roller */}
-        <View style={styles.diceSection}>
-          <DiceRoller onRollComplete={handleRollComplete} />
-        </View>
-
-        {/* Bottom quarter - Transport Options */}
-        <View style={styles.optionsContainer}>
-          {/* Bus Option */}
-          <View style={styles.optionCard}>
-            <View style={[styles.optionIcon, { backgroundColor: COLORS.busPath.base }]}>
-              <Text style={styles.optionEmoji}>🚌</Text>
-            </View>
-            <Text style={styles.optionTitle}>Public Transit</Text>
-            <Text style={styles.optionDescription}>Roll 1-3</Text>
-            <Text style={styles.optionSubtext}>{pathLengths.bus} spaces</Text>
-          </View>
-
-          {/* Carpool Option */}
-          <View style={styles.optionCard}>
-            <View style={[styles.optionIcon, { backgroundColor: COLORS.carpoolPath.base }]}>
-              <Text style={styles.optionEmoji}>🚗</Text>
-            </View>
-            <Text style={styles.optionTitle}>Carpool</Text>
-            <Text style={styles.optionDescription}>Roll 4-5</Text>
-            <Text style={styles.optionSubtext}>{pathLengths.carpool} spaces</Text>
-          </View>
-
-          {/* Bicycle Option */}
-          <View style={styles.optionCard}>
-            <View style={[styles.optionIcon, { backgroundColor: COLORS.bicyclePath.base }]}>
-              <Text style={styles.optionEmoji}>🚲</Text>
-            </View>
-            <Text style={styles.optionTitle}>Bicycle</Text>
-            <Text style={styles.optionDescription}>Roll 6</Text>
-            <Text style={styles.optionSubtext}>{pathLengths.bicycle} spaces</Text>
-          </View>
-        </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
