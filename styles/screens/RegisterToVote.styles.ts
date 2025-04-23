@@ -177,9 +177,9 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 20,
     marginBottom: 20,
-    //display: 'flex',
-    //flexDirection: 'row',
-    //justifyContent: 'center', // Center the child horizontally
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center', // Center the child horizontally
   },
   continueButton: {
     backgroundColor: COLORS.secondary,
